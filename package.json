@@ -1,0 +1,21 @@
+{
+  "name": "fortress-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "demo-app"
+  ],
+  "scripts": {
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.7.4"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx,json,css,md}": [
+      "prettier --write"
+    ]
+  }
+}
