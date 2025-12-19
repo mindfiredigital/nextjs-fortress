@@ -19,7 +19,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "nextjs-fortress": ["../../packages/nextjs-fortress/src/index.ts"],
+      "nextjs-fortress/*": ["../../packages/nextjs-fortress/src/*"]
     }
   },
   "include": [

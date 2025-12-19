@@ -8,9 +8,11 @@
     "start": "next start"
   },
   "dependencies": {
-    "next": "16.1.0",
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "lucide-react": "^0.561.0",
+    "next": "16.0.10",
+    "nextjs-fortress": "file:../../packages/nextjs-fortress",
+    "react": "19.2.1",
+    "react-dom": "19.2.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
