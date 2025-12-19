@@ -1,0 +1,90 @@
+name: RFC Proposal
+description: Start a discussion for a substantial change to infrastructure, services, or data
+title: "RFC: [Short Title of Your Proposal]"
+labels: [RFC, needs-review]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        👋 Thank you for contributing to our infrastructure RFC process.
+
+        Please fill out the sections below with as much clarity and context as possible. A mentor will review and guide the discussion.
+
+  - type: input
+    id: summary
+    attributes:
+      label: One-line summary
+      description: Short description of what this RFC proposes.
+      placeholder: "Add service-level circuit breaker for API-Gateway"
+    validations:
+      required: true
+
+  - type: textarea
+    id: overview
+    attributes:
+      label: 📘 Overview
+      description: What is this RFC about at a high level? What’s the goal?
+      placeholder: |
+        This RFC proposes to add a circuit breaker mechanism to the API gateway
+        to prevent cascading failures during downstream service outages.
+    validations:
+      required: true
+
+  - type: textarea
+    id: background
+    attributes:
+      label: 📚 Background & Motivation
+      description: Why is this change needed? Provide historical context, incidents, or shortcomings of the current approach.
+      placeholder: |
+        We experienced 3 outages in Q2 due to one service failure bringing down others.
+        A circuit breaker would allow graceful degradation.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 🛠 Proposal
+      description: Describe the technical approach or high-level plan for solving this.
+      placeholder: |
+        - Use Envoy’s outlier detection
+        - Configure timeouts and fallback responses
+        - Integrate with existing observability stack
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: ❓ Alternatives Considered
+      description: List other approaches that were considered and why they were not chosen.
+      placeholder: |
+        - Retry logic: Not effective if downstream remains unavailable
+        - Custom middleware: Adds complexity; Envoy provides native support
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: ⚠️ Risks and Mitigations
+      description: What are the potential risks, and how might we address them?
+      placeholder: |
+        - Risk: Circuit breaker false positives
+        - Mitigation: Tune thresholds carefully and log all trip events
+
+  - type: textarea
+    id: implementation
+    attributes:
+      label: 📦 Implementation Plan (Optional)
+      description: If known, describe a rough sequence of steps or responsibilities.
+      placeholder: |
+        1. Design circuit breaker config
+        2. Implement in staging
+        3. Alert routing rules
+        4. Deploy to production with metrics enabled
+
+  - type: markdown
+    attributes:
+      value: |
+        Once consensus is reached and a mentor approves, this issue will be labeled as `RFC` and `approved`, and a corresponding markdown RFC file will be added to the repository.
