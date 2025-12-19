@@ -94,5 +94,5 @@
   "directories": {
     "test": "tests"
   },
-  "type": "commonjs"
+  "type": "module"
 }
