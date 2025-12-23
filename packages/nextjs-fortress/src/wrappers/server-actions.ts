@@ -1,10 +1,9 @@
 // wrappers/server-actions.ts - Secure Server Actions wrapper
 
-import { FortressConfig, ValidationResult } from '../types'
+import { FortressConfig, SecurityThreatType } from '../types'
 import { createDeserializationValidator } from '../validators/deserialization'
 import { createInjectionValidator } from '../validators/injection'
 import { createCSRFValidator } from '../validators/csrf'
-import { createSecurityEvent } from '../utils/security-event'
 import { FortressLogger } from '../utils/logger'
 
 /**
@@ -34,7 +33,7 @@ export function createSecureServerAction(config: FortressConfig) {
   /**
    * Wrap a server action with security validation
    */
-  return function secureServerAction<TArgs extends any[], TReturn>(
+  return function secureServerAction<TArgs extends unknown[], TReturn>(
     action: (...args: TArgs) => Promise<TReturn>,
     options: SecureActionOptions = {}
   ) {
@@ -112,7 +111,7 @@ export function createSecureServerAction(config: FortressConfig) {
           const event = {
             id: generateEventId(),
             timestamp: new Date(),
-            type: error.rule as any,
+            type: (error.rule as SecurityThreatType) || 'unknown',
             severity: 'high' as const,
             message: error.message,
             request: {
@@ -154,12 +153,12 @@ class SecurityError extends Error {
 /**
  * Extract CSRF token from server action args
  */
-function extractCSRFToken(args: any[]): string | null {
+function extractCSRFToken(args: unknown[]): string | null {
   // Check if last arg is metadata object with csrf token
   if (args.length > 0) {
     const lastArg = args[args.length - 1]
     if (typeof lastArg === 'object' && lastArg !== null && '_csrf' in lastArg) {
-      return lastArg._csrf
+      return (lastArg as { _csrf: string })._csrf
     }
   }
   return null
@@ -168,16 +167,23 @@ function extractCSRFToken(args: any[]): string | null {
 /**
  * Extract session ID from server action args
  */
-function extractSessionId(args: any[]): string {
-  // For now, use a default session ID
-  // In production, extract from cookies or headers
+function extractSessionId(args: unknown[]): string {
+  const metadata = args[args.length - 1]
+  if (
+    typeof metadata === 'object' &&
+    metadata !== null &&
+    'sessionId' in metadata
+  ) {
+    return String((metadata as { sessionId: unknown }).sessionId)
+  }
+
   return 'default-session'
 }
 
 /**
  * Sanitize inputs by removing dangerous properties
  */
-function sanitizeInputs(args: any[]): any[] {
+function sanitizeInputs(args: unknown[]): unknown[] {
   return args.map((arg) => {
     if (arg === null || typeof arg !== 'object') {
       return arg
@@ -188,10 +194,12 @@ function sanitizeInputs(args: any[]): any[] {
     }
 
     // Remove dangerous keys
-    const sanitized: any = {}
+    const sanitized: Record<string, unknown> = {}
     const dangerousKeys = ['__proto__', 'constructor', 'prototype']
 
-    for (const [key, value] of Object.entries(arg)) {
+    const objArg = arg as Record<string, unknown>
+
+    for (const [key, value] of Object.entries(objArg)) {
       if (!dangerousKeys.includes(key.toLowerCase())) {
         sanitized[key] =
           value !== null && typeof value === 'object'
@@ -229,12 +237,14 @@ function generateEventId(): string {
  * );
  * ```
  */
-export function secureServerAction<TArgs extends any[], TReturn>(
+export function secureServerAction<TArgs extends unknown[], TReturn>(
   action: (...args: TArgs) => Promise<TReturn>,
   options?: SecureActionOptions
 ): (...args: TArgs) => Promise<TReturn> {
-  // This will be initialized with actual config when imported
+  const actionName = action.name || 'anonymous'
+  const optsCount = Object.keys(options || {}).length
+
   throw new Error(
-    'secureServerAction must be created with createSecureServerAction(config) first'
+    `secureServerAction (${actionName}) with ${optsCount} options must be created with createSecureServerAction(config) first`
   )
 }

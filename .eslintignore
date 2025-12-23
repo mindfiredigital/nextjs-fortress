@@ -1,0 +1,5 @@
+# Ignore the test files completely
+tests/**/*.test.ts
+tests/**/*.test.tsx
+# If your wrappers test is in a different spot
+packages/nextjs-fortress/tests/

@@ -50,7 +50,7 @@ export interface SecurityEvent {
     confidence: number
   }
   action: SecurityAction
-  context?: Record<string, any>
+  context?: Record<string, unknown>
 }
 
 /**

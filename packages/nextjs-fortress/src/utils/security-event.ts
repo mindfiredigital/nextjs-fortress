@@ -12,7 +12,7 @@ export function createSecurityEvent(params: {
   rule: string
   pattern?: string
   confidence: number
-  context?: Record<string, any>
+  context?: Record<string, unknown>
 }): SecurityEvent {
   const {
     type,
@@ -29,7 +29,9 @@ export function createSecurityEvent(params: {
   const method = request.method
   const path = request.nextUrl.pathname
   const ip =
-    (request as any).ip || request.headers.get('x-forwarded-for') || 'unknown'
+    (request as { ip?: string }).ip ||
+    request.headers.get('x-forwarded-for') ||
+    'unknown'
   const userAgent = request.headers.get('user-agent') || 'unknown'
   const referer = request.headers.get('referer') || undefined
 

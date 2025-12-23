@@ -1,6 +1,6 @@
 // index.ts - Main exports for nextjs-fortress package
 
-import { FortressConfig } from './types'
+import { DEFAULT_CONFIG, FortressConfig } from './types'
 
 export { createFortressMiddleware } from './middleware'
 
@@ -49,7 +49,6 @@ export const VERSION = '0.1.0'
 export function createDefaultConfig(
   overrides?: Partial<FortressConfig>
 ): FortressConfig {
-  const { DEFAULT_CONFIG } = require('./types')
   return {
     ...DEFAULT_CONFIG,
     ...overrides,

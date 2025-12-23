@@ -6,6 +6,17 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { execSync } from 'child_process'
 
+interface FortressOptions {
+  mode: string
+  logLevel: string
+  maxDepth: number
+  enableCSRF: boolean
+  enableRateLimit: boolean
+  rateLimitRequests: number
+  rateLimitWindow: number
+  maxPayloadSize: number
+}
+
 const COLORS = {
   reset: '\x1b[0m',
   bright: '\x1b[1m',
@@ -17,18 +28,18 @@ const COLORS = {
 }
 
 function log(message: string, color: keyof typeof COLORS = 'reset') {
-  console.log(`${COLORS[color]}${message}${COLORS.reset}`)
+  console.warn(`${COLORS[color]}${message}${COLORS.reset}`)
 }
 
 function logHeader() {
-  console.log('')
+  console.warn('')
   log('╔═══════════════════════════════════════════╗', 'cyan')
   log('║                                           ║', 'cyan')
   log('║      🛡️  nextjs-fortress CLI v0.1.0       ║', 'cyan')
   log('║   Universal Security Validation Framework ║', 'cyan')
   log('║                                           ║', 'cyan')
   log('╚═══════════════════════════════════════════╝', 'cyan')
-  console.log('')
+  console.warn('')
 }
 
 function checkNextJsProject(): boolean {
@@ -72,7 +83,7 @@ function hasSrcDirectory(): boolean {
   return fs.existsSync(path.join(process.cwd(), 'src'))
 }
 
-function createFortressConfig(options: any) {
+function createFortressConfig(options: FortressOptions) {
   const config = `import { FortressConfig } from 'nextjs-fortress';
 
 export const fortressConfig: FortressConfig = {
@@ -142,7 +153,7 @@ export const fortressConfig: FortressConfig = {
 
   onSecurityEvent: async (event) => {
     // Log security events
-    console.log(\`🚨 Security Event [\${event.type}]:\`, {
+    console.warn(\`🚨 Security Event [\${event.type}]:\`, {
       severity: event.severity,
       message: event.message,
       path: event.request.path,
@@ -160,32 +171,13 @@ export const fortressConfig: FortressConfig = {
   return config
 }
 
-function createMiddleware(hasAppDir: boolean) {
-  const middleware = `import { createFortressMiddleware } from 'nextjs-fortress';
-import { fortressConfig } from './fortress.config';
-
-// Create Fortress middleware with your configuration
-export const middleware = createFortressMiddleware(fortressConfig);
-
-// Configure which routes to protect
-export const config = {
-  matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization)
-     * - favicon.ico (favicon)
-     */
-    '/((?!_next/static|_next/image|favicon.ico).*)',
-  ],
-};
-`
-
-  return middleware
+function createMiddleware() {
+  return `import { createFortressMiddleware } from 'nextjs-fortress';
+export const middleware = createFortressMiddleware();`
 }
 
-function createEnvExample(options: any) {
-  return `# Fortress Configuration
+function createEnvExample(options: FortressOptions) {
+  return `# Fortress Configuration (Mode: ${options.mode})
 
 # CSRF Secret (generate with: openssl rand -hex 32)
 CSRF_SECRET=your-secret-key-here
@@ -246,7 +238,10 @@ function installDependencies() {
     execSync('npm install nextjs-fortress', { stdio: 'inherit' })
     log('✅ Dependencies installed successfully', 'green')
   } catch (error) {
-    log('❌ Failed to install dependencies', 'red')
+    log(
+      `❌ Failed to install dependencies: ${error instanceof Error ? error.message : String(error)}`,
+      'red'
+    )
     log('Please run: npm install nextjs-fortress', 'yellow')
   }
 }
@@ -266,10 +261,10 @@ function init() {
   log(`✓ Next.js ${nextVersion} detected`, 'green')
   log(`✓ Using ${hasAppDir ? 'App Router' : 'Pages Router'}`, 'green')
   log(`✓ ${hasSrc ? 'src/' : ''} directory structure`, 'green')
-  console.log('')
+  console.warn('')
 
   // Configuration options (you can make these interactive with prompts)
-  const options = {
+  const options: FortressOptions = {
     mode: 'development',
     logLevel: 'debug',
     maxDepth: 10,
@@ -281,7 +276,7 @@ function init() {
   }
 
   log('🔧 Creating configuration files...', 'blue')
-  console.log('')
+  console.warn('')
 
   // Create fortress.config.ts
   const configPath = path.join(process.cwd(), 'fortress.config.ts')
@@ -297,7 +292,7 @@ function init() {
   if (fs.existsSync(middlewarePath)) {
     log('⚠️  middleware.ts already exists, skipping...', 'yellow')
   } else {
-    fs.writeFileSync(middlewarePath, createMiddleware(hasAppDir))
+    fs.writeFileSync(middlewarePath, createMiddleware())
     log('✅ Created middleware.ts', 'green')
   }
 
@@ -307,6 +302,8 @@ function init() {
     fs.writeFileSync(envExamplePath, createEnvExample(options))
     log('✅ Created .env.example', 'green')
   }
+
+  installDependencies()
 
   // Create example API route
   if (hasAppDir) {

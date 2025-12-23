@@ -1,19 +1,6 @@
 // validators/encoding.ts - Full encoding validation (Ghost Mode protection)
 
 import { ValidationResult, EncodingConfig } from '../types'
-
-/**
- * BOM (Byte Order Mark) signatures for different encodings
- */
-const BOM_SIGNATURES = {
-  'UTF-8': [0xef, 0xbb, 0xbf],
-  'UTF-16LE': [0xff, 0xfe],
-  'UTF-16BE': [0xfe, 0xff],
-  'UTF-32LE': [0xff, 0xfe, 0x00, 0x00],
-  'UTF-32BE': [0x00, 0x00, 0xfe, 0xff],
-  GB18030: [0x84, 0x31, 0x95, 0x33],
-} as const
-
 /**
  * Dangerous encodings that can bypass WAF
  */
@@ -240,7 +227,7 @@ export class EncodingValidator {
     try {
       const decoder = new TextDecoder('utf-8', { fatal: true })
       return decoder.decode(body)
-    } catch (error) {
+    } catch {
       throw new Error('Failed to decode body as UTF-8')
     }
   }

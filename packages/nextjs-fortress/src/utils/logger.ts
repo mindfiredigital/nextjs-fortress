@@ -7,25 +7,25 @@ export class FortressLogger {
     this.config = config
   }
 
-  debug(message: string, ...args: any[]) {
+  debug(message: string, ...args: unknown[]) {
     if (this.shouldLog('debug')) {
       console.debug(`[Fortress] ${message}`, ...args)
     }
   }
 
-  info(message: string, ...args: any[]) {
+  info(message: string, ...args: unknown[]) {
     if (this.shouldLog('info')) {
       console.info(`[Fortress] ${message}`, ...args)
     }
   }
 
-  warn(message: string, ...args: any[]) {
+  warn(message: string, ...args: unknown[]) {
     if (this.shouldLog('warn')) {
       console.warn(`[Fortress] ${message}`, ...args)
     }
   }
 
-  error(message: string, ...args: any[]) {
+  error(message: string, ...args: unknown[]) {
     if (this.shouldLog('error')) {
       console.error(`[Fortress] ${message}`, ...args)
     }

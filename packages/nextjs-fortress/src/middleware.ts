@@ -8,44 +8,49 @@ import { createEncodingValidator } from './validators/encoding'
 import { createCSRFValidator } from './validators/csrf'
 import { createSecurityEvent } from './utils/security-event'
 import { FortressLogger } from './utils/logger'
+import { ValidationResult, SecurityThreatType } from './types'
 
 /**
  * Rate limiting store (in-memory for now)
  */
+type InternalValidationResult = ValidationResult & {
+  type?: SecurityThreatType
+}
 const rateLimitStore = new Map<string, { count: number; resetAt: number }>()
+
+interface BodyValidator {
+  validate(data: unknown): Promise<ValidationResult> | ValidationResult
+}
 
 /**
  * Main Fortress middleware creator
  */
 export function createFortressMiddleware(config: FortressConfig) {
   const logger = new FortressLogger(config.logging)
+
+  // Use 'as any' here only if the validator return types are strictly synchronous
+  // and cannot be changed to Promise easily.
   const deserializationValidator = createDeserializationValidator(
     config.modules.deserialization
-  )
-  const injectionValidator = createInjectionValidator(config.modules.injection)
+  ) as unknown as BodyValidator
+  const injectionValidator = createInjectionValidator(
+    config.modules.injection
+  ) as unknown as BodyValidator
+
   const encodingValidator = createEncodingValidator(config.modules.encoding)
   const csrfValidator = config.modules.csrf.enabled
     ? createCSRFValidator(config.modules.csrf)
     : null
 
-  /**
-   * The actual middleware function
-   */
   return async function fortressMiddleware(request: NextRequest) {
-    // Skip if disabled
-    if (!config.enabled) {
-      return NextResponse.next()
-    }
-
-    // Check whitelist
-    if (isWhitelisted(request, config)) {
+    if (!config.enabled || isWhitelisted(request, config)) {
       return NextResponse.next()
     }
 
     const startTime = Date.now()
 
     try {
-      // 1. Rate limiting check
+      // 1. Rate Limiting
       if (config.modules.rateLimit.enabled) {
         const rateLimitResult = await checkRateLimit(request, config)
         if (!rateLimitResult.allowed) {
@@ -57,9 +62,7 @@ export function createFortressMiddleware(config: FortressConfig) {
             rule: 'rate_limit',
             confidence: 1.0,
           })
-
           await handleSecurityEvent(event, config, logger)
-
           return new NextResponse('Too Many Requests', {
             status: 429,
             headers: {
@@ -71,7 +74,37 @@ export function createFortressMiddleware(config: FortressConfig) {
         }
       }
 
-      // 2. Content validation
+      // 2. CSRF Fix: Pass exact arguments required by the validator
+      if (csrfValidator) {
+        const token =
+          request.headers.get('x-csrf-token') ||
+          request.cookies.get('csrf-token')?.value
+        const sessionId =
+          request.cookies.get('session-id')?.value || 'anonymous'
+        const method = request.method
+
+        const csrfResult = await csrfValidator.validate(
+          token,
+          sessionId,
+          method
+        )
+        if (!csrfResult.valid) {
+          const event = createSecurityEvent({
+            type: 'csrf',
+            severity: 'high',
+            message: csrfResult.message || 'CSRF validation failed',
+            request,
+            rule: 'csrf_protection',
+            confidence: 1.0,
+          })
+          await handleSecurityEvent(event, config, logger)
+          return new NextResponse('Forbidden: CSRF Validation Failed', {
+            status: 403,
+          })
+        }
+      }
+
+      // 3. Content size validation
       if (config.modules.content.enabled) {
         const contentResult = validateContent(request, config)
         if (!contentResult.valid) {
@@ -83,14 +116,12 @@ export function createFortressMiddleware(config: FortressConfig) {
             rule: contentResult.rule || 'content_validation',
             confidence: contentResult.confidence || 0.9,
           })
-
           await handleSecurityEvent(event, config, logger)
-
           return new NextResponse('Bad Request', { status: 400 })
         }
       }
 
-      // 3. Encoding validation (Ghost Mode protection)
+      // 3.5 Encoding validation (Ghost Mode protection)
       if (config.modules.encoding.enabled) {
         const contentType = request.headers.get('content-type')
         const bodyBuffer = await request.clone().arrayBuffer()
@@ -99,9 +130,10 @@ export function createFortressMiddleware(config: FortressConfig) {
           contentType,
           bodyBuffer
         )
+
         if (!encodingResult.valid) {
           const event = createSecurityEvent({
-            type: 'encoding',
+            type: 'encoding' as SecurityThreatType,
             severity: encodingResult.severity || 'critical',
             message: encodingResult.message || 'Invalid encoding detected',
             request,
@@ -111,12 +143,13 @@ export function createFortressMiddleware(config: FortressConfig) {
           })
 
           await handleSecurityEvent(event, config, logger)
-
-          return new NextResponse('Bad Request', { status: 400 })
+          return new NextResponse('Bad Request: Encoding Validation Failed', {
+            status: 400,
+          })
         }
       }
 
-      // 4. Parse and validate request body (for POST/PUT/PATCH)
+      // 4. Body Validation (Injection / Deserialization)
       if (['POST', 'PUT', 'PATCH'].includes(request.method)) {
         const bodyResult = await validateRequestBody(
           request,
@@ -127,7 +160,7 @@ export function createFortressMiddleware(config: FortressConfig) {
 
         if (!bodyResult.valid) {
           const event = createSecurityEvent({
-            type: bodyResult.type || 'unknown',
+            type: (bodyResult as InternalValidationResult).type || 'unknown',
             severity: bodyResult.severity || 'high',
             message: bodyResult.message || 'Request validation failed',
             request,
@@ -148,41 +181,27 @@ export function createFortressMiddleware(config: FortressConfig) {
               headers: {
                 'Content-Type': 'application/json',
                 'x-fortress-rule': bodyResult.rule || 'unknown',
-                'x-fortress-confidence': (
-                  bodyResult.confidence || 0.9
-                ).toString(),
               },
             }
           )
         }
       }
 
-      // 5. Add security headers to response
       const response = NextResponse.next()
+      if (config.modules.securityHeaders.enabled) addSecurityHeaders(response)
 
-      if (config.modules.securityHeaders.enabled) {
-        addSecurityHeaders(response, config)
-      }
-
-      // Log successful request in dev mode
       if (config.mode === 'development') {
-        const duration = Date.now() - startTime
         logger.debug(
-          `✓ Request validated in ${duration}ms: ${request.method} ${request.nextUrl.pathname}`
+          `✓ Validated in ${Date.now() - startTime}ms: ${request.method} ${request.nextUrl.pathname}`
         )
       }
 
       return response
     } catch (error) {
       logger.error('Fortress middleware error:', error)
-
-      // Fail closed - block on error
-      if (config.mode === 'production') {
-        return new NextResponse('Internal Server Error', { status: 500 })
-      }
-
-      // Fail open in development
-      return NextResponse.next()
+      return config.mode === 'production'
+        ? new NextResponse('Internal Server Error', { status: 500 })
+        : NextResponse.next()
     }
   }
 }
@@ -192,7 +211,7 @@ export function createFortressMiddleware(config: FortressConfig) {
  */
 function isWhitelisted(request: NextRequest, config: FortressConfig): boolean {
   const path = request.nextUrl.pathname
-  const ip = (request as any).ip || request.headers.get('x-forwarded-for') || ''
+  const ip = request.headers.get('x-forwarded-for') || '127.0.0.1'
 
   // Check whitelisted paths
   if (config.whitelist?.paths) {
@@ -218,8 +237,7 @@ async function checkRateLimit(
   request: NextRequest,
   config: FortressConfig
 ): Promise<{ allowed: boolean; retryAfter: number }> {
-  const ip =
-    (request as any).ip || request.headers.get('x-forwarded-for') || 'unknown'
+  const ip = request.headers.get('x-forwarded-for') || 'unknown'
   const now = Date.now()
   const rateLimitConfig = config.modules.rateLimit
 
@@ -260,7 +278,6 @@ async function checkRateLimit(
  */
 function validateContent(request: NextRequest, config: FortressConfig) {
   const contentLength = request.headers.get('content-length')
-  const contentType = request.headers.get('content-type')
 
   if (contentLength) {
     const size = parseInt(contentLength, 10)
@@ -283,66 +300,49 @@ function validateContent(request: NextRequest, config: FortressConfig) {
  */
 async function validateRequestBody(
   request: NextRequest,
-  deserializationValidator: any,
-  injectionValidator: any,
+  deserializationValidator: BodyValidator,
+  injectionValidator: BodyValidator,
   config: FortressConfig
-) {
+): Promise<ValidationResult> {
   try {
-    // Clone request to read body
     const clonedRequest = request.clone()
     const body = await clonedRequest.text()
+    if (!body) return { valid: true }
 
-    if (!body) {
-      return { valid: true }
-    }
-
-    // Try to parse as JSON
-    let parsedBody: any
+    let parsedBody: unknown
     try {
       parsedBody = JSON.parse(body)
     } catch {
-      // Not JSON, validate as plain text
-      const injectionResult = injectionValidator.validate(body)
+      const injectionResult = await injectionValidator.validate(body)
       if (!injectionResult.valid) {
         return {
-          valid: false,
-          type: 'injection' as const,
           ...injectionResult,
-        }
+          type: 'injection',
+        } as InternalValidationResult
       }
       return { valid: true }
     }
 
-    // Validate deserialization
     if (config.modules.deserialization.enabled) {
-      const deserializationResult =
-        deserializationValidator.validate(parsedBody)
-      if (!deserializationResult.valid) {
+      const result = await deserializationValidator.validate(parsedBody)
+      if (!result.valid)
         return {
-          valid: false,
-          type: 'deserialization' as const,
-          ...deserializationResult,
-        }
-      }
+          ...result,
+          type: 'deserialization',
+        } as InternalValidationResult
     }
 
-    // Validate injection
     if (config.modules.injection.enabled) {
-      const injectionResult = injectionValidator.validate(parsedBody)
-      if (!injectionResult.valid) {
-        return {
-          valid: false,
-          type: 'injection' as const,
-          ...injectionResult,
-        }
-      }
+      const result = await injectionValidator.validate(parsedBody)
+      if (!result.valid)
+        return { ...result, type: 'injection' } as InternalValidationResult
     }
 
     return { valid: true }
-  } catch (error) {
+  } catch {
     return {
       valid: false,
-      severity: 'high' as const,
+      severity: 'high',
       message: 'Body validation failed',
       rule: 'body_parse_error',
       confidence: 0.8,
@@ -353,7 +353,7 @@ async function validateRequestBody(
 /**
  * Add security headers to response
  */
-function addSecurityHeaders(response: NextResponse, config: FortressConfig) {
+function addSecurityHeaders(response: NextResponse) {
   const headers = {
     'X-Content-Type-Options': 'nosniff',
     'X-Frame-Options': 'DENY',

@@ -1,6 +1,7 @@
 // validators/rate-limit-advanced.ts - Advanced rate limiting with Redis support
 
-import { ValidationResult, RateLimitConfig } from '../types'
+import { NextApiRequest, NextApiResponse } from 'next'
+import { RateLimitConfig } from '../types'
 
 /**
  * Rate limit entry
@@ -9,6 +10,12 @@ interface RateLimitEntry {
   count: number
   resetAt: number
   backoffMultiplier?: number
+}
+
+interface RedisClient {
+  get(key: string): Promise<string | null>
+  setex(key: string, seconds: number, value: string): Promise<void>
+  del(key: string): Promise<void>
 }
 
 /**
@@ -67,9 +74,9 @@ class MemoryStorage implements RateLimitStorage {
  * Redis storage implementation (optional)
  */
 class RedisStorage implements RateLimitStorage {
-  private client: any
+  private client: RedisClient
 
-  constructor(redisClient: any) {
+  constructor(redisClient: RedisClient) {
     this.client = redisClient
   }
 
@@ -137,7 +144,11 @@ export class AdvancedRateLimiter {
     }
 
     const now = Date.now()
-    const checks: Array<{ key: string; limit: any; type: string }> = []
+    const checks: Array<{
+      key: string
+      limit: { requests: number; window: number }
+      type: string
+    }> = []
 
     // 1. IP-based rate limit
     if (this.config.byIP) {
@@ -324,7 +335,7 @@ export class AdvancedRateLimiter {
  */
 export function createAdvancedRateLimiter(
   config: RateLimitConfig,
-  redisClient?: any
+  redisClient?: RedisClient
 ): AdvancedRateLimiter {
   const storage = redisClient
     ? new RedisStorage(redisClient)
@@ -336,11 +347,25 @@ export function createAdvancedRateLimiter(
  * Express/Next.js middleware helper
  */
 export function createRateLimitMiddleware(limiter: AdvancedRateLimiter) {
-  return async (req: any, res: any, next: any) => {
+  return async (
+    req: NextApiRequest,
+    res: NextApiResponse,
+    next: () => void
+  ) => {
     const ip =
-      req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress
-    const sessionId = req.session?.id || req.cookies?.sessionId
-    const endpoint = req.path
+      (req.headers['x-forwarded-for'] as string) ||
+      req.socket.remoteAddress ||
+      'unknown'
+
+    interface RequestWithSession extends NextApiRequest {
+      session?: { id: string }
+    }
+
+    const extendedReq = req as RequestWithSession
+    const sessionId =
+      extendedReq.session?.id ||
+      (extendedReq.cookies as Record<string, string>)?.sessionId
+    const endpoint = req.url || ''
 
     const result = await limiter.check(ip, sessionId, endpoint)
 

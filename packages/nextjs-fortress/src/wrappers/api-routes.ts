@@ -1,9 +1,15 @@
 // wrappers/api-routes.ts - Secure API Routes wrapper
 
 import { NextRequest, NextResponse } from 'next/server'
-import { FortressConfig } from '../types'
-import { createDeserializationValidator } from '../validators/deserialization'
-import { createInjectionValidator } from '../validators/injection'
+import { FortressConfig, SecuritySeverity, SecurityThreatType } from '../types'
+import {
+  createDeserializationValidator,
+  DeserializationValidator,
+} from '../validators/deserialization'
+import {
+  createInjectionValidator,
+  InjectionValidator,
+} from '../validators/injection'
 import { createCSRFValidator } from '../validators/csrf'
 import { createEncodingValidator } from '../validators/encoding'
 import { FortressLogger } from '../utils/logger'
@@ -22,6 +28,26 @@ interface SecureRouteOptions {
   allowedMethods?: string[]
   validateEncoding?: boolean
 }
+
+type BodyValidationResult =
+  | {
+      valid: true
+      type?: never
+      severity?: never
+      message?: never
+      rule?: never
+      pattern?: never
+      confidence?: never
+    }
+  | {
+      valid: false
+      type: SecurityThreatType
+      severity?: SecuritySeverity
+      message?: string
+      rule?: string
+      pattern?: string
+      confidence?: number
+    }
 
 /**
  * Rate limit store for API routes
@@ -133,8 +159,7 @@ export function createWithFortress(config: FortressConfig) {
             request,
             deserializationValidator,
             injectionValidator,
-            config,
-            logger
+            config
           )
 
           if (!validationResult.valid) {
@@ -216,8 +241,7 @@ function checkRateLimit(
   request: NextRequest,
   limit: { requests: number; window: number }
 ): { allowed: boolean; retryAfter: number } {
-  const ip =
-    (request as any).ip || request.headers.get('x-forwarded-for') || 'unknown'
+  const ip = request.headers.get('x-forwarded-for') || 'unknown'
   const path = request.nextUrl.pathname
   const key = `api:${ip}:${path}`
   const now = Date.now()
@@ -250,11 +274,10 @@ function checkRateLimit(
  */
 async function validateRequestBody(
   request: NextRequest,
-  deserializationValidator: any,
-  injectionValidator: any,
-  config: FortressConfig,
-  logger: FortressLogger
-) {
+  deserializationValidator: DeserializationValidator,
+  injectionValidator: InjectionValidator,
+  config: FortressConfig
+): Promise<BodyValidationResult> {
   try {
     const clonedRequest = request.clone()
     const body = await clonedRequest.text()
@@ -263,7 +286,7 @@ async function validateRequestBody(
       return { valid: true }
     }
 
-    let parsedBody: any
+    let parsedBody: unknown
     try {
       parsedBody = JSON.parse(body)
     } catch {
@@ -271,9 +294,9 @@ async function validateRequestBody(
       const injectionResult = injectionValidator.validate(body)
       if (!injectionResult.valid) {
         return {
+          ...injectionResult,
           valid: false,
           type: 'injection' as const,
-          ...injectionResult,
         }
       }
       return { valid: true }
@@ -285,9 +308,9 @@ async function validateRequestBody(
         deserializationValidator.validate(parsedBody)
       if (!deserializationResult.valid) {
         return {
+          ...deserializationResult,
           valid: false,
           type: 'deserialization' as const,
-          ...deserializationResult,
         }
       }
     }
@@ -297,17 +320,18 @@ async function validateRequestBody(
       const injectionResult = injectionValidator.validate(parsedBody)
       if (!injectionResult.valid) {
         return {
+          ...injectionResult,
           valid: false,
           type: 'injection' as const,
-          ...injectionResult,
         }
       }
     }
 
     return { valid: true }
-  } catch (error) {
+  } catch {
     return {
       valid: false,
+      type: 'unknown',
       severity: 'high' as const,
       message: 'Body validation failed',
       rule: 'body_parse_error',
@@ -335,10 +359,7 @@ async function validateRequestBody(
  * );
  * ```
  */
-export function withFortress(
-  handler: (request: NextRequest) => Promise<Response>,
-  options?: SecureRouteOptions
-): (request: NextRequest) => Promise<Response> {
+export function withFortress(): (request: NextRequest) => Promise<Response> {
   throw new Error(
     'withFortress must be created with createWithFortress(config) first'
   )

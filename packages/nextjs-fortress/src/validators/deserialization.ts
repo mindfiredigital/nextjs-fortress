@@ -68,7 +68,7 @@ export class DeserializationValidator {
   /**
    * Main validation entry point
    */
-  public validate(payload: any): ValidationResult {
+  public validate(payload: unknown): ValidationResult {
     if (!this.config.enabled) {
       return { valid: true }
     }
@@ -116,21 +116,24 @@ export class DeserializationValidator {
   /**
    * Check for dangerous keys that could lead to prototype pollution
    */
-  private checkDangerousKeys(obj: any, path: string = ''): ValidationResult {
+  private checkDangerousKeys(
+    obj: unknown,
+    path: string = ''
+  ): ValidationResult {
     if (obj === null || typeof obj !== 'object') {
       return { valid: true }
     }
 
+    const target = obj as Record<string, unknown>
+
     // 1. Get all keys, including non-enumerable ones
-    const keys = Reflect.ownKeys(obj)
+    const keys = Reflect.ownKeys(target)
 
     for (const key of keys) {
       if (typeof key !== 'string') continue
 
       const lowerKey = key.toLowerCase()
 
-      // RULE: If the key itself is in the blocklist, block immediately.
-      // This catches JSON.parse payloads and literal keys.
       if (this.blockList.has(lowerKey)) {
         return {
           valid: false,
@@ -145,8 +148,8 @@ export class DeserializationValidator {
       const currentPath = path ? `${path}.${key}` : key
 
       try {
-        // 2. Recursion
-        const result = this.checkDangerousKeys(obj[key], currentPath)
+        // 2. Fix: Use target[key] instead of obj[key]
+        const result = this.checkDangerousKeys(target[key], currentPath)
         if (!result.valid) return result
       } catch {
         continue
@@ -174,7 +177,7 @@ export class DeserializationValidator {
   /**
    * Check for dangerous patterns in stringified values
    */
-  private checkDangerousPatterns(obj: any): ValidationResult {
+  private checkDangerousPatterns(obj: unknown): ValidationResult {
     try {
       // Stringify the entire object to search for patterns
       const stringified = JSON.stringify(obj).toLowerCase()
@@ -196,7 +199,7 @@ export class DeserializationValidator {
       }
 
       return { valid: true }
-    } catch (error) {
+    } catch {
       // If stringification fails, treat as suspicious
       return {
         valid: false,
@@ -211,7 +214,7 @@ export class DeserializationValidator {
   /**
    * Check nesting depth to prevent deeply nested attacks
    */
-  private checkDepth(obj: any, currentDepth: number): ValidationResult {
+  private checkDepth(obj: unknown, currentDepth: number): ValidationResult {
     if (currentDepth > this.config.maxDepth) {
       return {
         valid: false,
@@ -243,7 +246,7 @@ export class DeserializationValidator {
    * Check for circular references
    */
   private checkCircularReferences(
-    obj: any,
+    obj: unknown,
     seen = new WeakSet()
   ): ValidationResult {
     if (obj === null || typeof obj !== 'object') {
@@ -278,7 +281,7 @@ export class DeserializationValidator {
   /**
    * Quick pre-check for obvious exploits (fast path)
    */
-  public quickCheck(payload: any): boolean {
+  public quickCheck(payload: unknown): boolean {
     if (!this.config.enabled) {
       return true
     }

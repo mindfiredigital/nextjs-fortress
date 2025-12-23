@@ -13,17 +13,17 @@ const SQL_PATTERNS = [
   /(\bUPDATE\b.*\bSET\b)/gi,
   /(\bEXEC(UTE)?\b)/gi,
   /(\bSELECT\b.*\bFROM\b)/gi,
-  /(;\s*--)/g, // Comment injection
-  /('|\"\s*OR\s*'1'\s*=\s*'1)/gi, // Classic OR 1=1
-  /(\bOR\b.*=.*)/gi, // OR conditions
-  /(\bAND\b.*=.*)/gi, // AND conditions
+  /(;\s*--)/g,
+  /('|" \s*OR\s*'1'\s*=\s*'1)/gi,
+  /(\bOR\b.*=.*)/gi,
+  /(\bAND\b.*=.*)/gi,
 ]
 
 /**
  * Command Injection patterns
  */
 const COMMAND_PATTERNS = [
-  /[;&|`$(){}\[\]<>]/, // Shell metacharacters
+  /[;&|`$(){}[\]<>]/, // Fix: removed escape from [
   /(bash|sh|cmd|powershell|exec|spawn)/gi,
   /(\|\s*cat\s+)/gi,
   /(>\s*\/dev\/null)/gi,
@@ -96,7 +96,7 @@ export class InjectionValidator {
   /**
    * Main validation entry point
    */
-  public validate(input: any): ValidationResult {
+  public validate(input: unknown): ValidationResult {
     if (!this.config.enabled) {
       return { valid: true }
     }
@@ -128,7 +128,7 @@ export class InjectionValidator {
   /**
    * Extract all strings from input (including nested objects)
    */
-  private extractStrings(input: any, depth: number = 0): string[] {
+  private extractStrings(input: unknown, depth: number = 0): string[] {
     const strings: string[] = []
     const maxDepth = 10
 
@@ -255,7 +255,7 @@ export class InjectionValidator {
   /**
    * Quick pre-check for obvious injection attempts
    */
-  public quickCheck(input: any): boolean {
+  public quickCheck(input: unknown): boolean {
     if (!this.config.enabled) {
       return true
     }
