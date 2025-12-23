@@ -1,15 +1,6 @@
 // validators/csrf.ts - CSRF Protection Implementation (Edge Runtime Compatible)
 
-import { ValidationResult, CSRFConfig } from '../types'
-
-/**
- * CSRF Token structure
- */
-interface CSRFToken {
-  token: string
-  createdAt: number
-  expiresAt: number
-}
+import { ValidationResult, CSRFConfig , CSRFToken } from '../types'
 
 /**
  * Token storage (in-memory for now)

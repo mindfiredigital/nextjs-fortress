@@ -1,26 +1,16 @@
 // middleware.ts - Next.js middleware integration for Fortress
 
 import { NextRequest, NextResponse } from 'next/server'
-import { FortressConfig, SecurityEvent } from './types'
+import { FortressConfig, SecurityEvent , InternalValidationResult , BodyValidator } from './types'
 import { createDeserializationValidator } from './validators/deserialization'
 import { createInjectionValidator } from './validators/injection'
 import { createEncodingValidator } from './validators/encoding'
 import { createCSRFValidator } from './validators/csrf'
-import { createSecurityEvent } from './utils/security-event'
+import { createSecurityEvent } from './utils/securityEvent'
 import { FortressLogger } from './utils/logger'
 import { ValidationResult, SecurityThreatType } from './types'
 
-/**
- * Rate limiting store (in-memory for now)
- */
-type InternalValidationResult = ValidationResult & {
-  type?: SecurityThreatType
-}
 const rateLimitStore = new Map<string, { count: number; resetAt: number }>()
-
-interface BodyValidator {
-  validate(data: unknown): Promise<ValidationResult> | ValidationResult
-}
 
 /**
  * Main Fortress middleware creator

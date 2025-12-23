@@ -1,32 +1,7 @@
 // validators/rate-limit-advanced.ts - Advanced rate limiting with Redis support
 
 import { NextApiRequest, NextApiResponse } from 'next'
-import { RateLimitConfig } from '../types'
-
-/**
- * Rate limit entry
- */
-interface RateLimitEntry {
-  count: number
-  resetAt: number
-  backoffMultiplier?: number
-}
-
-interface RedisClient {
-  get(key: string): Promise<string | null>
-  setex(key: string, seconds: number, value: string): Promise<void>
-  del(key: string): Promise<void>
-}
-
-/**
- * Rate limit storage interface
- */
-interface RateLimitStorage {
-  get(key: string): Promise<RateLimitEntry | null>
-  set(key: string, entry: RateLimitEntry): Promise<void>
-  delete(key: string): Promise<void>
-  cleanup(): Promise<number>
-}
+import { RateLimitConfig , RateLimitEntry , RedisClient , RateLimitStorage } from '../types'
 
 /**
  * In-memory storage implementation

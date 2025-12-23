@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createWithFortress } from '../src/wrappers/api-routes'
-import { createSecureServerAction } from '../src/wrappers/server-actions'
+import { createWithFortress } from '../src/wrappers/apiRoutes'
+import { createSecureServerAction } from '../src/wrappers/serverActions'
 import { FortressConfig, DEFAULT_CONFIG } from '../src/types'
 
 jest.mock('../src/validators/deserialization')

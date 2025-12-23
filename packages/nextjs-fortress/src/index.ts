@@ -8,8 +8,8 @@ export { createFortressMiddleware } from './middleware'
 export {
   createSecureServerAction,
   secureServerAction,
-} from './wrappers/server-actions'
-export { createWithFortress, withFortress } from './wrappers/api-routes'
+} from './wrappers/serverActions'
+export { createWithFortress, withFortress } from './wrappers/apiRoutes'
 
 export type {
   FortressConfig,
@@ -36,7 +36,7 @@ export { createEncodingValidator } from './validators/encoding'
 export { createCSRFValidator } from './validators/csrf'
 
 export { FortressLogger } from './utils/logger'
-export { createSecurityEvent } from './utils/security-event'
+export { createSecurityEvent } from './utils/securityEvent'
 
 /**
  * Version information

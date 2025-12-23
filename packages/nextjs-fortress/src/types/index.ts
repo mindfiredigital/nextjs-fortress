@@ -253,3 +253,83 @@ export const DEFAULT_CONFIG: FortressConfig = {
     cacheTTL: 3600000, // 1 hour
   },
 }
+
+export type InternalValidationResult = ValidationResult & {
+  type?: SecurityThreatType
+}
+
+export interface BodyValidator {
+  validate(data: unknown): Promise<ValidationResult> | ValidationResult
+}
+
+export interface SecureRouteOptions {
+  requireCSRF?: boolean
+  rateLimit?: {
+    requests: number
+    window: number
+  }
+  maxPayloadSize?: number
+  allowedMethods?: string[]
+  validateEncoding?: boolean
+}
+
+export type BodyValidationResult =
+  | {
+      valid: true
+      type?: never
+      severity?: never
+      message?: never
+      rule?: never
+      pattern?: never
+      confidence?: never
+    }
+  | {
+      valid: false
+      type: SecurityThreatType
+      severity?: SecuritySeverity
+      message?: string
+      rule?: string
+      pattern?: string
+      confidence?: number
+    }
+
+
+export interface SecureActionOptions {
+  requireCSRF?: boolean
+  sanitizeInputs?: boolean
+  maxDepth?: number
+  allowedInputs?: string[]
+  rateLimitKey?: string
+}
+
+export interface CSRFToken {
+  token: string
+  createdAt: number
+  expiresAt: number
+}
+
+/**
+ * Rate limit entry
+ */
+export interface RateLimitEntry {
+  count: number
+  resetAt: number
+  backoffMultiplier?: number
+}
+
+export interface RedisClient {
+  get(key: string): Promise<string | null>
+  setex(key: string, seconds: number, value: string): Promise<void>
+  del(key: string): Promise<void>
+}
+
+
+/**
+ * Rate limit storage interface
+ */
+export interface RateLimitStorage {
+  get(key: string): Promise<RateLimitEntry | null>
+  set(key: string, entry: RateLimitEntry): Promise<void>
+  delete(key: string): Promise<void>
+  cleanup(): Promise<number>
+}

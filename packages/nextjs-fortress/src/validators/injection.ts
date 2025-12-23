@@ -1,66 +1,7 @@
 // validators/injection.ts - Detects SQL, command, XSS, and code injection attacks
 
 import { ValidationResult, InjectionConfig } from '../types'
-
-/**
- * SQL Injection patterns
- */
-const SQL_PATTERNS = [
-  /(\bUNION\b.*\bSELECT\b)/gi,
-  /(\bINSERT\b.*\bINTO\b)/gi,
-  /(\bDELETE\b.*\bFROM\b)/gi,
-  /(\bDROP\b.*\bTABLE\b)/gi,
-  /(\bUPDATE\b.*\bSET\b)/gi,
-  /(\bEXEC(UTE)?\b)/gi,
-  /(\bSELECT\b.*\bFROM\b)/gi,
-  /(;\s*--)/g,
-  /('|" \s*OR\s*'1'\s*=\s*'1)/gi,
-  /(\bOR\b.*=.*)/gi,
-  /(\bAND\b.*=.*)/gi,
-]
-
-/**
- * Command Injection patterns
- */
-const COMMAND_PATTERNS = [
-  /[;&|`$(){}[\]<>]/, // Fix: removed escape from [
-  /(bash|sh|cmd|powershell|exec|spawn)/gi,
-  /(\|\s*cat\s+)/gi,
-  /(>\s*\/dev\/null)/gi,
-  /(\$\(.*\))/g, // Command substitution
-  /(wget|curl).*http/gi, // Remote code fetching
-  /(nc|netcat).*-e/gi, // Reverse shells
-]
-
-/**
- * XSS (Cross-Site Scripting) patterns
- */
-const XSS_PATTERNS = [
-  /<script[^>]*>.*<\/script>/gi,
-  /on\w+\s*=\s*["']?[^"']*["']?/gi, // Event handlers
-  /javascript:/gi,
-  /<iframe[^>]*>/gi,
-  /<object[^>]*>/gi,
-  /<embed[^>]*>/gi,
-  /<img[^>]*onerror/gi,
-  /eval\s*\(/gi,
-  /expression\s*\(/gi, // CSS expression
-  /vbscript:/gi,
-  /data:text\/html/gi,
-]
-
-/**
- * Code Injection patterns
- */
-const CODE_INJECTION_PATTERNS = [
-  /eval\s*\(/gi,
-  /Function\s*\(/gi,
-  /setTimeout\s*\(\s*["']/gi, // String-based setTimeout
-  /setInterval\s*\(\s*["']/gi, // String-based setInterval
-  /\.constructor\s*\(/gi,
-  /import\s*\(/gi, // Dynamic imports
-  /require\s*\(/gi, // CommonJS require
-]
+import {SQL_PATTERNS,COMMAND_PATTERNS,XSS_PATTERNS,CODE_INJECTION_PATTERNS,SQL_KEYWORDS,QUICK_PATTERNS} from "../constants"
 
 /**
  * Injection validator class
@@ -182,29 +123,9 @@ export class InjectionValidator {
    * Check SQL keyword density (high density = likely injection)
    */
   private checkSQLKeywordDensity(str: string): ValidationResult {
-    const sqlKeywords = [
-      'SELECT',
-      'FROM',
-      'WHERE',
-      'INSERT',
-      'UPDATE',
-      'DELETE',
-      'UNION',
-      'JOIN',
-      'DROP',
-      'CREATE',
-      'ALTER',
-      'TABLE',
-      'DATABASE',
-      'EXEC',
-      'EXECUTE',
-      'AND',
-      'OR',
-    ]
-
     const words = str.toUpperCase().split(/\s+/)
     const keywordCount = words.filter((word) =>
-      sqlKeywords.includes(word)
+      SQL_KEYWORDS.includes(word)
     ).length
     const density = words.length > 0 ? keywordCount / words.length : 0
 
@@ -262,17 +183,7 @@ export class InjectionValidator {
 
     const str = JSON.stringify(input).toLowerCase()
 
-    // Fast check for most dangerous patterns
-    const quickPatterns = [
-      '__proto__',
-      '<script',
-      'javascript:',
-      'union select',
-      '|cat',
-      '$()',
-    ]
-
-    return !quickPatterns.some((pattern) => str.includes(pattern))
+    return !QUICK_PATTERNS.some((pattern) => str.includes(pattern))
   }
 }
 

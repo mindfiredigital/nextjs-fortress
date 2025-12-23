@@ -1,21 +1,10 @@
 // wrappers/server-actions.ts - Secure Server Actions wrapper
 
-import { FortressConfig, SecurityThreatType } from '../types'
+import { FortressConfig, SecurityThreatType , SecureActionOptions } from '../types'
 import { createDeserializationValidator } from '../validators/deserialization'
 import { createInjectionValidator } from '../validators/injection'
 import { createCSRFValidator } from '../validators/csrf'
 import { FortressLogger } from '../utils/logger'
-
-/**
- * Options for securing a server action
- */
-interface SecureActionOptions {
-  requireCSRF?: boolean
-  sanitizeInputs?: boolean
-  maxDepth?: number
-  allowedInputs?: string[]
-  rateLimitKey?: string
-}
 
 /**
  * Create a secure server action wrapper

@@ -1,20 +1,7 @@
 // validators/encoding.ts - Full encoding validation (Ghost Mode protection)
 
 import { ValidationResult, EncodingConfig } from '../types'
-/**
- * Dangerous encodings that can bypass WAF
- */
-const DANGEROUS_ENCODINGS = [
-  'utf-16',
-  'utf-16le',
-  'utf-16be',
-  'utf-32',
-  'utf-32le',
-  'utf-32be',
-  'ucs-2',
-  'iso-2022-jp',
-  'gb18030',
-] as const
+import {DANGEROUS_ENCODINGS} from '../constants'
 
 /**
  * Encoding validator class
