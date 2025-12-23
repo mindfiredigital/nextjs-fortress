@@ -1,7 +1,11 @@
 // wrappers/api-routes.ts - Secure API Routes wrapper
 
 import { NextRequest, NextResponse } from 'next/server'
-import { FortressConfig , SecureRouteOptions , BodyValidationResult } from '../types'
+import {
+  FortressConfig,
+  SecureRouteOptions,
+  BodyValidationResult,
+} from '../types'
 import {
   createDeserializationValidator,
   DeserializationValidator,
@@ -14,10 +18,6 @@ import { createCSRFValidator } from '../validators/csrf'
 import { createEncodingValidator } from '../validators/encoding'
 import { FortressLogger } from '../utils/logger'
 import { createSecurityEvent } from '../utils/securityEvent'
-
-
-
-
 
 /**
  * Rate limit store for API routes

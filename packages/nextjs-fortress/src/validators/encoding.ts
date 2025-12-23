@@ -1,7 +1,7 @@
 // validators/encoding.ts - Full encoding validation (Ghost Mode protection)
 
 import { ValidationResult, EncodingConfig } from '../types'
-import {DANGEROUS_ENCODINGS} from '../constants'
+import { DANGEROUS_ENCODINGS } from '../constants'
 
 /**
  * Encoding validator class

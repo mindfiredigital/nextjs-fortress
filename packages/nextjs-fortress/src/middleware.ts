@@ -1,7 +1,12 @@
 // middleware.ts - Next.js middleware integration for Fortress
 
 import { NextRequest, NextResponse } from 'next/server'
-import { FortressConfig, SecurityEvent , InternalValidationResult , BodyValidator } from './types'
+import {
+  FortressConfig,
+  SecurityEvent,
+  InternalValidationResult,
+  BodyValidator,
+} from './types'
 import { createDeserializationValidator } from './validators/deserialization'
 import { createInjectionValidator } from './validators/injection'
 import { createEncodingValidator } from './validators/encoding'

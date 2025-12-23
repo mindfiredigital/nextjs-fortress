@@ -1,6 +1,10 @@
 // wrappers/server-actions.ts - Secure Server Actions wrapper
 
-import { FortressConfig, SecurityThreatType , SecureActionOptions } from '../types'
+import {
+  FortressConfig,
+  SecurityThreatType,
+  SecureActionOptions,
+} from '../types'
 import { createDeserializationValidator } from '../validators/deserialization'
 import { createInjectionValidator } from '../validators/injection'
 import { createCSRFValidator } from '../validators/csrf'

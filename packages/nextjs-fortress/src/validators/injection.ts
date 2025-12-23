@@ -1,7 +1,14 @@
 // validators/injection.ts - Detects SQL, command, XSS, and code injection attacks
 
 import { ValidationResult, InjectionConfig } from '../types'
-import {SQL_PATTERNS,COMMAND_PATTERNS,XSS_PATTERNS,CODE_INJECTION_PATTERNS,SQL_KEYWORDS,QUICK_PATTERNS} from "../constants"
+import {
+  SQL_PATTERNS,
+  COMMAND_PATTERNS,
+  XSS_PATTERNS,
+  CODE_INJECTION_PATTERNS,
+  SQL_KEYWORDS,
+  QUICK_PATTERNS,
+} from '../constants'
 
 /**
  * Injection validator class

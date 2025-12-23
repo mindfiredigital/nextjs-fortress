@@ -293,7 +293,6 @@ export type BodyValidationResult =
       confidence?: number
     }
 
-
 export interface SecureActionOptions {
   requireCSRF?: boolean
   sanitizeInputs?: boolean
@@ -322,7 +321,6 @@ export interface RedisClient {
   setex(key: string, seconds: number, value: string): Promise<void>
   del(key: string): Promise<void>
 }
-
 
 /**
  * Rate limit storage interface

@@ -1,6 +1,6 @@
 // validators/csrf.ts - CSRF Protection Implementation (Edge Runtime Compatible)
 
-import { ValidationResult, CSRFConfig , CSRFToken } from '../types'
+import { ValidationResult, CSRFConfig, CSRFToken } from '../types'
 
 /**
  * Token storage (in-memory for now)

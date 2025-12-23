@@ -33,7 +33,6 @@ export const DEFAULT_DANGEROUS_PATTERNS = [
   'spawn', // Process spawning
 ]
 
-
 /**
  * Dangerous encodings that can bypass WAF
  */
@@ -48,7 +47,6 @@ export const DANGEROUS_ENCODINGS = [
   'iso-2022-jp',
   'gb18030',
 ] as const
-
 
 /**
  * SQL Injection patterns
@@ -111,31 +109,31 @@ export const CODE_INJECTION_PATTERNS = [
 ]
 
 export const SQL_KEYWORDS = [
-    'SELECT',
-    'FROM',
-    'WHERE',
-    'INSERT',
-    'UPDATE',
-    'DELETE',
-    'UNION',
-    'JOIN',
-    'DROP',
-    'CREATE',
-    'ALTER',
-    'TABLE',
-    'DATABASE',
-    'EXEC',
-    'EXECUTE',
-    'AND',
-    'OR',
+  'SELECT',
+  'FROM',
+  'WHERE',
+  'INSERT',
+  'UPDATE',
+  'DELETE',
+  'UNION',
+  'JOIN',
+  'DROP',
+  'CREATE',
+  'ALTER',
+  'TABLE',
+  'DATABASE',
+  'EXEC',
+  'EXECUTE',
+  'AND',
+  'OR',
 ]
 
 // Fast check for most dangerous patterns
 export const QUICK_PATTERNS = [
-    '__proto__',
-    '<script',
-    'javascript:',
-    'union select',
-    '|cat',
-    '$()',
+  '__proto__',
+  '<script',
+  'javascript:',
+  'union select',
+  '|cat',
+  '$()',
 ]

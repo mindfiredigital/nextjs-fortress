@@ -1,7 +1,7 @@
 // validators/deserialization.ts - Prevents CVE-2025-55182 and prototype pollution attacks
 
 import { ValidationResult, DeserializationConfig } from '../types'
-import { DEFAULT_BLOCK_LIST , DEFAULT_DANGEROUS_PATTERNS } from '../constants'
+import { DEFAULT_BLOCK_LIST, DEFAULT_DANGEROUS_PATTERNS } from '../constants'
 
 /**
  * Deserialization validator class
