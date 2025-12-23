@@ -21,7 +21,6 @@ export default [
     // Point specifically to the workspaces
     files: [
       "packages/nextjs-fortress/src/**/*.ts",
-      "packages/nextjs-fortress/tests/**/*.ts",
       "examples/demo-app/src/**/*.{ts,tsx}" 
     ],
     languageOptions: {
