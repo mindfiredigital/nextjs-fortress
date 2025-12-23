@@ -6,7 +6,6 @@ import {
   Bug,
   Lock,
   Zap,
-  AlertTriangle,
   CheckCircle2,
   XCircle,
   Activity,
