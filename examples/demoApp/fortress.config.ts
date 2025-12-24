@@ -1,5 +1,9 @@
-import { FortressConfig } from 'nextjs-fortress'
+import { FortressConfig, FortressLogger } from 'nextjs-fortress'
 
+/**
+ * Fortress Security Configuration
+ * Configures all security modules and logging
+ */
 export const fortressConfig: FortressConfig = {
   enabled: true,
   mode: 'development',
@@ -65,16 +69,51 @@ export const fortressConfig: FortressConfig = {
     ips: [],
   },
 
+  /**
+   * Security Event Handler
+   * Called whenever a security threat is detected
+   * Uses FortressLogger for structured logging
+   */
   onSecurityEvent: async (event) => {
-    console.log('🚨 Security Event:', {
+    // Initialize logger with current config
+    const logger = new FortressLogger({
+      enabled: true,
+      level: 'warn', // Log security events as warnings
+      destination: 'console',
+    })
+
+    // Log security event with proper formatting
+    logger.warn('🚨 Security Threat Detected', {
+      timestamp: event.timestamp,
       type: event.type,
       severity: event.severity,
       message: event.message,
-      path: event.request.path,
-      rule: event.detection.rule,
+      request: {
+        method: event.request.method,
+        path: event.request.path,
+        ip: event.request.ip,
+        userAgent: event.request.userAgent,
+      },
+      detection: {
+        rule: event.detection.rule,
+        pattern: event.detection.pattern,
+        confidence: event.detection.confidence,
+      },
+      action: event.action,
     })
 
-    // Send to your monitoring service
-    // await sendToSentry(event);
+    // Log additional details in debug mode
+    if (process.env.NODE_ENV === 'development') {
+      logger.debug('Full Security Event', event)
+    }
+
+    // Send to external monitoring service (optional)
+    if (process.env.NODE_ENV === 'production') {
+      try {
+        logger.info('Security event sent to monitoring service')
+      } catch (error) {
+        logger.error('Failed to send security event to monitoring', error)
+      }
+    }
   },
 }

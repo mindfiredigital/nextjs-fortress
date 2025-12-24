@@ -15,6 +15,8 @@ import {
   getResultTextColor
 } from '../../lib/utils/attackHelpers'
 
+import { UI_CONFIG, APP_INFO } from '../../lib/constants/constants'
+
 export default function FortressDemo() {
   const [selectedCategory, setSelectedCategory] = useState<AttackCategory | 'all'>('all')
   
@@ -34,25 +36,26 @@ export default function FortressDemo() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
+        {/* Header - UPDATED: Using Tailwind config colors */}
+        <div className="text-center mb-8 animate-fade-in">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <Shield className="w-10 h-10 md:w-12 md:h-12 text-blue-400" />
-            <h1 className="text-4xl md:text-5xl font-bold text-white">
-              nextjs-fortress
+            <Shield className="w-10 h-10 md:w-12 md:h-12 text-primary-400" />
+            <h1 className="text-4xl md:text-5xl font-bold text-white font-sans">
+              {APP_INFO.NAME}
             </h1>
           </div>
-          <p className="text-lg md:text-xl text-blue-200 mb-4">
-            Security Validation Framework
+          <p className="text-lg md:text-xl text-primary-200 mb-4">
+            {APP_INFO.DESCRIPTION}
           </p>
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/20 rounded-full border border-blue-400/30">
-            <CheckCircle2 className="w-5 h-5 text-green-400" />
-            <span className="text-green-300 font-medium">
+          {/* UPDATED: Using design system classes */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 glass-effect rounded-full">
+            <CheckCircle2 className="w-5 h-5 text-success" />
+            <span className="text-success-light font-medium">
               Active Protection
             </span>
           </div>
 
-          {/* Category Filters */}
+          {/* Category Filters - UPDATED: Using Tailwind config */}
           <div className="flex flex-wrap justify-center gap-2 mt-6">
             {CATEGORIES.map((cat) => {
               const Icon = cat.icon
@@ -60,11 +63,15 @@ export default function FortressDemo() {
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-                    selectedCategory === cat.id
-                      ? 'bg-blue-500/30 border border-blue-400 text-white'
-                      : 'bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10'
-                  }`}
+                  className={`
+                    flex items-center gap-2 px-4 py-2 rounded-lg 
+                    transition-all duration-[var(--transition-base)]
+                    ${
+                      selectedCategory === cat.id
+                        ? 'bg-primary-500/30 border border-primary-400 text-white shadow-glow-blue'
+                        : 'bg-dark-bg-secondary/50 border border-dark-border-primary text-dark-text-secondary hover:bg-dark-bg-tertiary/50'
+                    }
+                  `}
                 >
                   <Icon className="w-4 h-4" />
                   <span className="text-sm font-medium">{cat.name}</span>
@@ -75,10 +82,10 @@ export default function FortressDemo() {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
-          {/* Attack List Panel */}
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+          {/* Attack List Panel - UPDATED */}
+          <div className="glass-effect rounded-2xl p-6 animate-slide-up">
             <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-              <Activity className="w-6 h-6 text-red-400" />
+              <Activity className="w-6 h-6 text-danger" />
               Threat Vectors ({filteredAttacks.length})
             </h2>
 
@@ -90,11 +97,16 @@ export default function FortressDemo() {
                   <button
                     key={key}
                     onClick={() => setSelectedAttack(attackKey)}
-                    className={`w-full text-left p-3 rounded-xl transition-all ${
-                      selectedAttack === key
-                        ? 'bg-blue-500/30 border-2 border-blue-400'
-                        : 'bg-white/5 border-2 border-transparent hover:bg-white/10'
-                    }`}
+                    className={`
+                      w-full text-left p-3 rounded-xl 
+                      transition-all duration-[var(--transition-base)]
+                      card-hover
+                      ${
+                        selectedAttack === key
+                          ? 'bg-primary-500/30 border-2 border-primary-400 shadow-glow-blue'
+                          : 'bg-dark-bg-secondary/30 border-2 border-transparent hover:bg-dark-bg-tertiary/50'
+                      }
+                    `}
                   >
                     <div className="flex items-start gap-3">
                       <AttackIcon
@@ -106,12 +118,12 @@ export default function FortressDemo() {
                             {attack.name}
                           </h3>
                           <span
-                            className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${getSeverityBadgeColor(attack.severity)}`}
+                            className={`text-2xs font-bold px-2 py-0.5 rounded-full ${getSeverityBadgeColor(attack.severity)}`}
                           >
                             {attack.severity.toUpperCase()}
                           </span>
                         </div>
-                        <p className="text-xs text-gray-300 mt-1">
+                        <p className="text-xs text-dark-text-secondary mt-1">
                           {attack.description}
                         </p>
                       </div>
@@ -123,17 +135,17 @@ export default function FortressDemo() {
           </div>
 
           <div className="space-y-6">
-            {/* Payload Inspection Panel */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+            {/* Payload Inspection Panel - UPDATED */}
+            <div className="glass-effect rounded-2xl p-6 animate-slide-up">
               <div className="flex items-center gap-3 mb-4">
-                <CurrentIcon className="w-6 h-6 text-blue-400" />
+                <CurrentIcon className="w-6 h-6 text-primary-400" />
                 <h2 className="text-xl font-bold text-white">
                   Payload Inspection
                 </h2>
               </div>
 
-              <div className="bg-black/40 rounded-xl p-4 border border-white/10 overflow-x-auto">
-                <pre className="text-xs text-red-300 font-mono">
+              <div className="bg-black/40 rounded-xl p-4 border border-dark-border-primary overflow-x-auto">
+                <pre className="text-xs text-danger-light font-mono">
                   {JSON.stringify(currentAttack.payload, null, 2)}
                 </pre>
               </div>
@@ -141,20 +153,29 @@ export default function FortressDemo() {
               <button
                 onClick={() => simulateAttack(selectedAttack)}
                 disabled={loading}
-                className="w-full mt-6 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 disabled:from-gray-700 disabled:to-gray-800 text-white font-bold py-4 rounded-xl transition-all"
+                className={`
+                  w-full mt-6 
+                  bg-gradient-to-r from-danger to-pink-600 
+                  hover:from-danger-dark hover:to-pink-700 
+                  disabled:from-gray-700 disabled:to-gray-800 
+                  text-white font-bold py-4 rounded-xl 
+                  transition-all duration-[var(--transition-base)]
+                  shadow-lg hover:shadow-glow-red
+                  disabled:cursor-not-allowed
+                `}
               >
                 {loading ? 'Testing...' : '🔥 Test Firewall Logic'}
               </button>
             </div>
 
-            {/* Test Result Panel */}
+            {/* Test Result Panel - UPDATED */}
             {testResult && (
-              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+              <div className="glass-effect rounded-2xl p-6 animate-slide-up">
                 <div className="flex items-center gap-3 mb-4">
                   {testResult.blocked ? (
-                    <Shield className="w-6 h-6 text-green-400" />
+                    <Shield className="w-6 h-6 text-success" />
                   ) : (
-                    <XCircle className="w-6 h-6 text-red-400" />
+                    <XCircle className="w-6 h-6 text-danger" />
                   )}
                   <h2 className="text-xl font-bold text-white">Result</h2>
                 </div>
@@ -169,15 +190,15 @@ export default function FortressDemo() {
 
                 <div className="grid grid-cols-2 gap-3 text-xs font-mono">
                   <div className="bg-black/30 p-3 rounded-lg">
-                    <span className="text-gray-500 block mb-1 text-[10px]">
+                    <span className="text-dark-text-tertiary block mb-1 text-2xs">
                       RULE
                     </span>
-                    <span className="text-blue-300">
+                    <span className="text-primary-300">
                       {testResult.details.rule}
                     </span>
                   </div>
                   <div className="bg-black/30 p-3 rounded-lg">
-                    <span className="text-gray-500 block mb-1 text-[10px]">
+                    <span className="text-dark-text-tertiary block mb-1 text-2xs">
                       STATUS
                     </span>
                     <span className="text-white">
@@ -185,7 +206,7 @@ export default function FortressDemo() {
                     </span>
                   </div>
                   <div className="bg-black/30 p-3 rounded-lg">
-                    <span className="text-gray-500 block mb-1 text-[10px]">
+                    <span className="text-dark-text-tertiary block mb-1 text-2xs">
                       CONFIDENCE
                     </span>
                     <span className="text-white">
@@ -193,7 +214,7 @@ export default function FortressDemo() {
                     </span>
                   </div>
                   <div className="bg-black/30 p-3 rounded-lg">
-                    <span className="text-gray-500 block mb-1 text-[10px]">
+                    <span className="text-dark-text-tertiary block mb-1 text-2xs">
                       TIME
                     </span>
                     <span className="text-white">
@@ -204,30 +225,30 @@ export default function FortressDemo() {
               </div>
             )}
 
-            {/* Test History Panel */}
+            {/* Test History Panel - UPDATED */}
             {testHistory.length > 0 && (
-              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+              <div className="glass-effect rounded-2xl p-6 animate-fade-in">
                 <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                  <Activity className="w-5 h-5 text-purple-400" />
-                  History ({testHistory.length})
+                  <Activity className="w-5 h-5 text-warning" />
+                  History ({testHistory.length}/{UI_CONFIG.MAX_HISTORY_ITEMS})
                 </h3>
                 <div className="space-y-2 max-h-64 overflow-y-auto">
                   {testHistory.map((result, idx) => (
                     <div
                       key={idx}
-                      className="bg-black/20 rounded-lg p-3 text-xs"
+                      className="bg-black/20 rounded-lg p-3 text-xs hover:bg-black/30 transition-colors"
                     >
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-white font-medium">
                           {result.attack}
                         </span>
                         {result.blocked ? (
-                          <CheckCircle2 className="w-4 h-4 text-green-400" />
+                          <CheckCircle2 className="w-4 h-4 text-success" />
                         ) : (
-                          <XCircle className="w-4 h-4 text-red-400" />
+                          <XCircle className="w-4 h-4 text-danger" />
                         )}
                       </div>
-                      <div className="flex justify-between text-gray-400">
+                      <div className="flex justify-between text-dark-text-secondary">
                         <span>{result.details.timestamp}</span>
                         <span>{result.responseStatus}</span>
                       </div>
@@ -239,10 +260,10 @@ export default function FortressDemo() {
           </div>
         </div>
 
-        {/* Footer */}
-        <footer className="mt-12 text-center text-slate-500 text-xs font-mono">
+        {/* Footer - UPDATED */}
+        <footer className="mt-12 text-center text-slate-500 text-xs font-mono animate-fade-in">
           <p>
-            nextjs-fortress v0.1.0 •{' '}
+            {APP_INFO.NAME} v{APP_INFO.VERSION} •{' '}
             {testHistory.filter((t) => t.blocked).length}/{testHistory.length}{' '}
             blocked
           </p>

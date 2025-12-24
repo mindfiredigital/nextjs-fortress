@@ -4,6 +4,12 @@ import { DEFAULT_CONFIG, FortressConfig } from './types'
 
 export { createFortressMiddleware } from './middleware'
 
+// Export middleware components (for advanced usage)
+export { RequestValidator } from './middleware/requestValidator'
+export { RateLimiter } from './middleware/rateLimiter'
+export { SecurityHeadersHandler } from './middleware/securityHeaders'
+export { WhitelistChecker } from './middleware/whitelist'
+
 // Wrappers for Server Actions and API Routes
 export {
   createSecureServerAction,

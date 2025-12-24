@@ -1,5 +1,7 @@
 // types/index.ts - Core type definitions for nextjs-fortress
 
+import { NextResponse } from "next/server"
+
 /**
  * Severity levels for security events
  */
@@ -254,9 +256,9 @@ export const DEFAULT_CONFIG: FortressConfig = {
   },
 }
 
-export type InternalValidationResult = ValidationResult & {
-  type?: SecurityThreatType
-}
+// export type InternalValidationResult = ValidationResult & {
+//   type?: SecurityThreatType
+// }
 
 export interface BodyValidator {
   validate(data: unknown): Promise<ValidationResult> | ValidationResult
@@ -330,4 +332,18 @@ export interface RateLimitStorage {
   set(key: string, entry: RateLimitEntry): Promise<void>
   delete(key: string): Promise<void>
   cleanup(): Promise<number>
+}
+
+export interface InternalValidationResult {
+  allowed: boolean
+  response?: NextResponse
+}
+
+// Type-safe validation error details
+export interface ValidationError {
+  severity: SecuritySeverity
+  message: string
+  rule: string
+  pattern?: string
+  confidence: number
 }
