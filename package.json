@@ -1,0 +1,50 @@
+{
+  "name": "fortress-monorepo",
+  "private": true,
+  "packageManager": "pnpm@9.0.0",
+  "scripts": {
+    "test": "pnpm --filter nextjs-fortress test",
+    "build": "pnpm --filter nextjs-fortress build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"packages/nextjs-fortress/src/**/*.ts\" \"packages/nextjs-fortress/tests/**/*.ts\"",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:publish": "changeset publish",
+    "changeset:autogenerate": "node .github/changeset-autogenerate.mjs",
+    "release": "pnpm build && changeset publish",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.1",
+    "@commitlint/cli": "^20.2.0",
+    "@commitlint/config-conventional": "^20.2.0",
+    "@eslint/js": "^9.39.2",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.50.1",
+    "@typescript-eslint/parser": "^8.50.1",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.7.4",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx,json,css,md}": [
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "globals": "^16.5.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^next/server$": "next/dist/server/web/spec-extension/adapters/next-request",
+      "^next/header$": "next/dist/server/web/spec-extension/adapters/headers"
+    }
+  }
+}
