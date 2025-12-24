@@ -45,7 +45,7 @@ export const useAttackTesting = () => {
         attack: ATTACKS[attackKey].name,
         severity: ATTACKS[attackKey].severity,
         responseStatus: 500,
-        message: '❌ Test failed - Network or server error',
+        message: ' Test failed - Network or server error',
         details: {
           rule: 'ERROR',
           pattern: 'Network failure',

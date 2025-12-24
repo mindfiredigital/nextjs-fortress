@@ -1,15 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { FortressConfig } from '../types'
-
-interface RateLimitEntry {
-  count: number
-  resetAt: number
-}
-
-interface RateLimitResult {
-  allowed: boolean
-  response?: NextResponse
-}
+import { FortressConfig, RateLimitEntry, RateLimitResult } from '../types'
 
 /**
  * Rate limiter - isolated rate limiting logic

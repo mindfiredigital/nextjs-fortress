@@ -1,4 +1,4 @@
-import FortressDemo from '@/components/fortress/FortressDemo'
+import FortressDemo from '@/components/FortressDemo'
 
 export const metadata = {
   title: 'nextjs-fortress | Security Validation Framework',

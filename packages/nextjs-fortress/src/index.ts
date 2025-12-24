@@ -8,7 +8,7 @@ export { createFortressMiddleware } from './middleware'
 export { RequestValidator } from './middleware/requestValidator'
 export { RateLimiter } from './middleware/rateLimiter'
 export { SecurityHeadersHandler } from './middleware/securityHeaders'
-export { WhitelistChecker } from './middleware/whitelist'
+export { WhitelistChecker } from './middleware/whiteList'
 
 // Wrappers for Server Actions and API Routes
 export {

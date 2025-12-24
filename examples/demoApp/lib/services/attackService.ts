@@ -105,8 +105,8 @@ export class AttackService {
       severity: attack.severity,
       responseStatus: wasBlocked ? 429 : 200,
       message: wasBlocked
-        ? `🛡️ Rate limit triggered! ${blockedCount}/${totalRequests} blocked`
-        : `⚠️ No rate limit (sent ${totalRequests} requests)`,
+        ? ` Rate limit triggered! ${blockedCount}/${totalRequests} blocked`
+        : ` No rate limit (sent ${totalRequests} requests)`,
       details: {
         rule: 'rate_limit',
         pattern: `${allowedCount} allowed, ${blockedCount} blocked`,
@@ -122,9 +122,9 @@ export class AttackService {
     isSuccess: boolean,
     status: number
   ): string {
-    if (isBlocked) return '🛡️ Attack blocked by Fortress!'
-    if (isSuccess) return '✅ Request allowed (Expected for valid)'
-    return `⚠️ Unexpected: ${status}`
+    if (isBlocked) return ' Attack blocked by Fortress!'
+    if (isSuccess) return ' Request allowed (Expected for valid)'
+    return ` Unexpected: ${status}`
   }
 
   private static delay(ms: number): Promise<void> {

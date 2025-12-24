@@ -206,7 +206,7 @@ export const ATTACKS: Record<AttackKey, Attack> = {
   },
 
   validRequest: {
-    name: '✅ Valid Request',
+    name: ' Valid Request',
     icon: CheckCircle2,
     description: 'Legitimate request (should pass)',
     payload: {

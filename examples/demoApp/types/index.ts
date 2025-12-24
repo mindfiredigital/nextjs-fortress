@@ -54,3 +54,40 @@ export type AttackKey =
   | 'utf16leBypass'
   | 'rateLimitTest'
   | 'validRequest'
+
+export interface ResultPanelProps {
+  result: TestResult
+  onClear: () => void
+}
+
+export interface PayloadPanelProps {
+  attack: Attack
+  loading: boolean
+  onTest: () => void
+}
+
+export interface HistoryPanelProps {
+  history: TestResult[]
+}
+
+export interface FooterProps {
+  history: TestResult[]
+}
+
+export interface CategoryFiltersProps {
+  selectedCategory: AttackCategory | 'all'
+  onCategoryChange: (category: AttackCategory | 'all') => void
+}
+
+export interface AttackListItemProps {
+  attackKey: AttackKey
+  attack: Attack
+  isSelected: boolean
+  onSelect: (key: AttackKey) => void
+}
+
+export interface AttackListProps {
+  attacks: [string, Attack][]
+  selectedAttack: AttackKey
+  onAttackSelect: (key: AttackKey) => void
+}

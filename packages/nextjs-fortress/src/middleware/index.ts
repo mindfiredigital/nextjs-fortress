@@ -4,7 +4,7 @@ import { FortressLogger } from '../utils/logger'
 import { RequestValidator } from './requestValidator'
 import { RateLimiter } from './rateLimiter'
 import { SecurityHeadersHandler } from './securityHeaders'
-import { WhitelistChecker } from './whitelist'
+import { WhitelistChecker } from './whiteList'
 
 /**
  * Main Fortress middleware creator

@@ -35,7 +35,7 @@ function logHeader() {
   console.warn('')
   log('╔═══════════════════════════════════════════╗', 'cyan')
   log('║                                           ║', 'cyan')
-  log('║      🛡️  nextjs-fortress CLI v0.1.0       ║', 'cyan')
+  log('║          nextjs-fortress CLI v0.1.0       ║', 'cyan')
   log('║   Universal Security Validation Framework ║', 'cyan')
   log('║                                           ║', 'cyan')
   log('╚═══════════════════════════════════════════╝', 'cyan')
@@ -46,7 +46,7 @@ function checkNextJsProject(): boolean {
   const packageJsonPath = path.join(process.cwd(), 'package.json')
 
   if (!fs.existsSync(packageJsonPath)) {
-    log('❌ Error: package.json not found', 'red')
+    log(' Error: package.json not found', 'red')
     log('Please run this command in a Next.js project directory', 'yellow')
     return false
   }
@@ -54,7 +54,7 @@ function checkNextJsProject(): boolean {
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'))
 
   if (!packageJson.dependencies?.next && !packageJson.devDependencies?.next) {
-    log('❌ Error: Next.js not found in dependencies', 'red')
+    log(' Error: Next.js not found in dependencies', 'red')
     log('Please run this command in a Next.js project directory', 'yellow')
     return false
   }
@@ -153,7 +153,7 @@ export const fortressConfig: FortressConfig = {
 
   onSecurityEvent: async (event) => {
     // Log security events
-    console.warn(\`🚨 Security Event [\${event.type}]:\`, {
+    console.warn(\`Security Event [\${event.type}]:\`, {
       severity: event.severity,
       message: event.message,
       path: event.request.path,
@@ -209,7 +209,7 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json({ 
       success: true, 
-      message: '✅ Request validated by Fortress',
+      message: ' Request validated by Fortress',
       data: body 
     });
   } catch (error) {
@@ -222,7 +222,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   return NextResponse.json({ 
-    message: '🛡️ Fortress Active',
+    message: 'Fortress Active',
     protections: [
       'Deserialization (CVE-2025-55182)',
       'SQL Injection',
@@ -238,14 +238,14 @@ export async function GET() {
 }
 
 function installDependencies() {
-  log('\n📦 Installing nextjs-fortress...', 'blue')
+  log('\nInstalling nextjs-fortress...', 'blue')
 
   try {
     execSync('npm install nextjs-fortress', { stdio: 'inherit' })
-    log('✅ Dependencies installed successfully', 'green')
+    log('Dependencies installed successfully', 'green')
   } catch (error) {
     log(
-      `❌ Failed to install dependencies: ${error instanceof Error ? error.message : String(error)}`,
+      `Failed to install dependencies: ${error instanceof Error ? error.message : String(error)}`,
       'red'
     )
     log('Please run: npm install nextjs-fortress', 'yellow')
@@ -281,32 +281,32 @@ function init() {
     maxPayloadSize: 1024 * 1024,
   }
 
-  log('🔧 Creating configuration files...', 'blue')
+  log('Creating configuration files...', 'blue')
   console.warn('')
 
   // Create fortress.config.ts
   const configPath = path.join(process.cwd(), 'fortress.config.ts')
   if (fs.existsSync(configPath)) {
-    log('⚠️  fortress.config.ts already exists, skipping...', 'yellow')
+    log(' fortress.config.ts already exists, skipping...', 'yellow')
   } else {
     fs.writeFileSync(configPath, createFortressConfig(options))
-    log('✅ Created fortress.config.ts', 'green')
+    log('Created fortress.config.ts', 'green')
   }
 
   // Create middleware.ts
   const middlewarePath = path.join(process.cwd(), 'middleware.ts')
   if (fs.existsSync(middlewarePath)) {
-    log('⚠️  middleware.ts already exists, skipping...', 'yellow')
+    log(' middleware.ts already exists, skipping...', 'yellow')
   } else {
     fs.writeFileSync(middlewarePath, createMiddleware())
-    log('✅ Created middleware.ts', 'green')
+    log('Created middleware.ts', 'green')
   }
 
   // Create .env.example
   const envExamplePath = path.join(process.cwd(), '.env.example')
   if (!fs.existsSync(envExamplePath)) {
     fs.writeFileSync(envExamplePath, createEnvExample(options))
-    log('✅ Created .env.example', 'green')
+    log(' Created .env.example', 'green')
   }
 
   installDependencies()
@@ -317,12 +317,12 @@ function init() {
     if (!fs.existsSync(apiDir)) {
       fs.mkdirSync(apiDir, { recursive: true })
       fs.writeFileSync(path.join(apiDir, 'route.ts'), createExampleApiRoute())
-      log('✅ Created example API route: /app/api/test/route.ts', 'green')
+      log(' Created example API route: /app/api/test/route.ts', 'green')
     }
   }
 
   console.log('')
-  log('🎉 Fortress setup complete!', 'green')
+  log(' Fortress setup complete!', 'green')
   console.log('')
 
   log('Next steps:', 'bright')
@@ -335,10 +335,7 @@ function init() {
   log('   -H "Content-Type: application/json" \\', 'cyan')
   log('   -d \'{"__proto__": {"hacked": true}}\'', 'cyan')
   console.log('')
-  log(
-    '📚 Documentation: https://github.com/lakinmindfire/nextjs-fortress',
-    'blue'
-  )
+  log('Documentation: https://github.com/lakinmindfire/nextjs-fortress', 'blue')
   console.log('')
 }
 
@@ -390,7 +387,7 @@ switch (command) {
     if (!command) {
       showHelp()
     } else {
-      log(`❌ Unknown command: ${command}`, 'red')
+      log(` Unknown command: ${command}`, 'red')
       log('Run "npx fortress help" for usage information', 'yellow')
     }
 }

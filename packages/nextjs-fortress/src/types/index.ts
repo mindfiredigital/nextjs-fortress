@@ -347,3 +347,8 @@ export interface ValidationError {
   pattern?: string
   confidence: number
 }
+
+export interface RateLimitResult {
+  allowed: boolean
+  response?: NextResponse
+}
