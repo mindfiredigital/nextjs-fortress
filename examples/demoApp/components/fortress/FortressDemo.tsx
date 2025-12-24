@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Shield, CheckCircle2, XCircle, Activity } from 'lucide-react'
 
 import { AttackKey, AttackCategory } from '../../types'
@@ -32,7 +32,10 @@ export default function FortressDemo() {
 
   const currentAttack = ATTACKS[selectedAttack]
   const CurrentIcon = currentAttack.icon
-  const filteredAttacks = filterAttacksByCategory(ATTACKS, selectedCategory)
+  const filteredAttacks = useMemo(() => 
+    filterAttacksByCategory(ATTACKS, selectedCategory), 
+    [selectedCategory]
+  );
 
   // Handle attack selection - clear previous result
   const handleAttackSelect = (attackKey: AttackKey) => {
