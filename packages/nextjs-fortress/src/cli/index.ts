@@ -173,7 +173,13 @@ export const fortressConfig: FortressConfig = {
 
 function createMiddleware() {
   return `import { createFortressMiddleware } from 'nextjs-fortress';
-export const middleware = createFortressMiddleware();`
+          import { fortressConfig } from './fortress.config';
+export const middleware = createFortressMiddleware(fortressConfig);
+
+export const config = {
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+}
+`
 }
 
 function createEnvExample(options: FortressOptions) {
