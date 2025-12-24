@@ -15,7 +15,7 @@ import {
   getResultTextColor
 } from '../../lib/utils/attackHelpers'
 
-import { UI_CONFIG, APP_INFO } from '../../lib/constants/constants'
+import { UI_CONFIG, APP_INFO, UI_LABELS } from '../../lib/constants/constants'
 
 export default function FortressDemo() {
   const [selectedCategory, setSelectedCategory] = useState<AttackCategory | 'all'>('all')
@@ -57,7 +57,7 @@ export default function FortressDemo() {
           <div className="inline-flex items-center gap-2 px-4 py-2 glass-effect rounded-full">
             <CheckCircle2 className="w-5 h-5 text-success" />
             <span className="text-success-light font-medium">
-              Active Protection
+              {UI_LABELS.ACTIVE_PROTECTION}
             </span>
           </div>
 
@@ -92,7 +92,7 @@ export default function FortressDemo() {
           <div className="glass-effect rounded-2xl p-6 animate-slide-up">
             <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
               <Activity className="w-6 h-6 text-danger" />
-              Threat Vectors ({filteredAttacks.length})
+              {UI_LABELS.THREAT_VECTORS} ({filteredAttacks.length})
             </h2>
 
             <div className="space-y-2 max-h-[600px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-primary-500/50 scrollbar-track-transparent">
@@ -146,7 +146,7 @@ export default function FortressDemo() {
               <div className="flex items-center gap-3 mb-4">
                 <CurrentIcon className="w-6 h-6 text-primary-400" />
                 <h2 className="text-xl font-bold text-white">
-                  Payload Inspection
+                  {UI_LABELS.PAYLOAD_INSPECTION}
                 </h2>
               </div>
 
@@ -175,10 +175,10 @@ export default function FortressDemo() {
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    Testing...
+                    {UI_LABELS.TESTING_BUTTON}
                   </span>
                 ) : (
-                  '🔥 Test Firewall Logic'
+                  APP_INFO.TEST
                 )}
               </button>
             </div>
@@ -193,13 +193,13 @@ export default function FortressDemo() {
                     ) : (
                       <XCircle className="w-6 h-6 text-danger" />
                     )}
-                    <h2 className="text-xl font-bold text-white">Result</h2>
+                    <h2 className="text-xl font-bold text-white">{UI_LABELS.RESULT_TITLE}</h2>
                   </div>
                   <button
                     onClick={clearTestResult}
                     className="text-xs text-dark-text-secondary hover:text-white transition-colors cursor-pointer px-3 py-1 rounded-lg hover:bg-dark-bg-tertiary/50"
                   >
-                    Clear
+                    {UI_LABELS.CLEAR_BUTTON}
                   </button>
                 </div>
 
@@ -253,7 +253,7 @@ export default function FortressDemo() {
               <div className="glass-effect rounded-2xl p-6 animate-fade-in">
                 <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                   <Activity className="w-5 h-5 text-warning" />
-                  History ({testHistory.length}/{UI_CONFIG.MAX_HISTORY_ITEMS})
+                  {UI_LABELS.HISTORY_TITLE} ({testHistory.length}/{UI_CONFIG.MAX_HISTORY_ITEMS})
                 </h3>
                 <div className="space-y-2 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-primary-500/50 scrollbar-track-transparent">
                   {testHistory.map((result, idx) => (
@@ -288,7 +288,7 @@ export default function FortressDemo() {
           <p>
             {APP_INFO.NAME} v{APP_INFO.VERSION} •{' '}
             {testHistory.filter((t) => t.blocked).length}/{testHistory.length}{' '}
-            blocked
+            {UI_LABELS.STATS_BLOCKED}
           </p>
         </footer>
       </div>

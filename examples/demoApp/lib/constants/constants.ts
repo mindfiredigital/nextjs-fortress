@@ -2,13 +2,24 @@
  * Application-wide constants
  */
 
+export const UI_LABELS = {
+  THREAT_VECTORS: "Threat Vectors",
+  PAYLOAD_INSPECTION: "Payload Inspection",
+  RESULT_TITLE: "Result",
+  HISTORY_TITLE: "History",
+  ACTIVE_PROTECTION: "Active Protection",
+  TESTING_BUTTON: "Testing...",
+  CLEAR_BUTTON: "Clear",
+  STATS_BLOCKED: "blocked",
+};
+
+
 export const APP_INFO = {
-  NAME: 'nextjs-fortress',
-  VERSION: '1.0.0',
-  DESCRIPTION: 'Test and validate security protections against common attack vectors',
-  AUTHOR: 'Mindfire Digital',
-  GITHUB: 'https://github.com/lakinmindfire/nextjs-fortress',
-}
+  NAME: "nextjs-fortress",
+  DESCRIPTION: "Universal Security Validation Framework",
+  VERSION: "0.1.0",
+  TEST: "Test Firewall", 
+};
 
 export const UI_CONFIG = {
   MAX_HISTORY_ITEMS: 10,
@@ -16,20 +27,4 @@ export const UI_CONFIG = {
   TOAST_DURATION: 3000,
 }
 
-export const API_ENDPOINTS = {
-  TEST: '/api/test',
-}
 
-export const COLORS = {
-  PRIMARY: '#3b82f6',
-  SUCCESS: '#10b981',
-  DANGER: '#ef4444',
-  WARNING: '#f59e0b',
-}
-
-export const SECURITY_HEADERS = {
-  'X-Fortress-Protected': 'true',
-  'X-Content-Type-Options': 'nosniff',
-  'X-Frame-Options': 'DENY',
-  'X-XSS-Protection': '1; mode=block',
-}
