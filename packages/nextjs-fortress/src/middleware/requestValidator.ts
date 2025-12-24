@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { 
-  FortressConfig, 
+import {
+  FortressConfig,
   ValidationResult as BaseValidationResult,
   SecurityThreatType,
   InternalValidationResult,
-  ValidationError
+  ValidationError,
 } from '../types'
 import { FortressLogger } from '../utils/logger'
 import { createDeserializationValidator } from '../validators/deserialization'
@@ -12,7 +12,6 @@ import { createInjectionValidator } from '../validators/injection'
 import { createEncodingValidator } from '../validators/encoding'
 import { createCSRFValidator } from '../validators/csrf'
 import { createSecurityEvent } from '../utils/securityEvent'
-
 
 /**
  * Request validator - handles all validation logic
@@ -75,7 +74,9 @@ export class RequestValidator {
     return ['POST', 'PUT', 'PATCH'].includes(method)
   }
 
-  private async validateCSRF(request: NextRequest): Promise<InternalValidationResult> {
+  private async validateCSRF(
+    request: NextRequest
+  ): Promise<InternalValidationResult> {
     if (!this.csrfValidator) return { allowed: true }
 
     const token =
@@ -119,11 +120,16 @@ export class RequestValidator {
     return { allowed: true }
   }
 
-  private async validateEncoding(request: NextRequest): Promise<InternalValidationResult> {
+  private async validateEncoding(
+    request: NextRequest
+  ): Promise<InternalValidationResult> {
     const contentType = request.headers.get('content-type')
     const bodyBuffer = await request.clone().arrayBuffer()
 
-    const result = await this.encodingValidator.validate(contentType, bodyBuffer)
+    const result = await this.encodingValidator.validate(
+      contentType,
+      bodyBuffer
+    )
 
     if (!result.valid) {
       const errorDetails: ValidationError = {
@@ -140,7 +146,9 @@ export class RequestValidator {
     return { allowed: true }
   }
 
-  private async validateBody(request: NextRequest): Promise<InternalValidationResult> {
+  private async validateBody(
+    request: NextRequest
+  ): Promise<InternalValidationResult> {
     try {
       const clonedRequest = request.clone()
       const body = await clonedRequest.text()
@@ -153,7 +161,11 @@ export class RequestValidator {
         // Not JSON - validate as text
         const result = this.injectionValidator.validate(body)
         if (!result.valid) {
-          return this.createValidationFailureResponse(request, result, 'injection')
+          return this.createValidationFailureResponse(
+            request,
+            result,
+            'injection'
+          )
         }
         return { allowed: true }
       }
@@ -162,7 +174,11 @@ export class RequestValidator {
       if (this.config.modules.deserialization.enabled) {
         const result = this.deserializationValidator.validate(parsedBody)
         if (!result.valid) {
-          return this.createValidationFailureResponse(request, result, 'deserialization')
+          return this.createValidationFailureResponse(
+            request,
+            result,
+            'deserialization'
+          )
         }
       }
 
@@ -170,7 +186,11 @@ export class RequestValidator {
       if (this.config.modules.injection.enabled) {
         const result = this.injectionValidator.validate(parsedBody)
         if (!result.valid) {
-          return this.createValidationFailureResponse(request, result, 'injection')
+          return this.createValidationFailureResponse(
+            request,
+            result,
+            'injection'
+          )
         }
       }
 
@@ -183,7 +203,6 @@ export class RequestValidator {
       }
     }
   }
-
 
   private async createValidationFailureResponse(
     request: NextRequest,

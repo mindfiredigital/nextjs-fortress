@@ -1,6 +1,6 @@
 // types/index.ts - Core type definitions for nextjs-fortress
 
-import { NextResponse } from "next/server"
+import { NextResponse } from 'next/server'
 
 /**
  * Severity levels for security events
