@@ -1,19 +1,24 @@
 {
   "name": "fortress-monorepo",
   "private": true,
-  "workspaces": [
-    "packages/*",
-    "demo-app"
-  ],
+  "packageManager": "pnpm@9.0.0",
   "scripts": {
-    "test": "npm test --workspace nextjs-fortress",
+    "test": "pnpm --filter nextjs-fortress test",
+    "build": "pnpm --filter nextjs-fortress build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write \"packages/nextjs-fortress/src/**/*.ts\" \"packages/nextjs-fortress/tests/**/*.ts\""
+    "format": "prettier --write \"packages/nextjs-fortress/src/**/*.ts\" \"packages/nextjs-fortress/tests/**/*.ts\"",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:publish": "changeset publish",
+    "release": "pnpm build && changeset publish",
+    "prepare": "husky install"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.27.1",
     "@commitlint/cli": "^20.2.0",
     "@commitlint/config-conventional": "^20.2.0",
+    "@eslint/js": "^9.39.2",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@typescript-eslint/eslint-plugin": "^8.50.1",

@@ -51,6 +51,7 @@
     "next": ">=12.0.0"
   },
   "devDependencies": {
+    "@jest/globals": "^30.2.0",
     "@types/jest": "^29.5.0",
     "@types/node": "^20.19.27",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
