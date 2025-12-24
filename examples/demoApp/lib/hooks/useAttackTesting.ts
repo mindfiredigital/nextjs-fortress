@@ -15,6 +15,10 @@ export const useAttackTesting = () => {
     setTestHistory((prev) => [result, ...prev.slice(0, MAX_HISTORY_ITEMS - 1)])
   }, [])
 
+  const clearTestResult = useCallback(() => {
+    setTestResult(null)
+  }, [])
+
   const simulateAttack = useCallback(async (attackKey: AttackKey): Promise<void> => {
     setLoading(true)
     setTestResult(null)
@@ -34,6 +38,22 @@ export const useAttackTesting = () => {
       addToHistory(result)
     } catch (error) {
       console.error('Test failed:', error)
+      
+      // Set error result
+      setTestResult({
+        blocked: false,
+        attack: ATTACKS[attackKey].name,
+        severity: ATTACKS[attackKey].severity,
+        responseStatus: 500,
+        message: '❌ Test failed - Network or server error',
+        details: {
+          rule: 'ERROR',
+          pattern: 'Network failure',
+          confidence: 0,
+          action: 'error',
+          timestamp: new Date().toLocaleTimeString(),
+        },
+      })
     } finally {
       setLoading(false)
     }
@@ -46,5 +66,6 @@ export const useAttackTesting = () => {
     loading,
     testHistory,
     simulateAttack,
+    clearTestResult,
   }
 }
