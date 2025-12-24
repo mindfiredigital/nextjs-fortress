@@ -13,7 +13,7 @@ if (commitMessage.includes('BREAKING CHANGE:')) {
 }
 
 if (changeType) {
-  const packageName = "nextjs-fortress";
+  const packageName = "@mindfiredigital/nextjs-fortress";
   const description = commitMessage.replace(/^(feat|fix)(\([^)]+\))?: /, '');
 
   const changesetContent = `---\n'${packageName}': ${changeType}\n---\n\n${description}\n`;
