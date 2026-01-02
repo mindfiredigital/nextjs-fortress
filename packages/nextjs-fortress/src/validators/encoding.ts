@@ -208,18 +208,6 @@ export class EncodingValidator {
   }
 
   /**
-   * Convert non-UTF8 body to UTF-8 (normalization)
-   */
-  public normalizeToUTF8(body: ArrayBuffer): string {
-    try {
-      const decoder = new TextDecoder('utf-8', { fatal: true })
-      return decoder.decode(body)
-    } catch {
-      throw new Error('Failed to decode body as UTF-8')
-    }
-  }
-
-  /**
    * Quick check for obvious encoding issues
    */
   public quickCheck(contentType: string | null): boolean {

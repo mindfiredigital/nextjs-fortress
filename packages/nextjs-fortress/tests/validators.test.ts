@@ -1,6 +1,6 @@
 // tests/validators.test.ts - Comprehensive test suite for all validators
 
-import { describe, test, expect, beforeEach } from '@jest/globals'
+import { describe, test, expect, beforeEach, jest } from '@jest/globals'
 import {
   createDeserializationValidator,
   createInjectionValidator,
