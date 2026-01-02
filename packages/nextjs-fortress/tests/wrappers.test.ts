@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createWithFortress } from '../src/wrappers/apiRoutes'
 import { createSecureServerAction } from '../src/wrappers/serverActions'
-import { FortressConfig, DEFAULT_CONFIG } from '../src/types'
+import { FortressConfig, DEFAULT_CONFIG, SecurityEvent } from '../src/types'
+import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 
 jest.mock('../src/validators/deserialization')
 jest.mock('../src/validators/injection')
@@ -26,14 +27,28 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
     const { createEncodingValidator } = require('../src/validators/encoding')
 
     mockValidators = {
-      deserialization: { validate: jest.fn().mockReturnValue({ valid: true }) },
-      injection: { validate: jest.fn().mockReturnValue({ valid: true }) },
-      csrf: {
-        validate: jest.fn().mockResolvedValue({ valid: true }),
-        getHeaderName: jest.fn().mockReturnValue('x-csrf-token'),
-        getCookieName: jest.fn().mockReturnValue('csrf-token'),
+      deserialization: {
+        validate: jest.fn<(data: unknown) => { valid: boolean }>(() => ({
+          valid: true,
+        })),
       },
-      encoding: { validate: jest.fn().mockResolvedValue({ valid: true }) },
+      injection: {
+        validate: jest.fn<(data: unknown) => { valid: boolean }>(() => ({
+          valid: true,
+        })),
+      },
+      csrf: {
+        validate: jest.fn<() => Promise<{ valid: boolean }>>(async () => ({
+          valid: true,
+        })),
+        getHeaderName: jest.fn<() => string>(() => 'x-csrf-token'),
+        getCookieName: jest.fn<() => string>(() => 'csrf-token'),
+      },
+      encoding: {
+        validate: jest.fn<() => Promise<{ valid: boolean }>>(async () => ({
+          valid: true,
+        })),
+      },
     }
 
     createDeserializationValidator.mockReturnValue(
@@ -47,7 +62,7 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
     mockConfig = {
       ...DEFAULT_CONFIG,
       mode: 'development',
-      onSecurityEvent: jest.fn(),
+      onSecurityEvent: jest.fn<(event: SecurityEvent) => Promise<void>>(),
     }
 
     withFortress = createWithFortress(mockConfig)
@@ -55,7 +70,9 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
 
   describe('Method Validation', () => {
     it('should block disallowed HTTP methods', async () => {
-      const handler = jest.fn().mockResolvedValue(new NextResponse('OK'))
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>(
+        async () => new NextResponse('OK')
+      )
       const protectedHandler = withFortress(handler, {
         allowedMethods: ['GET', 'POST'],
       })
@@ -71,7 +88,9 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
     })
 
     it('should allow specified methods', async () => {
-      const handler = jest.fn().mockResolvedValue(new NextResponse('OK'))
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>(
+        async () => new NextResponse('OK')
+      )
       const protectedHandler = withFortress(handler, {
         allowedMethods: ['POST'],
       })
@@ -89,7 +108,9 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
 
   describe('Rate Limiting', () => {
     it('should enforce rate limits', async () => {
-      const handler = jest.fn().mockResolvedValue(new NextResponse('OK'))
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>(
+        async () => new NextResponse('OK')
+      )
       const protectedHandler = withFortress(handler, {
         rateLimit: { requests: 2, window: 60000 },
       })
@@ -111,7 +132,9 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
     })
 
     it('should include Retry-After header', async () => {
-      const handler = jest.fn().mockResolvedValue(new NextResponse('OK'))
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>(
+        async () => new NextResponse('OK')
+      )
       const protectedHandler = withFortress(handler, {
         rateLimit: { requests: 1, window: 5000 },
       })
@@ -128,7 +151,9 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
 
   describe('Payload Size Validation', () => {
     it('should reject oversized payloads', async () => {
-      const handler = jest.fn().mockResolvedValue(new NextResponse('OK'))
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>(
+        async () => new NextResponse('OK')
+      )
       const protectedHandler = withFortress(handler, {
         maxPayloadSize: 100,
       })
@@ -146,7 +171,9 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
     })
 
     it('should accept payloads within limit', async () => {
-      const handler = jest.fn().mockResolvedValue(new NextResponse('OK'))
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>(
+        async () => new NextResponse('OK')
+      )
       const protectedHandler = withFortress(handler, {
         maxPayloadSize: 1000,
       })
@@ -164,7 +191,9 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
 
   describe('Encoding Validation Flow', () => {
     it('should call encoding validator when enabled', async () => {
-      const handler = jest.fn().mockResolvedValue(new NextResponse('OK'))
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>(
+        async () => new NextResponse('OK')
+      )
       const protectedHandler = withFortress(handler)
 
       const req = new NextRequest('http://localhost:3000/api/test', {
@@ -185,7 +214,9 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
         confidence: 1.0,
       })
 
-      const handler = jest.fn().mockResolvedValue(new NextResponse('OK'))
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>(
+        async () => new NextResponse('OK')
+      )
       const protectedHandler = withFortress(handler)
 
       const req = new NextRequest('http://localhost:3000/api/test', {
@@ -202,7 +233,9 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
     })
 
     it('should skip encoding validation when disabled', async () => {
-      const handler = jest.fn().mockResolvedValue(new NextResponse('OK'))
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>(
+        async () => new NextResponse('OK')
+      )
       const protectedHandler = withFortress(handler, {
         validateEncoding: false,
       })
@@ -219,7 +252,9 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
 
   describe('Body Validation Flow', () => {
     it('should validate JSON bodies', async () => {
-      const handler = jest.fn().mockResolvedValue(new NextResponse('OK'))
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>(
+        async () => new NextResponse('OK')
+      )
       const protectedHandler = withFortress(handler)
 
       const req = new NextRequest('http://localhost:3000/api/test', {
@@ -243,7 +278,9 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
         rule: 'prototype_pollution',
       })
 
-      const handler = jest.fn().mockResolvedValue(new NextResponse('OK'))
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>(
+        async () => new NextResponse('OK')
+      )
       const protectedHandler = withFortress(handler)
 
       const req = new NextRequest('http://localhost:3000/api/test', {
@@ -266,7 +303,9 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
         rule: 'sql_injection',
       })
 
-      const handler = jest.fn().mockResolvedValue(new NextResponse('OK'))
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>(
+        async () => new NextResponse('OK')
+      )
       const protectedHandler = withFortress(handler)
 
       const req = new NextRequest('http://localhost:3000/api/test', {
@@ -282,7 +321,9 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
     })
 
     it('should validate non-JSON text bodies', async () => {
-      const handler = jest.fn().mockResolvedValue(new NextResponse('OK'))
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>(
+        async () => new NextResponse('OK')
+      )
       const protectedHandler = withFortress(handler)
 
       const req = new NextRequest('http://localhost:3000/api/test', {
@@ -302,7 +343,9 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
 
   describe('CSRF Validation Flow', () => {
     it('should validate CSRF token when required', async () => {
-      const handler = jest.fn().mockResolvedValue(new NextResponse('OK'))
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>(
+        async () => new NextResponse('OK')
+      )
       const protectedHandler = withFortress(handler, {
         requireCSRF: true,
       })
@@ -333,7 +376,9 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
         rule: 'csrf_validation',
       })
 
-      const handler = jest.fn().mockResolvedValue(new NextResponse('OK'))
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>(
+        async () => new NextResponse('OK')
+      )
       const protectedHandler = withFortress(handler, {
         requireCSRF: true,
       })
@@ -351,7 +396,9 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
     })
 
     it('should skip CSRF when not required', async () => {
-      const handler = jest.fn().mockResolvedValue(new NextResponse('OK'))
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>(
+        async () => new NextResponse('OK')
+      )
       const protectedHandler = withFortress(handler, {
         requireCSRF: false,
       })
@@ -379,7 +426,7 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
         confidence: 0.9,
       })
 
-      const handler = jest.fn()
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>()
       const protectedHandler = withFortress(handler)
 
       const req = new NextRequest('http://localhost:3000/api/test', {
@@ -405,7 +452,11 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
       mockConfig.mode = 'production'
       withFortress = createWithFortress(mockConfig)
 
-      const handler = jest.fn().mockRejectedValue(new Error('Handler error'))
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>(
+        async () => {
+          throw new Error('Handler error')
+        }
+      )
       const protectedHandler = withFortress(handler)
 
       const req = new NextRequest('http://localhost:3000/api/test')
@@ -419,7 +470,11 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
       mockConfig.mode = 'development'
       withFortress = createWithFortress(mockConfig)
 
-      const handler = jest.fn().mockRejectedValue(new Error('Handler error'))
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>(
+        async () => {
+          throw new Error('Handler error')
+        }
+      )
       const protectedHandler = withFortress(handler)
 
       const req = new NextRequest('http://localhost:3000/api/test')
@@ -444,9 +499,21 @@ describe('Server Actions Wrapper - Orchestration Tests', () => {
     const { createCSRFValidator } = require('../src/validators/csrf')
 
     mockValidators = {
-      deserialization: { validate: jest.fn().mockReturnValue({ valid: true }) },
-      injection: { validate: jest.fn().mockReturnValue({ valid: true }) },
-      csrf: { validate: jest.fn().mockResolvedValue({ valid: true }) },
+      deserialization: {
+        validate: jest.fn<(data: unknown) => { valid: boolean }>(() => ({
+          valid: true,
+        })),
+      },
+      injection: {
+        validate: jest.fn<(data: unknown) => { valid: boolean }>(() => ({
+          valid: true,
+        })),
+      },
+      csrf: {
+        validate: jest.fn<() => Promise<{ valid: boolean }>>(async () => ({
+          valid: true,
+        })),
+      },
     }
 
     createDeserializationValidator.mockReturnValue(
@@ -458,7 +525,7 @@ describe('Server Actions Wrapper - Orchestration Tests', () => {
     mockConfig = {
       ...DEFAULT_CONFIG,
       mode: 'development',
-      onSecurityEvent: jest.fn(),
+      onSecurityEvent: jest.fn<(event: SecurityEvent) => Promise<void>>(),
     }
 
     secureServerAction = createSecureServerAction(mockConfig)
@@ -466,7 +533,9 @@ describe('Server Actions Wrapper - Orchestration Tests', () => {
 
   describe('Input Validation Flow', () => {
     it('should validate all arguments', async () => {
-      const action = jest.fn().mockResolvedValue({ success: true })
+      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
+        async () => ({ success: true })
+      )
       const protectedAction = secureServerAction(action)
 
       await protectedAction('user123', { name: 'John' })
@@ -483,7 +552,9 @@ describe('Server Actions Wrapper - Orchestration Tests', () => {
         rule: 'prototype_pollution',
       })
 
-      const action = jest.fn().mockResolvedValue({ success: true })
+      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
+        async () => ({ success: true })
+      )
       const protectedAction = secureServerAction(action)
 
       await expect(
@@ -502,7 +573,9 @@ describe('Server Actions Wrapper - Orchestration Tests', () => {
           rule: 'sql_injection',
         })
 
-      const action = jest.fn().mockResolvedValue({ success: true })
+      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
+        async () => ({ success: true })
+      )
       const protectedAction = secureServerAction(action)
 
       await expect(protectedAction('safe-id', "1' OR '1'='1")).rejects.toThrow(
@@ -515,7 +588,9 @@ describe('Server Actions Wrapper - Orchestration Tests', () => {
 
   describe('CSRF Validation Flow', () => {
     it('should validate CSRF when required', async () => {
-      const action = jest.fn().mockResolvedValue({ success: true })
+      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
+        async () => ({ success: true })
+      )
       const protectedAction = secureServerAction(action, {
         requireCSRF: true,
       })
@@ -536,7 +611,9 @@ describe('Server Actions Wrapper - Orchestration Tests', () => {
         rule: 'csrf_token_invalid',
       })
 
-      const action = jest.fn().mockResolvedValue({ success: true })
+      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
+        async () => ({ success: true })
+      )
       const protectedAction = secureServerAction(action, {
         requireCSRF: true,
       })
@@ -549,7 +626,9 @@ describe('Server Actions Wrapper - Orchestration Tests', () => {
     })
 
     it('should skip CSRF when not required', async () => {
-      const action = jest.fn().mockResolvedValue({ success: true })
+      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
+        async () => ({ success: true })
+      )
       const protectedAction = secureServerAction(action, {
         requireCSRF: false,
       })
@@ -563,7 +642,9 @@ describe('Server Actions Wrapper - Orchestration Tests', () => {
 
   describe('Input Sanitization', () => {
     it('should sanitize dangerous keys when enabled', async () => {
-      const action = jest.fn().mockResolvedValue({ success: true })
+      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
+        async () => ({ success: true })
+      )
       const protectedAction = secureServerAction(action, {
         sanitizeInputs: true,
       })
@@ -580,7 +661,9 @@ describe('Server Actions Wrapper - Orchestration Tests', () => {
     })
 
     it('should sanitize nested objects', async () => {
-      const action = jest.fn().mockResolvedValue({ success: true })
+      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
+        async () => ({ success: true })
+      )
       const protectedAction = secureServerAction(action, {
         sanitizeInputs: true,
       })
@@ -605,7 +688,9 @@ describe('Server Actions Wrapper - Orchestration Tests', () => {
     })
 
     it('should not sanitize when disabled', async () => {
-      const action = jest.fn().mockResolvedValue({ success: true })
+      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
+        async () => ({ success: true })
+      )
       const protectedAction = secureServerAction(action, {
         sanitizeInputs: false,
       })
@@ -625,7 +710,8 @@ describe('Server Actions Wrapper - Orchestration Tests', () => {
         rule: 'xss_attack',
       })
 
-      const action = jest.fn()
+      const action =
+        jest.fn<(...args: any[]) => Promise<{ success: boolean }>>()
       const protectedAction = secureServerAction(action)
 
       await expect(
@@ -643,7 +729,9 @@ describe('Server Actions Wrapper - Orchestration Tests', () => {
 
   describe('Edge Cases', () => {
     it('should handle empty arguments', async () => {
-      const action = jest.fn().mockResolvedValue({ success: true })
+      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
+        async () => ({ success: true })
+      )
       const protectedAction = secureServerAction(action)
 
       await protectedAction()
@@ -652,7 +740,9 @@ describe('Server Actions Wrapper - Orchestration Tests', () => {
     })
 
     it('should handle null arguments', async () => {
-      const action = jest.fn().mockResolvedValue({ success: true })
+      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
+        async () => ({ success: true })
+      )
       const protectedAction = secureServerAction(action)
 
       await protectedAction(null, undefined)
@@ -661,7 +751,9 @@ describe('Server Actions Wrapper - Orchestration Tests', () => {
     })
 
     it('should handle array arguments', async () => {
-      const action = jest.fn().mockResolvedValue({ success: true })
+      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
+        async () => ({ success: true })
+      )
       const protectedAction = secureServerAction(action)
 
       await protectedAction([1, 2, 3], ['a', 'b'])
