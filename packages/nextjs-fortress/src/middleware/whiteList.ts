@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server'
 import { FortressConfig } from '../types'
 
 /**
- * Whitelist checker - isolated whitelist logic
+ * Whitelist checker - isolated whitelist logic in here
  */
 export class WhitelistChecker {
   private config: FortressConfig
