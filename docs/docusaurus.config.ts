@@ -2,34 +2,20 @@ import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
-// This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
-
 const config: Config = {
-  title: 'My Site',
-  tagline: 'Dinosaurs are cool',
+  title: 'nextjs-fortress',
+  tagline: 'Security Validation middleware for Next.js',
   favicon: 'img/favicon.ico',
 
-  // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
-  future: {
-    v4: true, // Improve compatibility with the upcoming Docusaurus v4
-  },
+  url: 'https://mindfiredigital.github.io',
+  baseUrl: '/nextjs-fortress/',
 
-  // Set the production url of your site here
-  url: 'https://your-docusaurus-site.example.com',
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/',
-
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName: 'mindfiredigital',
+  projectName: 'nextjs-fortress',
 
   onBrokenLinks: 'throw',
+  onBrokenMarkdownLinks: 'warn',
 
-  // Even if you don't use internationalization, you can use this field to set
-  // useful metadata like html lang. For example, if your site is Chinese, you
-  // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
@@ -41,25 +27,11 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          editUrl: 'https://github.com/mindfiredigital/nextjs-fortress/tree/main/docs/',
         },
         blog: {
           showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-          // Useful options to enforce blogging best practices
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
+          editUrl: 'https://github.com/mindfiredigital/nextjs-fortress/tree/main/docs/',
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -69,15 +41,11 @@ const config: Config = {
   ],
 
   themeConfig: {
-    // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
-    colorMode: {
-      respectPrefersColorScheme: true,
-    },
+    image: 'img/social-card.png',
     navbar: {
-      title: 'My Site',
+      title: 'nextjs-fortress',
       logo: {
-        alt: 'My Site Logo',
+        alt: 'nextjs-fortress Logo',
         src: 'img/logo.svg',
       },
       items: [
@@ -85,11 +53,11 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Tutorial',
+          label: 'Docs',
         },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/facebook/docusaurus',
+          href: 'https://github.com/mindfiredigital/nextjs-fortress',
           label: 'GitHub',
           position: 'right',
         },
@@ -102,25 +70,29 @@ const config: Config = {
           title: 'Docs',
           items: [
             {
-              label: 'Tutorial',
+              label: 'Introduction',
               to: '/docs/intro',
+            },
+            {
+              label: 'Quick Start',
+              to: '/docs/quick-start',
+            },
+            {
+              label: 'API Reference',
+              to: '/docs/api/configuration',
             },
           ],
         },
         {
-          title: 'Community',
+          title: 'Security',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+              label: 'CVE-2025-55182',
+              to: '/docs/security/cve-2025-55182',
             },
             {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
-            },
-            {
-              label: 'X',
-              href: 'https://x.com/docusaurus',
+              label: 'Threat Detection',
+              to: '/docs/security/threat-detection',
             },
           ],
         },
@@ -133,12 +105,12 @@ const config: Config = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              href: 'https://github.com/mindfiredigital/nextjs-fortress',
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} nextjs-fortress. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,

@@ -2,46 +2,52 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Introduction
 
-Let's discover **Docusaurus in less than 5 minutes**.
+**nextjs-fortress** is a comprehensive security validation framework for Next.js applications that protects against major attack vectors including CVE-2025-55182, SQL injection, XSS, command injection, and more.
 
-## Getting Started
+## 🛡️ Key Features
 
-Get started by **creating a new site**.
+- ✅ **Deserialization Protection** - Guards against CVE-2025-55182 and prototype pollution
+- ✅ **Injection Detection** - SQL, XSS, Command, and Code injection prevention
+- ✅ **Ghost Mode Protection** - UTF-16LE encoding bypass detection
+- ✅ **CSRF Protection** - HMAC-based token validation
+- ✅ **Rate Limiting** - IP and session-based request throttling
+- ✅ **Security Headers** - Automatic security header injection
+- ✅ **Modular Architecture** - Enable/disable specific checks
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+## 🎯 Why nextjs-fortress?
 
-### What you'll need
+Traditional security tools often miss modern attack vectors. nextjs-fortress provides:
 
-- [Node.js](https://nodejs.org/en/download/) version 20.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+1. **Zero-Config Security** - Works out of the box with sensible defaults
+2. **Granular Control** - Enable only the checks you need
+3. **TypeScript First** - Full type safety throughout
+4. **Edge Runtime Compatible** - Works with Next.js middleware
+5. **Performance Optimized** - Minimal overhead on requests
 
-## Generate a new site
+## 📦 Quick Example
+```typescript
+import { createFortressMiddleware } from 'nextjs-fortress'
 
-Generate a new Docusaurus site using the **classic template**.
+export const middleware = createFortressMiddleware({
+  enabled: true,
+  mode: 'production',
+  modules: {
+    deserialization: { enabled: true, maxDepth: 10 },
+    injection: { enabled: true, checks: ['sql', 'xss'] },
+    csrf: { enabled: true, cookieName: '_csrf' },
+    rateLimit: { enabled: true, byIP: { requests: 100, window: 60000 } },
+  },
+})
 
-The classic template will automatically be added to your project after you run the command:
-
-```bash
-npm init docusaurus@latest my-website classic
+export const config = {
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+}
 ```
 
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
+## 🚀 Next Steps
 
-The command also installs all necessary dependencies you need to run Docusaurus.
-
-## Start your site
-
-Run the development server:
-
-```bash
-cd my-website
-npm run start
-```
-
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
-
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
-
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+- [Installation Guide](./installation) - Get started in 5 minutes
+- [Quick Start Tutorial](./quick-start) - Build your first protected API
+- [Security Checkers Overview](./checkers/overview) - Learn about all protection modules
