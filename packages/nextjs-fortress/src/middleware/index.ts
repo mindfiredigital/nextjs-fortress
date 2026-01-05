@@ -16,6 +16,7 @@ export function createFortressMiddleware(config: FortressConfig) {
   const rateLimiter = new RateLimiter(config)
   const headersHandler = new SecurityHeadersHandler(config)
   const whitelistChecker = new WhitelistChecker(config)
+  
 
   return async function fortressMiddleware(request: NextRequest) {
     // Early exit for disabled or whitelisted

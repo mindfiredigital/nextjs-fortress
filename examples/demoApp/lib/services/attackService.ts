@@ -123,7 +123,7 @@ export class AttackService {
     status: number
   ): string {
     if (isBlocked) return ' Attack blocked by Fortress!'
-    if (isSuccess) return ' Request allowed (Expected for valid)'
+    if (isSuccess) return ' Request allowed'
     return ` Unexpected: ${status}`
   }
 
