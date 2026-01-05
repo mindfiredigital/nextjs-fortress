@@ -22,7 +22,7 @@ export class RequestValidator {
   private deserializationValidator
   private injectionValidator
   private encodingValidator
-  private csrfValidator
+  public csrfValidator
 
   constructor(config: FortressConfig, logger: FortressLogger) {
     this.config = config
