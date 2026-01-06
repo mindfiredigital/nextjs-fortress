@@ -173,7 +173,7 @@ export const fortressConfig: FortressConfig = {
 
 function createMiddleware() {
   return `import { createFortressMiddleware } from 'nextjs-fortress';
-          import { fortressConfig } from './fortress.config';
+import { fortressConfig } from './fortress.config';
 export const middleware = createFortressMiddleware(fortressConfig);
 
 export const config = {
