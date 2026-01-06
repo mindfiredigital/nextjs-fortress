@@ -40,6 +40,11 @@ jobs:
       - name: Build Package
         run: pnpm --filter nextjs-fortress build
 
+      - name: 'Set Git user name and email'
+        run: |
+          git config --local user.email "github-actions@github.com"
+          git config --local user.name "GitHub Actions"
+
       - name: Auto-generate changeset
         run: node .github/changeset-autogenerate.mjs
         env:
@@ -49,9 +54,10 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          # This runs `pnpm release` (which we define below)
-          publish: pnpm release
+          commit: 'chore(release): version packages'
+          title: 'chore(release): version packages'
           version: node .github/changeset-version.js
+          publish: npx changeset publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
