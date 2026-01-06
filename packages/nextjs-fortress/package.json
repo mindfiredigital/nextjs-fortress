@@ -1,5 +1,5 @@
 {
-  "name": "nextjs-fortress",
+  "name": "@mindfiredigital/nextjs-fortress",
   "version": "1.0.0",
   "description": "Universal security validation framework for Next.js - Protects against CVE-2025-55182 and major attack vectors",
   "main": "dist/index.js",
@@ -34,16 +34,16 @@
     "server-actions",
     "api-routes"
   ],
-  "author": "Security Research Team",
+  "author": "Mindfire Digital",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lakinmindfire/nextjs-fortress.git"
+    "url": "git+https://github.com/mindfiredigital/nextjs-fortress.git"
   },
   "bugs": {
-    "url": "https://github.com/lakinmindfire/nextjs-fortress/issues"
+    "url": "https://github.com/mindfiredigital/nextjs-fortress/issues"
   },
-  "homepage": "https://github.com/lakinmindfire/nextjs-fortress#readme",
+  "homepage": "https://github.com/mindfiredigital/nextjs-fortress#readme",
   "peerDependencies": {
     "next": ">=12.0.0"
   },
