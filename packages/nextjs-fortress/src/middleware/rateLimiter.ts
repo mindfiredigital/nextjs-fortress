@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { FortressConfig, RateLimitEntry, RateLimitResult } from '../types'
 
 /**
- * Rate limiter - isolated rate limiting logic
+ * Rate limiter - isolated rate limiting logic of middleware
  */
 export class RateLimiter {
   private config: FortressConfig
