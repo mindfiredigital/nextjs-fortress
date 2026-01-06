@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: '@mindfiredigital/pagebuilder'
+    name: '@mindfiredigital/nextjs-fortress'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -33,7 +33,7 @@ jobs:
         run: pnpm install
 
       - name: 'Build application'
-        run: pnpm turbo run build
+        run: pnpm build
 
       - name: 'Set Git user name and email'
         run: |
