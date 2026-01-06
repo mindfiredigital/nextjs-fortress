@@ -40,6 +40,11 @@ jobs:
       - name: Build Package
         run: pnpm --filter nextjs-fortress build
 
+      - name: 'Set Git user name and email'
+        run: |
+          git config --local user.email "github-actions@github.com"
+          git config --local user.name "GitHub Actions"
+
       - name: Auto-generate changeset
         run: node .github/changeset-autogenerate.mjs
         env:
