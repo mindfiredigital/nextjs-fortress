@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  release:
-    name: Build, Test, and Release
+  build:
+    name: '@mindfiredigital/nextjs-fortress'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -29,29 +29,71 @@ jobs:
       - name: Enable Corepack
         run: npm install -g pnpm
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: 'Install dependencies with pnpm'
+        run: pnpm install
 
-      - name: Lint and Test
+      - name: 'Build application'
+        run: pnpm build
+
+      - name: 'Set Git user name and email'
         run: |
-          pnpm lint
-          pnpm test
+          git config --local user.email "github-actions@github.com"
+          git config --local user.name "GitHub Actions"
 
-      - name: Build Package
-        run: pnpm --filter nextjs-fortress build
+      - name: Generate Changeset from commit messages
+        run: pnpm changeset:autogenerate
 
-      - name: Auto-generate changeset
-        run: node .github/changeset-autogenerate.mjs
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create Release Pull Request or Publish
+      - name: Create Release Pull Request or Publish to npm
         id: changesets
-        uses: changesets/action@v1
+        uses: changesets/action@v1.4.1
         with:
-          # This runs `pnpm release` (which we define below)
-          publish: pnpm release
+          commit: 'chore(release): version packages'
+          title: 'chore(release): version packages'
           version: node .github/changeset-version.js
+          publish: npx changeset publish
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Auto-merge release PR
+        if: steps.changesets.outputs.pullRequestNumber != ''
+        run: |
+          gh pr merge ${{ steps.changesets.outputs.pullRequestNumber }} --squash --delete-branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+
+      - name: Enable Corepack
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Pull latest changes
+        run: |
+          git pull origin main
+
+      - name: Publish to npm
+        id: changesets
+        uses: changesets/action@v1.4.1
+        with:
+            commit: 'chore(release): version packages'
+            title: 'chore(release): version packages'
+            version: node .github/changeset-version.js
+            publish: npx changeset publish
+        env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
