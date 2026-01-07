@@ -21,18 +21,18 @@ nextjs-fortress provides **7 layers of protection** that work together to secure
 On January 5, 2025, the React2Shell vulnerability (CVE-2025-55182) was discovered in React Server Components. This critical vulnerability affects **every Next.js application** using Server Actions or Server Components.
 
 Without protection:
-- ❌ Attackers can pollute JavaScript prototypes
-- ❌ Authentication can be completely bypassed
-- ❌ Privileges can be escalated to admin
-- ❌ Remote code execution is possible
-- ❌ WAFs can be bypassed using encoding tricks
+- Attackers can pollute JavaScript prototypes
+- Authentication can be completely bypassed
+- Privileges can be escalated to admin
+- Remote code execution is possible
+- WAFs can be bypassed using encoding tricks
 
 With nextjs-fortress:
-- ✅ All attack vectors blocked automatically
-- ✅ Zero configuration required
-- ✅ \<1ms performance overhead
-- ✅ Works with existing code
-- ✅ Comprehensive security logging
+- All attack vectors blocked automatically
+- Zero configuration required
+- \<1ms performance overhead
+- Works with existing code
+- Comprehensive security logging
 
 ## Quick Example
 
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
 
 ## Key Features
 
-### 🛡️ CVE-2025-55182 Protection
+### CVE-2025-55182 Protection
 
 ```typescript
 // Blocks all prototype pollution attempts
@@ -90,14 +90,14 @@ export async function POST(request: Request) {
 }
 ```
 
-### 🔍 Deep Inspection
+### Deep Inspection
 
 - Checks ALL object keys (including non-enumerable)
 - Scans nested objects recursively
 - Validates prototype chain
 - Detects circular references
 
-### ⚡ Zero Performance Impact
+### Zero Performance Impact
 
 ```typescript
 // Benchmark: 1000 requests
@@ -106,14 +106,14 @@ With fortress:    11ms
 Overhead:        +1ms (10%)
 ```
 
-### 🎯 Framework Agnostic
+### Framework Agnostic
 
 Works with:
-- ✅ App Router (Next.js 13+)
-- ✅ Pages Router (Next.js 12+)
-- ✅ Server Actions
-- ✅ API Routes
-- ✅ Server Components
+- App Router (Next.js 13+)
+- Pages Router (Next.js 12+)
+- Server Actions
+- API Routes
+- Server Components
 
 ## Real-World Protection
 
@@ -168,12 +168,6 @@ Body: [0xFF, 0xFE, ...] // __proto__ in UTF-16LE
 }
 ```
 
-## Installation
-
-```bash
-npm install @mindfiredigital/nextjs-fortress
-```
-
 ## Basic Setup
 
 ### 1. Create Configuration
@@ -223,7 +217,7 @@ export const config = {
 };
 ```
 
-### 3. Done! 🎉
+### 3. Done! 
 
 Your entire Next.js application is now protected.
 
@@ -238,47 +232,6 @@ Your entire Next.js application is now protected.
 ✓ /pages/*        - Pages router
 ✓ Server Actions  - Form submissions
 ✓ Server Components - RSC requests
-```
-
-### Manual Protection (Optional)
-
-```typescript
-// API Routes
-import { withFortress } from 'nextjs-fortress';
-
-export const POST = withFortress(async (request) => {
-  // Your handler
-});
-
-// Server Actions
-import { secureServerAction } from 'nextjs-fortress';
-
-export const updateUser = secureServerAction(async (data) => {
-  // Your action
-});
-```
-
-## Security Event Logging
-
-```typescript
-export const fortressConfig: FortressConfig = {
-  onSecurityEvent: async (event) => {
-    console.warn('Security Event:', {
-      type: event.type,           // 'deserialization', 'injection', etc.
-      severity: event.severity,   // 'low', 'medium', 'high', 'critical'
-      message: event.message,
-      ip: event.request.ip,
-      path: event.request.path,
-      rule: event.detection.rule,
-      confidence: event.detection.confidence,
-    });
-
-    // Send to monitoring service
-    if (event.severity === 'critical') {
-      await sendToSentry(event);
-    }
-  },
-};
 ```
 
 ## Validation Levels
@@ -322,18 +275,14 @@ Total:          ~0.9ms
 ## Browser Compatibility
 
 Works in all modern environments:
-- ✅ Next.js Edge Runtime
-- ✅ Node.js Runtime
-- ✅ Vercel Edge Functions
-- ✅ Cloudflare Workers
-- ✅ AWS Lambda
+- Next.js Edge Runtime
+- Node.js Runtime
 
 ## Next Steps
 
 - [Quick Start Guide](./quick-start.md) - Get protected in 5 minutes
-- [Configuration Guide](./configuration/overview.md) - Customize settings
+- [Motivation Behind Guide](./motivation.md) - Motivation Behind Building the middleware
 - [CVE-2025-55182 Details](./cve/cve-2025-55182.md) - Understand the vulnerability
-- [API Reference](./api/types.md) - Full API documentation
 
 ## License
 
@@ -341,10 +290,8 @@ MIT License - See [LICENSE](https://github.com/mindfiredigital/nextjs-fortress/b
 
 ## Support
 
-- 📖 [Documentation](https://fortress-docs.mindfire.com)
-- 🐛 [Report Issues](https://github.com/mindfiredigital/nextjs-fortress/issues)
-- 💬 [Discussions](https://github.com/mindfiredigital/nextjs-fortress/discussions)
-- 📧 [Email Support](mailto:support@mindfire.com)
+- [Report Issues](https://github.com/mindfiredigital/nextjs-fortress/issues)
+- [Discussions](https://github.com/mindfiredigital/nextjs-fortress/discussions)
 
 ---
 

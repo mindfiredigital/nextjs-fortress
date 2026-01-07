@@ -54,6 +54,21 @@ const sidebars: SidebarsConfig = {
         },
       ],
     },
+    {
+      type: 'category',
+      label: 'About CVEs',
+      collapsible: true,
+      collapsed: false,
+      items:[
+        {
+          type: 'category',
+          label: 'cve-2025-55182',
+          items: [
+            'cve/cve-2025-55182',
+          ],
+        }
+      ]
+    }
   ],
 };
 

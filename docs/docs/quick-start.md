@@ -20,15 +20,15 @@ npx fortress init
 ```
 
 The CLI will:
-- ✅ Detect your Next.js version
-- ✅ Create `fortress.config.ts`
-- ✅ Create `middleware.ts`
-- ✅ Generate `.env.example`
-- ✅ Create example API route
+- Detect your Next.js version
+- Create `fortress.config.ts`
+- Create `middleware.ts`
+- Generate `.env.example`
+- Create example API route
 
-## Step 2: Create Configuration (2 minutes)
+## Step 2: Configuration file gets created
 
-Create `fortress.config.ts` in your project root:
+`fortress.config.ts` in your project root gets created:
 
 ```typescript
 // fortress.config.ts
@@ -110,7 +110,7 @@ export const fortressConfig: FortressConfig = {
 };
 ```
 
-## Step 3: Add Middleware (1 minute)
+## Step 3: Middleware gets created on the application
 
 Create `middleware.ts` in your project root:
 
@@ -143,7 +143,7 @@ curl -X POST http://localhost:3000/api/test \
   "rule": "dangerous_key"
 }
 ```
-**Status:** 403 Forbidden ✅
+**Status:** 403 Forbidden 
 
 ### Test 2: SQL Injection
 
@@ -160,7 +160,7 @@ curl -X POST http://localhost:3000/api/test \
   "rule": "sql_injection"
 }
 ```
-**Status:** 403 Forbidden ✅
+**Status:** 403 Forbidden 
 
 ### Test 3: XSS Attack
 
@@ -177,7 +177,7 @@ curl -X POST http://localhost:3000/api/test \
   "rule": "xss_injection"
 }
 ```
-**Status:** 403 Forbidden ✅
+**Status:** 403 Forbidden 
 
 ### Test 4: Rate Limiting
 
@@ -195,60 +195,7 @@ done
 Status: 429 Too Many Requests
 Retry-After: 45
 ```
-✅ Rate limit working!
-
-## Step 5: Production Configuration (Optional)
-
-For production, update your config:
-
-```typescript
-// fortress.config.ts
-export const fortressConfig: FortressConfig = {
-  enabled: true,
-  mode: 'production', // Changed to production
-
-  logging: {
-    enabled: true,
-    level: 'warn', // Less verbose in production
-    destination: 'console',
-  },
-
-  modules: {
-    deserialization: {
-      enabled: true,
-      maxDepth: 10,
-      detectCircular: true,
-    },
-    
-    csrf: {
-      enabled: true, // Enable CSRF in production
-      cookieName: '_csrf',
-      tokenSecret: process.env.CSRF_SECRET,
-    },
-    
-    rateLimit: {
-      enabled: true,
-      byIP: {
-        requests: 100,
-        window: 60000,
-      },
-    },
-    
-    // ... other modules
-  },
-
-  onSecurityEvent: async (event) => {
-    // Send to monitoring service
-    if (event.severity === 'critical') {
-      await sendToSentry(event);
-      await alertSecurityTeam(event);
-    }
-    
-    // Log everything
-    console.warn('Security Event:', event);
-  },
-};
-```
+Rate limit working!
 
 ## Environment Variables
 
@@ -353,55 +300,6 @@ curl -X POST http://localhost:3000/api/test \
 }
 ```
 
-## Common Issues
-
-### Issue: Middleware Not Running
-
-**Problem:** Fortress not blocking attacks
-
-**Solution:** Check middleware matcher
-
-```typescript
-// Make sure matcher includes your routes
-export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
-};
-```
-
-### Issue: Legitimate Requests Blocked
-
-**Problem:** Valid data flagged as malicious
-
-**Solution:** Adjust depth limit or add whitelist
-
-```typescript
-deserialization: {
-  maxDepth: 15, // Increase if you have deep objects
-}
-
-whitelist: {
-  paths: ['/api/webhook'], // Whitelist specific paths
-}
-```
-
-### Issue: CSRF Token Missing
-
-**Problem:** POST requests failing with CSRF error
-
-**Solution:** Disable CSRF in development or add token
-
-```typescript
-// Development
-csrf: {
-  enabled: false, // Disable in dev
-}
-
-// Production - Add token to requests
-headers: {
-  'X-CSRF-Token': getCsrfToken(),
-}
-```
-
 ## Next Steps
 
 Now that you're protected:
@@ -414,10 +312,8 @@ Now that you're protected:
 
 ## Additional Resources
 
-- [Full Configuration Guide](./configuration/overview.md)
-- [API Reference](./api/types.md)
 - [CVE-2025-55182 Details](./cve/cve-2025-55182.md)
-- [Security Best Practices](./advanced/monitoring.md)
+- [modular-overview](./modules/deserialization/dangerous-keys.md)
 
 ## Getting Help
 
