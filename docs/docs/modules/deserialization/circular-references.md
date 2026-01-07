@@ -265,28 +265,6 @@ export const fortressConfig: FortressConfig = {
 };
 ```
 
-## Performance Impact
-
-### Benchmarks
-
-```typescript
-// Test: 1000 requests
-
-Without circular detection:   0.2ms per request
-With circular detection:      0.3ms per request
-Overhead:                    +0.1ms per request
-
-// Circular attack blocked:   0.4ms (then rejected)
-// Circular attack success:   CRASH (infinite loop)
-```
-
-### Why It's Fast
-
-1. **WeakSet** - O(1) lookup time
-2. **Early exit** - Stops immediately on detection
-3. **No memory leak** - WeakSet allows garbage collection
-4. **Minimal overhead** - Only tracks object references
-
 ## Summary
 
 **What happens without circular reference detection:**

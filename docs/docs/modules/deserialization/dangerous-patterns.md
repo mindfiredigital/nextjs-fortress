@@ -28,10 +28,10 @@ Even if an object doesn't have dangerous keys, its values can contain exploit pa
 - Potential RCE through React internals
 
 **Impact:**
-- 🎭 React Flight protocol manipulation
-- 🔓 Server-side state corruption
-- 💣 Remote code execution through RSC
-- 🚨 CVE-2025-55182 exploitation
+- React Flight protocol manipulation
+- Server-side state corruption
+- Remote code execution through RSC
+- CVE-2025-55182 exploitation
 
 #### 2. **Code Injection Patterns**
 
@@ -49,11 +49,7 @@ Even if an object doesn't have dangerous keys, its values can contain exploit pa
 - Attacker code gets executed
 - Server compromise achieved
 
-**Impact:**
-- 💥 Arbitrary code execution
-- 📁 File system access
-- 🔑 Environment variable theft
-- 🌐 Network access
+**Impact:** Arbitrary code execution File system access Environment variable theft Network access
 
 #### 3. **Malware Dropper Markers**
 
@@ -72,11 +68,10 @@ Even if an object doesn't have dangerous keys, its values can contain exploit pa
 - Persistent access established
 
 **Impact:**
-- 🦠 Malware installation
-- 🚪 Backdoor creation
-- 🔄 Persistent compromise
-- 📡 Command & control connection
-
+- Malware installation
+- Backdoor creation
+- Persistent compromise
+- Command & control connectio
 #### 4. **Path Traversal Patterns**
 
 ```javascript
@@ -93,10 +88,10 @@ Even if an object doesn't have dangerous keys, its values can contain exploit pa
 - Source code leak
 
 **Impact:**
-- 📂 Unauthorized file access
-- 🔑 Credential exposure
-- 📝 Source code theft
-- ⚙️ Configuration leak
+- Unauthorized file access
+- Credential exposure
+- Source code theft
+- Configuration leak
 
 ## How nextjs-fortress Solves This
 
@@ -292,61 +287,6 @@ export const fortressConfig: FortressConfig = {
 
 **Why Blocked:** These patterns indicate attempts to access the file system or environment variables.
 
-## Attack Examples
-
-### Example 1: React2Shell Exploitation
-
-```javascript
-// CVE-2025-55182 payload
-POST /api/server-action
-{
-  "data": {
-    "resolved_model": "true",
-    "_response": {
-      "chunks": ["malicious"]
-    }
-  }
-}
-
-// Fortress detects:
-// Stringified: '{"data":{"resolved_model":"true","_response":...}}'
-// Pattern match: "resolved_model" found
-// Result: BLOCKED ✅
-// Message: 'Dangerous pattern detected: "resolved_model"'
-```
-
-### Example 2: Code Injection Attempt
-
-```javascript
-// Attacker tries code injection
-POST /api/execute
-{
-  "task": "calculate",
-  "formula": "require('child_process').exec('rm -rf /')"
-}
-
-// Fortress detects:
-// Stringified: '{"task":"calculate","formula":"require(...)"}'
-// Pattern match: "require" and "child_process" found
-// Result: BLOCKED ✅
-```
-
-### Example 3: Environment Variable Theft
-
-```javascript
-// Attacker tries to read secrets
-POST /api/config
-{
-  "setting": "debug",
-  "value": "process.env.DATABASE_PASSWORD"
-}
-
-// Fortress detects:
-// Stringified: '{"setting":"debug","value":"process.env..."}'
-// Pattern match: "process.env" found
-// Result: BLOCKED ✅
-```
-
 ## How to Initialize
 
 ```typescript
@@ -394,28 +334,6 @@ export const fortressConfig: FortressConfig = {
   },
 };
 ```
-
-## Performance Impact
-
-### Benchmarks
-
-```typescript
-// Test: 1000 requests
-
-Without pattern detection:   0.2ms per request
-With pattern detection:      0.4ms per request
-Overhead:                   +0.2ms per request
-
-// Note: Single stringify + regex scan
-// Very efficient compared to deep AST parsing
-```
-
-### Why It's Fast
-
-1. **Single stringify** - Only one JSON.stringify() call
-2. **Compiled regex** - Patterns pre-compiled
-3. **Early exit** - Stops on first match
-4. **No AST parsing** - Simple string matching
 
 ## Summary
 
