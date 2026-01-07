@@ -1,148 +1,430 @@
----
-sidebar_position: 3
----
+# Quick Start Guide
 
-# Quick Start
+Get your Next.js application protected from CVE-2025-55182 in under 5 minutes.
 
-Learn how to protect your Next.js application in 5 minutes.
+## Prerequisites
 
-## Step 1: Basic Protection
+- Next.js 12.0.0 or higher
+- Node.js 16.0.0 or higher
 
-After installation, your middleware is automatically protecting all routes:
-```typescript
-// middleware.ts
-import { createFortressMiddleware } from 'nextjs-fortress'
+## Step 1: Install (30 seconds)
 
-export const middleware = createFortressMiddleware({
-  enabled: true,
-  mode: 'development',
-  modules: {
-    deserialization: { enabled: true, maxDepth: 10 },
-    injection: { enabled: true, checks: ['sql', 'xss'] },
-  },
-})
+```bash
+npm install @mindfiredigital/nextjs-fortress
 ```
 
-## Step 2: Protect API Routes
+Or use the CLI:
 
-### Option A: Automatic (via Middleware)
-
-All API routes under `/api/*` are automatically protected.
-
-### Option B: Manual (for specific routes)
-```typescript
-// app/api/users/route.ts
-import { createWithFortress } from 'nextjs-fortress'
-import { fortressConfig } from '@/fortress.config'
-
-const withFortress = createWithFortress(fortressConfig)
-
-export const POST = withFortress(
-  async (request) => {
-    const data = await request.json()
-    // Your business logic here
-    return Response.json({ success: true, data })
-  },
-  {
-    requireCSRF: true,
-    rateLimit: { requests: 10, window: 60000 },
-    maxPayloadSize: 100000,
-  }
-)
+```bash
+npx fortress init
 ```
 
-## Step 3: Protect Server Actions
-```typescript
-// app/actions.ts
-'use server'
+The CLI will:
+- ✅ Detect your Next.js version
+- ✅ Create `fortress.config.ts`
+- ✅ Create `middleware.ts`
+- ✅ Generate `.env.example`
+- ✅ Create example API route
 
-import { createSecureServerAction } from 'nextjs-fortress'
-import { fortressConfig } from '@/fortress.config'
+## Step 2: Create Configuration (2 minutes)
 
-const secureAction = createSecureServerAction(fortressConfig)
+Create `fortress.config.ts` in your project root:
 
-export const updateProfile = secureAction(
-  async (userId: string, data: { name: string; email: string }) => {
-    // Inputs are automatically validated
-    // Safe to use data here
-    await db.user.update({ where: { id: userId }, data })
-    return { success: true }
-  },
-  {
-    sanitizeInputs: true,
-    requireCSRF: false,
-  }
-)
-```
-
-## Step 4: Enable/Disable Specific Checks
 ```typescript
 // fortress.config.ts
+import { FortressConfig } from 'nextjs-fortress';
+
 export const fortressConfig: FortressConfig = {
+  enabled: true,
+  mode: 'development', // Change to 'production' when deploying
+
+  logging: {
+    enabled: true,
+    level: 'debug',
+    destination: 'console',
+  },
+
   modules: {
+    // 1. Deserialization Protection (CVE-2025-55182)
+    deserialization: {
+      enabled: true,
+      maxDepth: 10,
+      detectCircular: true,
+    },
+
+    // 2. Injection Detection
     injection: {
       enabled: true,
-      sql: { enabled: true },      // ✅ Enable SQL injection detection
-      xss: { enabled: true },       // ✅ Enable XSS detection
-      command: { enabled: false },  // ❌ Disable if no shell access
-      code: { enabled: true },      // ✅ Enable code injection detection
+      checks: ['sql', 'command', 'xss', 'codeInjection'],
+    },
+
+    // 3. Encoding Validation (Ghost Mode Protection)
+    encoding: {
+      enabled: true,
+      blockNonUTF8: true,
+      detectBOM: true,
+    },
+
+    // 4. CSRF Protection (disable in development)
+    csrf: {
+      enabled: false, // Enable in production
+      cookieName: '_csrf',
+      tokenSecret: process.env.CSRF_SECRET,
+    },
+
+    // 5. Rate Limiting
+    rateLimit: {
+      enabled: true,
+      byIP: {
+        requests: 100,
+        window: 60000, // 100 requests per minute
+      },
+    },
+
+    // 6. Content Validation
+    content: {
+      enabled: true,
+      maxPayloadSize: 1024 * 1024, // 1MB
+    },
+
+    // 7. Security Headers
+    securityHeaders: {
+      enabled: true,
     },
   },
-}
-```
 
-## Step 5: Handle Security Events
-```typescript
-// fortress.config.ts
-export const fortressConfig: FortressConfig = {
+  whitelist: {
+    paths: ['/_next', '/favicon.ico'],
+    ips: [],
+  },
+
   onSecurityEvent: async (event) => {
-    console.log(`🚨 Security Event: ${event.type}`, {
+    console.warn('🚨 Security Event:', {
+      type: event.type,
       severity: event.severity,
       message: event.message,
       ip: event.request.ip,
       path: event.request.path,
-    })
-
-    // Send to external monitoring
-    if (event.severity === 'critical') {
-      await sendToSentry(event)
-      await notifySlack(event)
-    }
+    });
   },
-}
+};
 ```
 
-## Testing Your Setup
+## Step 3: Add Middleware (1 minute)
 
-### Test 1: Prototype Pollution (Should be blocked)
+Create `middleware.ts` in your project root:
+
+```typescript
+// middleware.ts
+import { createFortressMiddleware } from 'nextjs-fortress';
+import { fortressConfig } from './fortress.config';
+
+export const middleware = createFortressMiddleware(fortressConfig);
+
+export const config = {
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+};
+```
+
+## Step 4: Test Protection (1 minute)
+
+### Test 1: Prototype Pollution (CVE-2025-55182)
+
 ```bash
 curl -X POST http://localhost:3000/api/test \
   -H "Content-Type: application/json" \
   -d '{"__proto__": {"isAdmin": true}}'
-
-# Expected: 403 Forbidden
 ```
 
-### Test 2: SQL Injection (Should be blocked)
+**Expected Response:**
+```json
+{
+  "error": "Dangerous key detected: \"__proto__\"",
+  "rule": "dangerous_key"
+}
+```
+**Status:** 403 Forbidden ✅
+
+### Test 2: SQL Injection
+
 ```bash
 curl -X POST http://localhost:3000/api/test \
   -H "Content-Type: application/json" \
-  -d '{"username": "admin'\'' OR '\''1'\''='\''1"}'
-
-# Expected: 403 Forbidden
+  -d '{"query": "SELECT * FROM users WHERE id=1 OR 1=1"}'
 ```
 
-### Test 3: Normal Request (Should succeed)
+**Expected Response:**
+```json
+{
+  "error": "SQL injection detected: \"OR 1=1\"",
+  "rule": "sql_injection"
+}
+```
+**Status:** 403 Forbidden ✅
+
+### Test 3: XSS Attack
+
 ```bash
 curl -X POST http://localhost:3000/api/test \
   -H "Content-Type: application/json" \
-  -d '{"username": "john_doe", "email": "john@example.com"}'
+  -d '{"comment": "<script>alert(1)</script>"}'
+```
 
-# Expected: 200 OK
+**Expected Response:**
+```json
+{
+  "error": "XSS injection detected: \"<script>\"",
+  "rule": "xss_injection"
+}
+```
+**Status:** 403 Forbidden ✅
+
+### Test 4: Rate Limiting
+
+```bash
+# Run this 101 times quickly
+for i in {1..101}; do
+  curl -X POST http://localhost:3000/api/test \
+    -H "Content-Type: application/json" \
+    -d '{"test": "data"}'
+done
+```
+
+**After 100 requests:**
+```
+Status: 429 Too Many Requests
+Retry-After: 45
+```
+✅ Rate limit working!
+
+## Step 5: Production Configuration (Optional)
+
+For production, update your config:
+
+```typescript
+// fortress.config.ts
+export const fortressConfig: FortressConfig = {
+  enabled: true,
+  mode: 'production', // Changed to production
+
+  logging: {
+    enabled: true,
+    level: 'warn', // Less verbose in production
+    destination: 'console',
+  },
+
+  modules: {
+    deserialization: {
+      enabled: true,
+      maxDepth: 10,
+      detectCircular: true,
+    },
+    
+    csrf: {
+      enabled: true, // Enable CSRF in production
+      cookieName: '_csrf',
+      tokenSecret: process.env.CSRF_SECRET,
+    },
+    
+    rateLimit: {
+      enabled: true,
+      byIP: {
+        requests: 100,
+        window: 60000,
+      },
+    },
+    
+    // ... other modules
+  },
+
+  onSecurityEvent: async (event) => {
+    // Send to monitoring service
+    if (event.severity === 'critical') {
+      await sendToSentry(event);
+      await alertSecurityTeam(event);
+    }
+    
+    // Log everything
+    console.warn('Security Event:', event);
+  },
+};
+```
+
+## Environment Variables
+
+Create `.env.local`:
+
+```bash
+# CSRF Secret (generate with: openssl rand -hex 32)
+CSRF_SECRET=your-32-character-secret-key-here
+
+# Whitelisted IPs (comma-separated)
+WHITELIST_IPS=127.0.0.1,::1
+```
+
+## Verify Installation
+
+### Create Test API Route
+
+```typescript
+// app/api/test/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    
+    return NextResponse.json({
+      success: true,
+      message: 'Request validated by Fortress',
+      data: body,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Invalid request' },
+      { status: 400 }
+    );
+  }
+}
+
+export async function GET() {
+  return NextResponse.json({
+    message: 'Fortress Active',
+    protections: [
+      'Deserialization (CVE-2025-55182)',
+      'SQL Injection',
+      'XSS Attacks',
+      'Command Injection',
+      'Encoding Bypass (Ghost Mode)',
+      'Rate Limiting',
+      'Security Headers',
+    ],
+  });
+}
+```
+
+### Test the Endpoint
+
+```bash
+# Should succeed
+curl http://localhost:3000/api/test
+
+# Should get blocked
+curl -X POST http://localhost:3000/api/test \
+  -H "Content-Type: application/json" \
+  -d '{"__proto__": {"hacked": true}}'
+```
+
+## What Happens Now
+
+### Every Request Is Protected
+
+```typescript
+// Before reaching your code, fortress validates:
+
+1. ✓ No dangerous keys (__proto__, constructor, prototype)
+2. ✓ No SQL injection patterns
+3. ✓ No XSS attempts
+4. ✓ No command injection
+5. ✓ No encoding bypasses
+6. ✓ Depth limit not exceeded
+7. ✓ No circular references
+8. ✓ Rate limit not exceeded
+9. ✓ Payload size within limit
+10. ✓ Valid content type
+
+// If all checks pass → Your handler executes
+// If any check fails → 403 Forbidden + logged
+```
+
+### Security Events Are Logged
+
+```typescript
+// Console output when attack detected:
+🚨 Security Event: {
+  type: 'deserialization',
+  severity: 'critical',
+  message: 'Dangerous key detected: "__proto__"',
+  ip: '192.168.1.100',
+  path: '/api/test',
+  rule: 'dangerous_key',
+  confidence: 1.0,
+  timestamp: 2025-01-07T10:30:00.000Z
+}
+```
+
+## Common Issues
+
+### Issue: Middleware Not Running
+
+**Problem:** Fortress not blocking attacks
+
+**Solution:** Check middleware matcher
+
+```typescript
+// Make sure matcher includes your routes
+export const config = {
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+};
+```
+
+### Issue: Legitimate Requests Blocked
+
+**Problem:** Valid data flagged as malicious
+
+**Solution:** Adjust depth limit or add whitelist
+
+```typescript
+deserialization: {
+  maxDepth: 15, // Increase if you have deep objects
+}
+
+whitelist: {
+  paths: ['/api/webhook'], // Whitelist specific paths
+}
+```
+
+### Issue: CSRF Token Missing
+
+**Problem:** POST requests failing with CSRF error
+
+**Solution:** Disable CSRF in development or add token
+
+```typescript
+// Development
+csrf: {
+  enabled: false, // Disable in dev
+}
+
+// Production - Add token to requests
+headers: {
+  'X-CSRF-Token': getCsrfToken(),
+}
 ```
 
 ## Next Steps
 
-- [Security Checkers Overview](./checkers/overview) - Learn about all protection modules
-- [Enable/Disable Specific Checks](./guides/enabling-checks) - Customize your security
-- [Custom Checkers](./guides/custom-checkers) - Extend with your own validators
+Now that you're protected:
+
+1. **Monitor Security Events** - Watch console for attacks
+2. **Customize Configuration** - Adjust limits for your needs
+3. **Add Monitoring** - Send events to Sentry, DataDog, etc.
+4. **Test Thoroughly** - Ensure it doesn't break your app
+5. **Deploy to Production** - Enable CSRF and production mode
+
+## Additional Resources
+
+- [Full Configuration Guide](./configuration/overview.md)
+- [API Reference](./api/types.md)
+- [CVE-2025-55182 Details](./cve/cve-2025-55182.md)
+- [Security Best Practices](./advanced/monitoring.md)
+
+## Getting Help
+
+- 📖 [Documentation](https://fortress-docs.mindfire.com)
+- 🐛 [Report Issues](https://github.com/mindfiredigital/nextjs-fortress/issues)
+- 💬 [Discussions](https://github.com/mindfiredigital/nextjs-fortress/discussions)
+
+---
+
+**🎉 Congratulations!** Your Next.js application is now protected from CVE-2025-55182 and all major attack vectors.
