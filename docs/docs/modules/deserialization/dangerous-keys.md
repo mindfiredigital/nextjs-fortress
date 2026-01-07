@@ -26,7 +26,7 @@ Object.prototype.isAdmin = true;
 
 // Now EVERY object is an admin
 const normalUser = {};
-console.log(normalUser.isAdmin); // true 💥
+console.log(normalUser.isAdmin); // true 
 
 // Authentication bypass
 function checkAdmin(user) {
@@ -36,19 +36,19 @@ function checkAdmin(user) {
   return "ACCESS DENIED";
 }
 
-checkAdmin({}); // "ACCESS GRANTED" 🚨
+checkAdmin({}); // "ACCESS GRANTED" 
 ```
 
 **What Happens Without Protection:**
 - All objects inherit malicious properties
 - Authentication logic bypassed
-- Authorization checks fail
+- Authorization checks fl
 
 **Impact:**
-- 🔓 Complete security bypass - Any user becomes admin
-- 📂 Unauthorized access to all data
-- 💰 Financial fraud possible
-- 📉 Loss of customer trust
+- Complete security bypass - Any user becomes admin
+- Unauthorized access to all data
+- Financial fraud possible
+- Loss of customer trust
 
 #### 2. **The `constructor` Attack**
 
@@ -70,7 +70,7 @@ Object.constructor.prototype.executeCode = function() { /* evil */ };
 
 // Now every object has malicious methods
 const anyObject = {};
-anyObject.executeCode(); // 💥 RCE achieved
+anyObject.executeCode(); // RCE achieved
 ```
 
 **What Happens Without Protection:**
@@ -79,10 +79,10 @@ anyObject.executeCode(); // 💥 RCE achieved
 - Server compromise achieved
 
 **Impact:**
-- 💣 Remote Code Execution (RCE)
-- 📁 File system access
-- 🔑 Steal API keys and secrets
-- 🎭 Install backdoors
+- Remote Code Execution (RCE)
+- File system access
+- Steal API keys and secrets
+- Install backdoors
 
 #### 3. **The `prototype` Attack**
 
@@ -109,7 +109,7 @@ User.prototype.role = "superadmin";
 
 // All User instances are now superadmin
 const attacker = new User({ name: "Attacker" });
-console.log(attacker.role); // "superadmin" 💥
+console.log(attacker.role); // "superadmin" 
 ```
 
 **What Happens Without Protection:**
@@ -118,8 +118,8 @@ console.log(attacker.role); // "superadmin" 💥
 - Privilege escalation achieved
 
 **Impact:**
-- 👑 Privilege escalation (User → SuperAdmin)
-- 🔄 All future instances compromised
+- Privilege escalation (User → SuperAdmin)
+- All future instances compromised
 
 #### 4. **Hidden Properties Attack**
 
@@ -145,9 +145,9 @@ console.log(malicious.__proto__);     // { isAdmin: true } - but isn't!
 - Attack succeeds silently
 
 **Impact:**
-- 🥷 Stealth attacks bypass logging
-- 🔍 Detection evasion
-- ⏱️ Time bomb - activates later
+- Stealth attacks bypass logging
+- Detection evasion
+- Time bomb - activates later
 
 ## How nextjs-fortress Solves This
 
