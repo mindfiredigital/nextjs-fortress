@@ -36,10 +36,10 @@ Attackers can craft malicious payloads with excessive nesting to:
 - Denial of Service (DoS) achieved
 
 **Impact:**
-- 💥 Application crashes and downtime
-- 🔄 Continuous crash loops
-- 📊 CPU spikes and memory leaks
-- 👥 All users affected
+- Application crashes and downtime
+- Continuous crash loops
+- CPU spikes and memory leaks
+- All users affected
 
 #### 2. **Validation Bypass**
 
@@ -76,9 +76,9 @@ Attackers can craft malicious payloads with excessive nesting to:
 - Security breach achieved
 
 **Impact:**
-- 🚨 Authentication bypass
-- 🔓 Privilege escalation
-- 📂 Unauthorized data access
+- Authentication bypass
+- Privilege escalation
+- Unauthorized data access
 
 #### 3. **Parser Exploitation**
 
@@ -94,9 +94,9 @@ Attackers can craft malicious payloads with excessive nesting to:
 - CPU usage spikes to 100%
 
 **Impact:**
-- ⏱️ Response time degradation (30s+)
-- 🔥 CPU exhaustion
-- 🛑 Service degradation for all users
+- Response time degradation 
+- CPU exhaustion
+- Service degradation for all users
 
 #### 4. **Memory Exhaustion**
 
@@ -113,9 +113,9 @@ Attackers can craft malicious payloads with excessive nesting to:
 - Server runs out of memory
 
 **Impact:**
-- 💾 Out of Memory errors and crashes
-- 🐌 Garbage collection storms
-- 📉 Performance degradation
+- Out of Memory errors and crashes
+- Garbage collection storms
+- Performance degradation
 
 ## How nextjs-fortress Solves This
 
