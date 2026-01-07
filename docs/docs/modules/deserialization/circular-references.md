@@ -35,11 +35,7 @@ function serialize(obj) {
 - Application crashes
 - Server becomes unresponsive
 
-**Impact:**
-- 💥 Server crashes and immediate downtime
-- 🔄 Infinite loops consume CPU
-- 📊 Stack overflow errors
-- 🛑 Denial of Service (DoS)
+**Impact:** Server crashes and immediate downtime Infinite loops consume CPU Stack overflow errors Denial of Service (DoS)
 
 #### 2. **Memory Exhaustion**
 
@@ -66,10 +62,10 @@ function validate(obj, seen = []) {
 - Server runs out of memory
 
 **Impact:**
-- 💾 Memory exhaustion and OOM errors
-- 🐌 Performance degradation
-- 🔥 CPU spikes during GC
-- 👥 Affects all users
+- Memory exhaustion and OOM errors
+- Performance degradation
+- CPU spikes during GC
+- Affects all users
 
 #### 3. **JSON Serialization DoS**
 
@@ -79,10 +75,10 @@ app.post('/api/user', async (req, res) => {
   const userData = await req.json(); // Contains circular ref
   
   // Later in the code:
-  await db.save(JSON.stringify(userData)); // 💥 Crash
+  await db.save(JSON.stringify(userData)); // Crash
   
   // Or
-  return res.json(userData); // 💥 Crash
+  return res.json(userData); // Crash
 });
 ```
 
@@ -92,11 +88,7 @@ app.post('/api/user', async (req, res) => {
 - Error propagates
 - Service becomes unavailable
 
-**Impact:**
-- 🚨 API endpoint crashes
-- 📉 Service unavailability
-- 🔄 Error cascades
-- 💸 Lost revenue
+**Impact:** API endpoint crashes Service unavailability Error cascades Lost revenue
 
 #### 4. **Database Corruption**
 
@@ -121,10 +113,10 @@ await db.users.insert(user); // Database tries to serialize
 - Data inconsistency
 
 **Impact:**
-- 🗄️ Database connection issues
-- 🔄 Transaction failures
-- 📊 Data inconsistency
-- ⚠️ Application instability
+- Database connection issues
+- Transaction failures
+- Data inconsistency
+- Application instability
 
 ## How nextjs-fortress Solves This
 
@@ -237,64 +229,6 @@ export const fortressConfig: FortressConfig = {
     }
   },
 };
-```
-
-## Attack Examples
-
-### Example 1: Simple Circular Reference
-
-```javascript
-// Attacker payload
-const attack = { name: "user" };
-attack.self = attack;
-
-// Fortress detects:
-// Level 1: { name: "user", self: {...} }
-// Level 2: Checking "self" property
-// Found: "self" points back to Level 1 object
-// Result: BLOCKED ✅
-```
-
-### Example 2: Deep Circular Reference
-
-```javascript
-// More sophisticated attack
-const attack = {
-  user: {
-    profile: {
-      settings: {}
-    }
-  }
-};
-attack.user.profile.settings.root = attack;
-
-// Fortress detects:
-// Seen: Set()
-// Check attack → Add to seen
-// Check attack.user → Add to seen
-// Check attack.user.profile → Add to seen  
-// Check attack.user.profile.settings → Add to seen
-// Check attack.user.profile.settings.root → Already in seen!
-// Result: BLOCKED ✅
-```
-
-### Example 3: Mutual References
-
-```javascript
-// Two objects referencing each other
-const a = { name: "A" };
-const b = { name: "B" };
-a.ref = b;
-b.ref = a;
-
-const payload = { data: a };
-
-// Fortress detects:
-// Check payload → Add to seen
-// Check payload.data (a) → Add to seen
-// Check a.ref (b) → Add to seen
-// Check b.ref (a) → Already in seen!
-// Result: BLOCKED ✅
 ```
 
 ## How to Initialize
