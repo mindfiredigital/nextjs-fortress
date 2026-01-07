@@ -10,8 +10,7 @@ SQL injection protection detects and blocks malicious SQL code in request payloa
 
 Attackers inject SQL code into inputs to manipulate database queries:
 
-#### 1. **Authentication Bypass**
-
+#### 1. **Authentication Bypass*
 ```javascript
 // Login form payload
 {
@@ -34,10 +33,10 @@ AND password = 'anything'
 - No password needed
 
 **Impact:**
-- 🔓 Complete authentication bypass
-- 👤 Account takeover
-- 📂 Unauthorized data access
-- 💰 Financial fraud
+- Complete authentication bypass
+- Account takeover
+- Unauthorized data access
+- Financial fraud
 
 #### 2. **Data Extraction (UNION SELECT)**
 
@@ -60,10 +59,10 @@ WHERE name = 'product' UNION SELECT username, password FROM users--'
 - Sensitive data exposed
 
 **Impact:**
-- 📊 Complete database dump
-- 🔑 Password theft
-- 💳 Payment information stolen
-- 👥 User data breach
+- Complete database dump
+- Password theft
+- Payment information stolen
+- User data breach
 
 #### 3. **Data Destruction (DROP TABLE)**
 
@@ -85,10 +84,10 @@ DELETE FROM products WHERE id = '123'; DROP TABLE products--'
 - Application breaks completely
 
 **Impact:**
-- 💥 Data destruction
-- 🗑️ Permanent data loss
-- 📉 Business disruption
-- 💸 Revenue loss
+- Data destruction
+- Permanent data loss
+- Business disruption
+- Revenue loss
 
 #### 4. **SQL Keyword Density Attack**
 
@@ -108,9 +107,9 @@ DELETE FROM products WHERE id = '123'; DROP TABLE products--'
 - Privileged data accessed
 
 **Impact:**
-- 🎯 Targeted data extraction
-- 🔐 Privilege escalation
-- 📋 Multi-table data theft
+- Targeted data extraction
+- Privilege escalation
+- Multi-table data theft
 
 ## How nextjs-fortress Solves This
 
@@ -196,21 +195,6 @@ private extractStrings(input: unknown, depth: number = 0): string[] {
 ### Basic Setup
 
 ```typescript
-import { FortressConfig } from 'nextjs-fortress';
-
-export const fortressConfig: FortressConfig = {
-  modules: {
-    injection: {
-      enabled: true,
-      checks: ['sql', 'command', 'xss', 'codeInjection'],
-    },
-  },
-};
-```
-
-### SQL Only
-
-```typescript
 export const fortressConfig: FortressConfig = {
   modules: {
     injection: {
@@ -254,7 +238,7 @@ POST /api/auth/login
 // Fortress detects:
 // Pattern match: "OR '1'='1'" found
 // Severity: critical
-// Result: BLOCKED ✅
+// Result: BLOCKED 
 // Message: "SQL injection detected: OR '1'='1'"
 ```
 
@@ -270,7 +254,7 @@ POST /api/products/search
 // Fortress detects:
 // Pattern match: "UNION SELECT" found
 // Severity: critical
-// Result: BLOCKED ✅
+// Result: BLOCKED 
 ```
 
 ### Example 3: Table Deletion
@@ -285,7 +269,7 @@ DELETE /api/product/123
 // Fortress detects:
 // Pattern match: "DROP TABLE" found
 // Severity: critical
-// Result: BLOCKED ✅
+// Result: BLOCKED 
 ```
 
 ### Example 4: Comment Injection
@@ -300,7 +284,7 @@ POST /api/comment
 // Fortress detects:
 // Pattern match: "DELETE FROM" found
 // Severity: critical
-// Result: BLOCKED ✅
+// Result: BLOCKED 
 ```
 
 ## SQL Keywords Monitored
