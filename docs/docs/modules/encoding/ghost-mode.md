@@ -29,10 +29,10 @@ __proto__
 - Attack goes undetected
 
 **Impact:**
-- 🥷 Complete WAF bypass
-- 🔓 Prototype pollution
-- 🚨 CVE-2025-55182 exploitation
-- 📊 Zero detection
+- Complete WAF bypass
+- Prototype pollution
+- CVE-2025-55182 exploitation
+- Zero detection
 
 #### 2. **BOM (Byte Order Mark) Manipulation**
 
@@ -58,10 +58,7 @@ __proto__
 - Security bypassed completely
 
 **Impact:**
-- 🛡️ WAF rendered useless
-- 🎭 Stealth attacks
-- 🔑 No security logs
-- 💣 Undetected exploitation
+- WAF rendered useless Stealth attacks No security logs Undetected exploitation
 
 #### 3. **GB18030 Encoding Attack**
 
@@ -84,10 +81,10 @@ __proto__
 - Injection succeeds
 
 **Impact:**
-- 🌐 International encoding abuse
-- 🔓 Security bypass
-- 🎯 Targeted attacks
-- 📡 Silent exploitation
+- International encoding abuse
+- Security bypass
+- Targeted attacks
+- Silent exploitation
 
 #### 4. **Mixed Encoding Attack**
 
@@ -111,9 +108,9 @@ Content-Type: application/json; charset=utf-8
 - Partial bypass achieved
 
 **Impact:**
-- 🎪 Complex bypass techniques
-- 🔍 Hard to detect
-- 🎭 Sophisticated attacks
+- Complex bypass techniques
+- Hard to detect
+- Sophisticated attacks
 
 ## How nextjs-fortress Solves This
 
@@ -374,18 +371,6 @@ export const fortressConfig: FortressConfig = {
 | UTF-32BE | 00 00 FE FF | Complex Bypass | Critical |
 | UTF-8 | EF BB BF | Allowed | Low |
 | GB18030 | 84 31 95 33 | Exotic Bypass | High |
-
-## Performance Impact
-
-```typescript
-// Test: 1000 requests
-
-Without encoding detection:   0.1ms per request
-With encoding detection:      0.2ms per request
-Overhead:                    +0.1ms per request
-
-// BOM check is very fast - just byte inspection
-```
 
 ## Summary
 
