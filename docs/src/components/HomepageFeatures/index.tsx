@@ -5,48 +5,79 @@ import styles from './styles.module.css';
 
 type FeatureItem = {
   title: string;
-  Svg: React.ComponentType<React.ComponentProps<'svg'>>;
+  icon: string;
   description: ReactNode;
 };
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    title: '🛡️ CVE-2025-55182 Protection',
+    icon: '🔒',
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Complete protection against React2Shell vulnerability. Blocks prototype 
+        pollution, dangerous keys, and all attack vectors targeting React Server 
+        Components.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    title: '⚡ Zero Performance Impact',
+    icon: '🚀',
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Less than 1ms overhead per request. Optimized validation algorithms ensure 
+        your application stays fast while remaining secure against all threats.
       </>
     ),
   },
   {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: '🎯 7 Layers of Protection',
+    icon: '🛡️',
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Deserialization, Injection Detection, Encoding Validation, CSRF, Rate 
+        Limiting, Content Validation, and Security Headers - all working together.
+      </>
+    ),
+  },
+  {
+    title: '👻 Ghost Mode Defense',
+    icon: '🔍',
+    description: (
+      <>
+        Detects UTF-16LE encoding bypasses that trick WAFs. Prevents sophisticated 
+        attackers from using encoding tricks to deliver malicious payloads.
+      </>
+    ),
+  },
+  {
+    title: '🔧 Zero Configuration',
+    icon: '⚙️',
+    description: (
+      <>
+        Works out of the box with sensible defaults. Add one middleware file and 
+        your entire Next.js application is protected. Customize when needed.
+      </>
+    ),
+  },
+  {
+    title: '📊 Security Logging',
+    icon: '📈',
+    description: (
+      <>
+        Comprehensive security event logging with severity levels, confidence 
+        scores, and attack details. Send events to Sentry, DataDog, or your SIEM.
       </>
     ),
   },
 ];
 
-function Feature({title, Svg, description}: FeatureItem) {
+function Feature({title, icon, description}: FeatureItem) {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
+        <div className={styles.featureIcon}>{icon}</div>
       </div>
       <div className="text--center padding-horiz--md">
         <Heading as="h3">{title}</Heading>

@@ -30,10 +30,10 @@ exec(`convert ${filename} output.jpg`);
 - Credentials exposed
 
 **Impact:**
-- 📁 File system access
-- 🔑 Credential theft
-- 💣 System compromise
-- 🎭 Privilege escalation
+- File system access
+- Credential theft
+- System compromise
+- Privilege escalation
 
 #### 2. **Pipe Command Injection**
 
@@ -52,13 +52,8 @@ exec(`cat logs.txt | grep "${query}"`);
 **What Happens Without Protection:**
 - Pipe commands chain operations
 - Data exfiltrated
-- Remote server receives data
-
-**Impact:**
-- 📡 Data exfiltration
-- 🕵️ Silent attacks
-- 🔓 Credential leakage
-- 💾 Database dumps
+- Remote server receives d
+**Impact:** Data exfiltration Silent attacks Credential leakage Database dumps
 
 #### 3. **Command Substitution**
 
@@ -80,10 +75,10 @@ exec(`backup ${path}`);
 - System destroyed
 
 **Impact:**
-- 💥 File system destruction
-- 🗑️ Data deletion
-- 📉 Service outage
-- 💸 Business loss
+- File system destruction
+- Data deletion
+- Service outage
+- Business loss
 
 #### 4. **Reverse Shell**
 
@@ -105,10 +100,10 @@ exec(`curl ${webhook}`);
 - Full server control
 
 **Impact:**
-- 🔓 Complete server compromise
-- 👑 Root access possible
-- 🎯 Persistent backdoor
-- 🌐 Network pivot point
+- Complete server compromise
+- Root access possible
+- Persistent backdoor
+- Network pivot point
 
 ## How nextjs-fortress Solves This
 
@@ -169,19 +164,6 @@ export const fortressConfig: FortressConfig = {
     injection: {
       enabled: true,
       checks: ['command'], // Enable command injection detection
-    },
-  },
-};
-```
-
-### With All Injection Types
-
-```typescript
-export const fortressConfig: FortressConfig = {
-  modules: {
-    injection: {
-      enabled: true,
-      checks: ['sql', 'command', 'xss', 'codeInjection'],
     },
   },
 };
@@ -312,16 +294,6 @@ export const fortressConfig: FortressConfig = {
     }
   },
 };
-```
-
-## Performance Impact
-
-```typescript
-// Test: 1000 requests
-
-Without command detection:   0.1ms per request
-With command detection:      0.2ms per request
-Overhead:                   +0.1ms per request
 ```
 
 ## Summary

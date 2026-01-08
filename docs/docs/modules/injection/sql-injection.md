@@ -338,28 +338,6 @@ export const fortressConfig: FortressConfig = {
 };
 ```
 
-## Performance Impact
-
-### Benchmarks
-
-```typescript
-// Test: 1000 requests
-
-Without SQL detection:   0.1ms per request
-With SQL detection:      0.3ms per request
-Overhead:               +0.2ms per request
-
-// Attack blocked:        0.4ms (then rejected)
-// Attack success:        Database compromised
-```
-
-### Why It's Fast
-
-1. **Compiled regex** - Patterns pre-compiled
-2. **Early exit** - Stops on first match
-3. **Efficient extraction** - Single pass through data
-4. **No database queries** - Pure computation
-
 ## Summary
 
 **What happens without SQL injection protection:**
