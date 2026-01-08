@@ -20,7 +20,9 @@ describe('Server Actions Wrapper - Orchestration Tests', () => {
     const {
       createDeserializationValidator,
     } = require('../../src/validators/deserialization')
-    const { createInjectionValidator } = require('../../src/validators/injection')
+    const {
+      createInjectionValidator,
+    } = require('../../src/validators/injection')
     const { createCSRFValidator } = require('../../src/validators/csrf')
 
     mockValidators = {
@@ -268,9 +270,9 @@ describe('Server Actions Wrapper - Orchestration Tests', () => {
       const callArg = action.mock.calls[0][0]
       expect(callArg[0].name).toBe('item1')
       expect(callArg[1].name).toBe('item2')
-      expect(Object.prototype.hasOwnProperty.call(callArg[0], '__proto__')).toBe(
-        false
-      )
+      expect(
+        Object.prototype.hasOwnProperty.call(callArg[0], '__proto__')
+      ).toBe(false)
       expect(
         Object.prototype.hasOwnProperty.call(callArg[1], 'constructor')
       ).toBe(false)
@@ -349,7 +351,8 @@ describe('Server Actions Wrapper - Orchestration Tests', () => {
         severity: 'high',
       })
 
-      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>()
+      const action =
+        jest.fn<(...args: any[]) => Promise<{ success: boolean }>>()
       const protectedAction = secureServerAction(action)
 
       await expect(protectedAction({ data: 'test' })).rejects.toThrow()

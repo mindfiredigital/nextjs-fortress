@@ -155,17 +155,17 @@ describe('CSRFValidator', () => {
 
     test('should return count of cleaned tokens', async () => {
       jest.useFakeTimers()
-      
+
       await validator.generateToken('session-1')
       await validator.generateToken('session-2')
-      
+
       // Fast-forward past expiry
       jest.advanceTimersByTime(61000)
-      
+
       const cleaned = validator.cleanup()
-      
+
       expect(cleaned).toBeGreaterThanOrEqual(0)
-      
+
       jest.useRealTimers()
     })
   })

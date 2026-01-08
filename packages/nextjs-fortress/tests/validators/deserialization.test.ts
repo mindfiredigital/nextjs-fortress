@@ -77,7 +77,7 @@ describe('DeserializationValidator', () => {
         command: 'require("child_process").exec("whoami")',
       }
       const result = validator.validate(payload)
-      
+
       expect(result.valid).toBe(false)
     })
 

@@ -23,7 +23,9 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
     const {
       createDeserializationValidator,
     } = require('../../src/validators/deserialization')
-    const { createInjectionValidator } = require('../../src/validators/injection')
+    const {
+      createInjectionValidator,
+    } = require('../../src/validators/injection')
     const { createCSRFValidator } = require('../../src/validators/csrf')
     const { createEncodingValidator } = require('../../src/validators/encoding')
 
