@@ -1,0 +1,30 @@
+.features {
+  display: flex;
+  align-items: center;
+  padding: 4rem 0;
+  width: 100%;
+}
+
+.featureIcon {
+  height: 120px;
+  width: 120px;
+  font-size: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  background: linear-gradient(135deg, #2e8555 0%, #33925d 100%);
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(46, 133, 85, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.featureIcon:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 50px rgba(46, 133, 85, 0.3);
+}
+
+[data-theme='dark'] .featureIcon {
+  background: linear-gradient(135deg, #25c2a0 0%, #29d5b0 100%);
+  box-shadow: 0 10px 40px rgba(37, 194, 160, 0.3);
+}
