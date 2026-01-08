@@ -319,12 +319,18 @@ function handleExistingMiddleware(): boolean {
   log('📖 To integrate Fortress with your existing middleware:', 'bright')
   console.warn('')
   log('Please read the integration guide in the README:', 'yellow')
-  log('  → https://github.com/mindfiredigital/nextjs-fortress#middleware-integration', 'blue')
+  log(
+    '  → https://github.com/mindfiredigital/nextjs-fortress#middleware-integration',
+    'blue'
+  )
   console.warn('')
   log('Or check the documentation for manual setup:', 'yellow')
-  log('  → https://github.com/mindfiredigital/nextjs-fortress/blob/main/docs/INTEGRATION.md', 'blue')
+  log(
+    '  → https://github.com/mindfiredigital/nextjs-fortress/blob/main/docs/INTEGRATION.md',
+    'blue'
+  )
   console.warn('')
-  
+
   return false // Indicates middleware was not created
 }
 
@@ -404,7 +410,7 @@ function init() {
   }
 
   console.warn('')
-  
+
   // Different messages based on whether middleware was created
   if (middlewareCreated) {
     log('🎉 Fortress setup complete!', 'green')
@@ -430,7 +436,10 @@ function init() {
     log('⚠️  Skipped: middleware.ts (already exists)', 'yellow')
     console.warn('')
     log('📚 Required action:', 'bright')
-    log('You must manually integrate Fortress into your existing middleware.', 'cyan')
+    log(
+      'You must manually integrate Fortress into your existing middleware.',
+      'cyan'
+    )
     log('Please follow the integration guide in the README.', 'cyan')
   }
 

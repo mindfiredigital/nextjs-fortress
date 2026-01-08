@@ -17,7 +17,9 @@ export function createFortressMiddleware(
   const headersHandler = new SecurityHeadersHandler(config)
   const whitelistChecker = new WhitelistChecker(config)
 
-  return async function fortressMiddleware(request: NextRequest): Promise<NextResponse> {
+  return async function fortressMiddleware(
+    request: NextRequest
+  ): Promise<NextResponse> {
     if (!config.enabled || whitelistChecker.isWhitelisted(request)) {
       return nextHandler ? await nextHandler(request) : NextResponse.next()
     }
@@ -37,7 +39,7 @@ export function createFortressMiddleware(
         return validationResult.response
       }
 
-      const response = nextHandler 
+      const response = nextHandler
         ? await nextHandler(request)
         : NextResponse.next()
 
@@ -52,7 +54,7 @@ export function createFortressMiddleware(
       return response
     } catch (error) {
       logger.error('Fortress middleware error:', error)
-      
+
       return config.mode === 'production'
         ? new NextResponse('Internal Server Error', { status: 500 })
         : NextResponse.next()
