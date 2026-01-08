@@ -30,11 +30,6 @@ for (let i = 0; i < 1000000; i++) {
 - Password eventually cracked
 - Account compromised
 
-**Impact:**
-- 🔓 Account takeover
-- 👤 Credential theft
-- 📊 Data breach
-- 💰 Financial fraud
 
 #### 2. **Denial of Service (DoS)**
 
@@ -54,11 +49,7 @@ while (true) {
 - Application crashes
 - All users affected
 
-**Impact:**
-- 💥 Service outage
-- 📉 Business disruption
-- 💸 Revenue loss
-- 👥 Customer complaints
+**Impact:** Service outage Business disruption Revenue loss Customer complaints
 
 #### 3. **Data Scraping**
 
@@ -76,10 +67,10 @@ for (let id = 1; id <= 1000000; id++) {
 - Competitive intelligence gathered
 
 **Impact:**
-- 📊 Data theft
-- 🕵️ Privacy violations
-- 💼 Competitive disadvantage
-- ⚖️ Legal liability
+- Data theft
+- Privacy violations
+- Competitive disadvantage
+- Legal liability
 
 #### 4. **API Abuse / Resource Exhaustion**
 
@@ -103,10 +94,10 @@ for (let i = 0; i < 10000; i++) {
 - Costs skyrocket
 
 **Impact:**
-- 💰 Excessive cloud bills
-- 🐌 Performance degradation
-- 🔥 Database overload
-- 💸 Financial damage
+- Excessive cloud bills
+- Performance degradation
+- Database overload
+- Financial damage
 
 ## How nextjs-fortress Solves This
 
@@ -490,19 +481,6 @@ byIP: {
   requests: 200,
   window: 60000,
 }
-```
-
-## Performance Impact
-
-```typescript
-// Test: 1000 requests
-
-Without rate limiting:   0.1ms per request
-With rate limiting:      0.2ms per request
-Overhead:               +0.1ms per request
-
-// In-memory Map lookup: O(1)
-// Very efficient
 ```
 
 ## Summary
