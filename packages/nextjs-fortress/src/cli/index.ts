@@ -419,37 +419,50 @@ function installDependencies() {
     // Check if already installed
     const packageJsonPath = path.join(process.cwd(), 'package.json')
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'))
-    
-    if (packageJson.dependencies?.['@mindfiredigital/nextjs-fortress'] || 
-        packageJson.devDependencies?.['@mindfiredigital/nextjs-fortress']) {
+
+    if (
+      packageJson.dependencies?.['@mindfiredigital/nextjs-fortress'] ||
+      packageJson.devDependencies?.['@mindfiredigital/nextjs-fortress']
+    ) {
       log('✅ Package already installed, skipping...', 'green')
       return
     }
 
-    execSync('npm install @mindfiredigital/nextjs-fortress', { stdio: 'inherit' })
+    execSync('npm install @mindfiredigital/nextjs-fortress', {
+      stdio: 'inherit',
+    })
     log('✅ Dependencies installed successfully', 'green')
   } catch (error) {
     log(
       `❌ Failed to install dependencies: ${error instanceof Error ? error.message : String(error)}`,
       'red'
     )
-    log('Please run manually: npm install @mindfiredigital/nextjs-fortress', 'yellow')
+    log(
+      'Please run manually: npm install @mindfiredigital/nextjs-fortress',
+      'yellow'
+    )
   }
 }
 
 function handleExistingMiddleware(): void {
   const middlewarePath = path.join(process.cwd(), 'middleware.ts')
   const backupPath = path.join(process.cwd(), 'middleware.backup.ts')
-  
+
   // Create backup
   fs.copyFileSync(middlewarePath, backupPath)
   log(`📋 Created backup: middleware.backup.ts`, 'cyan')
-  
+
   // Create integration guide
-  const guidePath = path.join(process.cwd(), 'fortress-middleware-integration.ts')
+  const guidePath = path.join(
+    process.cwd(),
+    'fortress-middleware-integration.ts'
+  )
   fs.writeFileSync(guidePath, createMiddlewareIntegrationGuide())
-  log(`📖 Created integration guide: fortress-middleware-integration.ts`, 'green')
-  
+  log(
+    `📖 Created integration guide: fortress-middleware-integration.ts`,
+    'green'
+  )
+
   console.warn('')
   log('⚠️  EXISTING MIDDLEWARE DETECTED', 'yellow')
   console.warn('')
@@ -579,7 +592,10 @@ function showHelp() {
   logHeader()
 
   log('Usage:', 'bright')
-  log('  npx fortress init         Initialize Fortress in current project', 'cyan')
+  log(
+    '  npx fortress init         Initialize Fortress in current project',
+    'cyan'
+  )
   log('  npx fortress help         Show this help message', 'cyan')
   log('  npx fortress version      Show version', 'cyan')
   console.warn('')
@@ -603,7 +619,10 @@ function showHelp() {
 
   log('Need help?', 'bright')
   log('  GitHub: https://github.com/mindfiredigital/nextjs-fortress', 'blue')
-  log('  Issues: https://github.com/mindfiredigital/nextjs-fortress/issues', 'blue')
+  log(
+    '  Issues: https://github.com/mindfiredigital/nextjs-fortress/issues',
+    'blue'
+  )
   console.warn('')
 }
 
