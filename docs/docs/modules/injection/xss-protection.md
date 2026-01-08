@@ -31,11 +31,7 @@ Attackers inject malicious scripts that execute in victims' browsers:
 - Session cookies stolen
 - Users' accounts compromised
 
-**Impact:**
-- 🍪 Session hijacking
-- 👤 Account takeover
-- 📊 Data theft
-- 🎭 Identity impersonation
+**Impact:** Session hijacking Account takeover Data theft Identity impersonation
 
 #### 2. **Event Handler Injection**
 
@@ -57,10 +53,10 @@ Attackers inject malicious scripts that execute in victims' browsers:
 - User unaware of attack
 
 **Impact:**
-- 🔓 Silent data theft
-- 🕵️ Stealth attacks
-- 📡 Data exfiltration
-- 🎯 Targeted attacks
+- Silent data theft
+- Stealth attacks
+- Data exfiltration
+- Targeted attacks
 
 #### 3. **JavaScript Protocol**
 
@@ -83,10 +79,10 @@ Attackers inject malicious scripts that execute in victims' browsers:
 - Credentials stolen
 
 **Impact:**
-- 🎣 Phishing attacks
-- 🔗 Malicious redirects
-- 🍪 Cookie theft
-- 💳 Credential harvesting
+- Phishing attacks
+- Malicious redirects
+- Cookie theft
+- Credential harvesting
 
 #### 4. **iFrame Injection**
 
@@ -108,10 +104,10 @@ Attackers inject malicious scripts that execute in victims' browsers:
 - All user actions monitored
 
 **Impact:**
-- ⌨️ Keystroke logging
-- 🔑 Password capture
-- 📝 Form data theft
-- 🎯 Persistent monitoring
+- Keystroke logging
+- Password capture
+- Form data theft
+- Persistent monitoring
 
 ## How nextjs-fortress Solves This
 
@@ -176,19 +172,6 @@ export const fortressConfig: FortressConfig = {
     injection: {
       enabled: true,
       checks: ['xss'], // Enable XSS detection
-    },
-  },
-};
-```
-
-### With All Injection Types
-
-```typescript
-export const fortressConfig: FortressConfig = {
-  modules: {
-    injection: {
-      enabled: true,
-      checks: ['sql', 'command', 'xss', 'codeInjection'],
     },
   },
 };
@@ -304,16 +287,6 @@ export const fortressConfig: FortressConfig = {
     }
   },
 };
-```
-
-## Performance Impact
-
-```typescript
-// Test: 1000 requests
-
-Without XSS detection:   0.1ms per request
-With XSS detection:      0.2ms per request
-Overhead:               +0.1ms per request
 ```
 
 ## Summary
