@@ -30,7 +30,7 @@ jobs:
         run: npm install -g pnpm
 
       - name: 'Install dependencies with pnpm'
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
       - name: 'Build application'
         run: pnpm build
@@ -51,49 +51,6 @@ jobs:
           title: 'chore(release): version packages'
           version: node .github/changeset-version.js
           publish: npx changeset publish
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Auto-merge release PR
-        if: steps.changesets.outputs.pullRequestNumber != ''
-        run: |
-          gh pr merge ${{ steps.changesets.outputs.pullRequestNumber }} --squash --delete-branch
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  publish:
-    needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-
-      - name: Enable Corepack
-        run: npm install -g pnpm
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Pull latest changes
-        run: |
-          git pull origin main
-
-      - name: Publish to npm
-        id: changesets
-        uses: changesets/action@v1.4.1
-        with:
-            commit: 'chore(release): version packages'
-            title: 'chore(release): version packages'
-            version: node .github/changeset-version.js
-            publish: npx changeset publish
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
