@@ -1,14 +1,15 @@
+// tests/wrappers/apiRoutes.test.ts
+
 import { NextRequest, NextResponse } from 'next/server'
-import { createWithFortress } from '../src/wrappers/apiRoutes'
-import { createSecureServerAction } from '../src/wrappers/serverActions'
-import { FortressConfig, DEFAULT_CONFIG, SecurityEvent } from '../src/types'
+import { createWithFortress } from '../../src/wrappers/apiRoutes'
+import { FortressConfig, DEFAULT_CONFIG, SecurityEvent } from '../../src/types'
 import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 
-jest.mock('../src/validators/deserialization')
-jest.mock('../src/validators/injection')
-jest.mock('../src/validators/csrf')
-jest.mock('../src/validators/encoding')
-jest.mock('../src/utils/logger')
+jest.mock('../../src/validators/deserialization')
+jest.mock('../../src/validators/injection')
+jest.mock('../../src/validators/csrf')
+jest.mock('../../src/validators/encoding')
+jest.mock('../../src/utils/logger')
 
 describe('API Routes Wrapper - Orchestration Tests', () => {
   let mockConfig: FortressConfig
@@ -18,13 +19,15 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
   beforeEach(() => {
     jest.clearAllMocks()
 
-    // Setup mock validators with default "pass" behavior
+    // Setup mock validators
     const {
       createDeserializationValidator,
-    } = require('../src/validators/deserialization')
-    const { createInjectionValidator } = require('../src/validators/injection')
-    const { createCSRFValidator } = require('../src/validators/csrf')
-    const { createEncodingValidator } = require('../src/validators/encoding')
+    } = require('../../src/validators/deserialization')
+    const {
+      createInjectionValidator,
+    } = require('../../src/validators/injection')
+    const { createCSRFValidator } = require('../../src/validators/csrf')
+    const { createEncodingValidator } = require('../../src/validators/encoding')
 
     mockValidators = {
       deserialization: {
@@ -58,7 +61,6 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
     createCSRFValidator.mockReturnValue(mockValidators.csrf)
     createEncodingValidator.mockReturnValue(mockValidators.encoding)
 
-    // Use DEFAULT_CONFIG as base and override what's needed
     mockConfig = {
       ...DEFAULT_CONFIG,
       mode: 'development',
@@ -104,6 +106,24 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
       await protectedHandler(req)
       expect(handler).toHaveBeenCalled()
     })
+
+    it('should allow all methods by default', async () => {
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>(
+        async () => new NextResponse('OK')
+      )
+      const protectedHandler = withFortress(handler)
+
+      const methods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
+
+      for (const method of methods) {
+        const req = new NextRequest('http://localhost:3000/api/test', {
+          method,
+        })
+        await protectedHandler(req)
+      }
+
+      expect(handler).toHaveBeenCalledTimes(methods.length)
+    })
   })
 
   describe('Rate Limiting', () => {
@@ -147,6 +167,34 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
       expect(response.status).toBe(429)
       expect(response.headers.get('Retry-After')).toBeTruthy()
     })
+
+    it('should track requests per IP', async () => {
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>(
+        async () => new NextResponse('OK')
+      )
+      const protectedHandler = withFortress(handler, {
+        rateLimit: { requests: 1, window: 60000 },
+      })
+
+      const req1 = new NextRequest('http://localhost:3000/api/test', {
+        headers: { 'x-forwarded-for': '192.168.1.1' },
+      })
+      const req2 = new NextRequest('http://localhost:3000/api/test', {
+        headers: { 'x-forwarded-for': '192.168.1.2' },
+      })
+
+      // First request from IP1 should succeed
+      await protectedHandler(req1)
+      expect(handler).toHaveBeenCalledTimes(1)
+
+      // Second request from IP1 should be blocked
+      const response1 = await protectedHandler(req1)
+      expect(response1.status).toBe(429)
+
+      // But request from IP2 should succeed (different IP)
+      await protectedHandler(req2)
+      expect(handler).toHaveBeenCalledTimes(2)
+    })
   })
 
   describe('Payload Size Validation', () => {
@@ -182,6 +230,23 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
         method: 'POST',
         body: JSON.stringify({ data: 'test' }),
         headers: { 'content-length': '16' },
+      })
+
+      await protectedHandler(req)
+      expect(handler).toHaveBeenCalled()
+    })
+
+    it('should handle missing content-length header', async () => {
+      const handler = jest.fn<(req: NextRequest) => Promise<NextResponse>>(
+        async () => new NextResponse('OK')
+      )
+      const protectedHandler = withFortress(handler, {
+        maxPayloadSize: 1000,
+      })
+
+      const req = new NextRequest('http://localhost:3000/api/test', {
+        method: 'POST',
+        body: 'small data',
       })
 
       await protectedHandler(req)
@@ -480,288 +545,6 @@ describe('API Routes Wrapper - Orchestration Tests', () => {
       const req = new NextRequest('http://localhost:3000/api/test')
 
       await expect(protectedHandler(req)).rejects.toThrow('Handler error')
-    })
-  })
-})
-
-describe('Server Actions Wrapper - Orchestration Tests', () => {
-  let mockConfig: FortressConfig
-  let secureServerAction: ReturnType<typeof createSecureServerAction>
-  let mockValidators: any
-
-  beforeEach(() => {
-    jest.clearAllMocks()
-
-    const {
-      createDeserializationValidator,
-    } = require('../src/validators/deserialization')
-    const { createInjectionValidator } = require('../src/validators/injection')
-    const { createCSRFValidator } = require('../src/validators/csrf')
-
-    mockValidators = {
-      deserialization: {
-        validate: jest.fn<(data: unknown) => { valid: boolean }>(() => ({
-          valid: true,
-        })),
-      },
-      injection: {
-        validate: jest.fn<(data: unknown) => { valid: boolean }>(() => ({
-          valid: true,
-        })),
-      },
-      csrf: {
-        validate: jest.fn<() => Promise<{ valid: boolean }>>(async () => ({
-          valid: true,
-        })),
-      },
-    }
-
-    createDeserializationValidator.mockReturnValue(
-      mockValidators.deserialization
-    )
-    createInjectionValidator.mockReturnValue(mockValidators.injection)
-    createCSRFValidator.mockReturnValue(mockValidators.csrf)
-
-    mockConfig = {
-      ...DEFAULT_CONFIG,
-      mode: 'development',
-      onSecurityEvent: jest.fn<(event: SecurityEvent) => Promise<void>>(),
-    }
-
-    secureServerAction = createSecureServerAction(mockConfig)
-  })
-
-  describe('Input Validation Flow', () => {
-    it('should validate all arguments', async () => {
-      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
-        async () => ({ success: true })
-      )
-      const protectedAction = secureServerAction(action)
-
-      await protectedAction('user123', { name: 'John' })
-
-      expect(mockValidators.deserialization.validate).toHaveBeenCalledTimes(2)
-      expect(mockValidators.injection.validate).toHaveBeenCalledTimes(2)
-      expect(action).toHaveBeenCalledWith('user123', { name: 'John' })
-    })
-
-    it('should block when deserialization fails', async () => {
-      mockValidators.deserialization.validate.mockReturnValueOnce({
-        valid: false,
-        message: 'Prototype pollution detected',
-        rule: 'prototype_pollution',
-      })
-
-      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
-        async () => ({ success: true })
-      )
-      const protectedAction = secureServerAction(action)
-
-      await expect(
-        protectedAction({ __proto__: { isAdmin: true } })
-      ).rejects.toThrow('Prototype pollution detected')
-
-      expect(action).not.toHaveBeenCalled()
-    })
-
-    it('should block when injection validation fails', async () => {
-      mockValidators.injection.validate
-        .mockReturnValueOnce({ valid: true })
-        .mockReturnValueOnce({
-          valid: false,
-          message: 'SQL injection detected',
-          rule: 'sql_injection',
-        })
-
-      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
-        async () => ({ success: true })
-      )
-      const protectedAction = secureServerAction(action)
-
-      await expect(protectedAction('safe-id', "1' OR '1'='1")).rejects.toThrow(
-        'SQL injection detected'
-      )
-
-      expect(action).not.toHaveBeenCalled()
-    })
-  })
-
-  describe('CSRF Validation Flow', () => {
-    it('should validate CSRF when required', async () => {
-      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
-        async () => ({ success: true })
-      )
-      const protectedAction = secureServerAction(action, {
-        requireCSRF: true,
-      })
-
-      await protectedAction('data', { _csrf: 'valid-token' })
-
-      expect(mockValidators.csrf.validate).toHaveBeenCalledWith(
-        'valid-token',
-        expect.any(String),
-        'POST'
-      )
-    })
-
-    it('should block when CSRF validation fails', async () => {
-      mockValidators.csrf.validate.mockResolvedValueOnce({
-        valid: false,
-        message: 'Invalid CSRF token',
-        rule: 'csrf_token_invalid',
-      })
-
-      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
-        async () => ({ success: true })
-      )
-      const protectedAction = secureServerAction(action, {
-        requireCSRF: true,
-      })
-
-      await expect(
-        protectedAction('data', { _csrf: 'invalid' })
-      ).rejects.toThrow('Invalid CSRF token')
-
-      expect(action).not.toHaveBeenCalled()
-    })
-
-    it('should skip CSRF when not required', async () => {
-      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
-        async () => ({ success: true })
-      )
-      const protectedAction = secureServerAction(action, {
-        requireCSRF: false,
-      })
-
-      await protectedAction('data')
-
-      expect(mockValidators.csrf.validate).not.toHaveBeenCalled()
-      expect(action).toHaveBeenCalled()
-    })
-  })
-
-  describe('Input Sanitization', () => {
-    it('should sanitize dangerous keys when enabled', async () => {
-      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
-        async () => ({ success: true })
-      )
-      const protectedAction = secureServerAction(action, {
-        sanitizeInputs: true,
-      })
-
-      await protectedAction({
-        username: 'test',
-        __proto__: { isAdmin: true },
-        constructor: { polluted: true },
-      })
-
-      expect(action).toHaveBeenCalledWith({
-        username: 'test',
-      })
-    })
-
-    it('should sanitize nested objects', async () => {
-      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
-        async () => ({ success: true })
-      )
-      const protectedAction = secureServerAction(action, {
-        sanitizeInputs: true,
-      })
-
-      await protectedAction({
-        user: {
-          name: 'John',
-          profile: {
-            __proto__: { admin: true },
-            bio: 'Developer',
-          },
-        },
-      })
-
-      const callArg = action.mock.calls[0][0]
-      expect(callArg.user.name).toBe('John')
-      expect(callArg.user.profile.bio).toBe('Developer')
-      // Check that __proto__ is not an own property (it was removed)
-      expect(
-        Object.prototype.hasOwnProperty.call(callArg.user.profile, '__proto__')
-      ).toBe(false)
-    })
-
-    it('should not sanitize when disabled', async () => {
-      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
-        async () => ({ success: true })
-      )
-      const protectedAction = secureServerAction(action, {
-        sanitizeInputs: false,
-      })
-
-      const input = { username: 'test', data: { value: 123 } }
-      await protectedAction(input)
-
-      expect(action).toHaveBeenCalledWith(input)
-    })
-  })
-
-  describe('Security Event Reporting', () => {
-    it('should report security events on validation failure', async () => {
-      mockValidators.injection.validate.mockReturnValueOnce({
-        valid: false,
-        message: 'XSS detected',
-        rule: 'xss_attack',
-      })
-
-      const action =
-        jest.fn<(...args: any[]) => Promise<{ success: boolean }>>()
-      const protectedAction = secureServerAction(action)
-
-      await expect(
-        protectedAction('<script>alert(1)</script>')
-      ).rejects.toThrow()
-
-      expect(mockConfig.onSecurityEvent).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: 'xss_attack',
-          severity: 'high',
-        })
-      )
-    })
-  })
-
-  describe('Edge Cases', () => {
-    it('should handle empty arguments', async () => {
-      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
-        async () => ({ success: true })
-      )
-      const protectedAction = secureServerAction(action)
-
-      await protectedAction()
-
-      expect(action).toHaveBeenCalledWith()
-    })
-
-    it('should handle null arguments', async () => {
-      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
-        async () => ({ success: true })
-      )
-      const protectedAction = secureServerAction(action)
-
-      await protectedAction(null, undefined)
-
-      expect(action).toHaveBeenCalledWith(null, undefined)
-    })
-
-    it('should handle array arguments', async () => {
-      const action = jest.fn<(...args: any[]) => Promise<{ success: boolean }>>(
-        async () => ({ success: true })
-      )
-      const protectedAction = secureServerAction(action)
-
-      await protectedAction([1, 2, 3], ['a', 'b'])
-
-      expect(mockValidators.deserialization.validate).toHaveBeenCalledWith([
-        1, 2, 3,
-      ])
-      expect(action).toHaveBeenCalled()
     })
   })
 })
