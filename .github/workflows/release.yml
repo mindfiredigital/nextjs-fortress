@@ -69,6 +69,8 @@ jobs:
     permissions:
       contents: write
       packages: write
+      pull-requests: write
+      actions: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
