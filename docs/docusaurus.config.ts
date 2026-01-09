@@ -5,7 +5,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 const config: Config = {
   title: 'nextjs-fortress',
   tagline: 'Security Validation middleware for Next.js',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/logo.png',
 
   url: 'https://mindfiredigital.github.io',
   baseUrl: '/nextjs-fortress/',
@@ -29,10 +29,7 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           editUrl: 'https://github.com/mindfiredigital/nextjs-fortress/tree/main/docs/',
         },
-        blog: {
-          showReadingTime: true,
-          editUrl: 'https://github.com/mindfiredigital/nextjs-fortress/tree/main/docs/',
-        },
+        blog: false,
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -46,7 +43,7 @@ const config: Config = {
       title: 'nextjs-fortress',
       logo: {
         alt: 'nextjs-fortress Logo',
-        src: 'img/logo.svg',
+        src: 'img/logo.png',
       },
       items: [
         {
@@ -55,7 +52,7 @@ const config: Config = {
           position: 'left',
           label: 'Docs',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
+        // {to: '/blog', label: 'Blog', position: 'left'},
         {
           href: 'https://github.com/mindfiredigital/nextjs-fortress',
           label: 'GitHub',
