@@ -1,6 +1,6 @@
 // types/index.ts - Core type definitions for nextjs-fortress
 
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
 /**
  * Severity levels for security events
@@ -352,3 +352,7 @@ export interface RateLimitResult {
   allowed: boolean
   response?: NextResponse
 }
+
+export type MiddlewareFunction = (
+  req: NextRequest
+) => NextResponse | Promise<NextResponse>

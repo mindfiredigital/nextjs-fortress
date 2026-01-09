@@ -1,59 +1,60 @@
+// middleware/index.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { FortressConfig } from '../types'
+import { FortressConfig, MiddlewareFunction } from '../types'
 import { FortressLogger } from '../utils/logger'
 import { RequestValidator } from './requestValidator'
 import { RateLimiter } from './rateLimiter'
 import { SecurityHeadersHandler } from './securityHeaders'
 import { WhitelistChecker } from './whiteList'
 
-/**
- * Main Fortress middleware creator
- * Clean, single responsibility - orchestration only
- */
-export function createFortressMiddleware(config: FortressConfig) {
+export function createFortressMiddleware(
+  config: FortressConfig,
+  nextHandler?: MiddlewareFunction
+) {
   const logger = new FortressLogger(config.logging)
   const validator = new RequestValidator(config, logger)
   const rateLimiter = new RateLimiter(config)
   const headersHandler = new SecurityHeadersHandler(config)
   const whitelistChecker = new WhitelistChecker(config)
 
-  return async function fortressMiddleware(request: NextRequest) {
-    // Early exit for disabled or whitelisted
+  return async function fortressMiddleware(
+    request: NextRequest
+  ): Promise<NextResponse> {
     if (!config.enabled || whitelistChecker.isWhitelisted(request)) {
-      return NextResponse.next()
+      return nextHandler ? await nextHandler(request) : NextResponse.next()
     }
 
     const startTime = Date.now()
 
     try {
-      // 1. Check rate limit
       if (config.modules.rateLimit.enabled) {
         const rateLimitResult = await rateLimiter.check(request)
-        if (!rateLimitResult.allowed) {
+        if (!rateLimitResult.allowed && rateLimitResult.response) {
           return rateLimitResult.response
         }
       }
 
-      // 2. Validate request (CSRF, encoding, body)
       const validationResult = await validator.validate(request)
-      if (!validationResult.allowed) {
+      if (!validationResult.allowed && validationResult.response) {
         return validationResult.response
       }
 
-      // 3. Add security headers
-      const response = NextResponse.next()
+      const response = nextHandler
+        ? await nextHandler(request)
+        : NextResponse.next()
+
       headersHandler.addHeaders(response)
 
-      // 4. Log success in dev mode
       if (config.mode === 'development') {
         logger.debug(
-          `✓ Validated in ${Date.now() - startTime}ms: ${request.method} ${request.nextUrl.pathname}`
+          `✓ Request processed in ${Date.now() - startTime}ms: ${request.method} ${request.nextUrl.pathname}`
         )
       }
 
       return response
     } catch (error) {
       logger.error('Fortress middleware error:', error)
+
       return config.mode === 'production'
         ? new NextResponse('Internal Server Error', { status: 500 })
         : NextResponse.next()

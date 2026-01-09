@@ -184,141 +184,6 @@ export const config = {
 `
 }
 
-function createMiddlewareIntegrationGuide() {
-  return `// ============================================
-// FORTRESS MIDDLEWARE INTEGRATION GUIDE
-// ============================================
-
-import { createFortressMiddleware } from '@mindfiredigital/nextjs-fortress';
-import { fortressConfig } from './fortress.config';
-
-// Create Fortress middleware
-const fortressMiddleware = createFortressMiddleware(fortressConfig);
-
-// OPTION 1: Use Fortress as your only middleware
-// ------------------------------------------------
-// Replace your existing middleware export with:
-
-export const middleware = fortressMiddleware;
-
-export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
-};
-
-
-// OPTION 2: Combine with existing middleware
-// -------------------------------------------
-// If you have existing middleware logic:
-
-import { NextRequest, NextResponse } from 'next/server';
-
-export async function middleware(request: NextRequest) {
-  // 1. Run Fortress security checks first
-  const fortressResponse = await fortressMiddleware(request);
-  
-  // If Fortress blocks the request, return immediately
-  if (fortressResponse.status !== 200 && fortressResponse.status !== 304) {
-    return fortressResponse;
-  }
-  
-  // 2. Run your existing middleware logic
-  // ... your custom logic here ...
-  
-  // 3. Return response
-  return NextResponse.next();
-}
-
-export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
-};
-
-
-// OPTION 3: Chain multiple middleware functions
-// ----------------------------------------------
-// For complex middleware chains:
-
-import { NextRequest, NextResponse } from 'next/server';
-
-type MiddlewareFactory = (middleware: MiddlewareFunction) => MiddlewareFunction;
-type MiddlewareFunction = (request: NextRequest) => Promise<NextResponse>;
-
-function chain(functions: MiddlewareFactory[], index = 0): MiddlewareFunction {
-  const current = functions[index];
-  
-  if (current) {
-    const next = chain(functions, index + 1);
-    return current(next);
-  }
-  
-  return () => Promise.resolve(NextResponse.next());
-}
-
-// Your existing middleware
-function withAuth(middleware: MiddlewareFunction): MiddlewareFunction {
-  return async (request: NextRequest) => {
-    // Your auth logic
-    return middleware(request);
-  };
-}
-
-function withLogging(middleware: MiddlewareFunction): MiddlewareFunction {
-  return async (request: NextRequest) => {
-    console.log('Request:', request.url);
-    return middleware(request);
-  };
-}
-
-// Wrap Fortress middleware in factory pattern
-function withFortress(middleware: MiddlewareFunction): MiddlewareFunction {
-  return async (request: NextRequest) => {
-    const fortressResponse = await fortressMiddleware(request);
-    if (fortressResponse.status !== 200 && fortressResponse.status !== 304) {
-      return fortressResponse;
-    }
-    return middleware(request);
-  };
-}
-
-export const middleware = chain([
-  withFortress,  // Run Fortress first for security
-  withAuth,      // Then auth
-  withLogging,   // Then logging
-]);
-
-export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
-};
-
-
-// OPTION 4: Selective path protection
-// ------------------------------------
-// Apply Fortress only to specific paths:
-
-import { NextRequest, NextResponse } from 'next/server';
-
-export async function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname;
-  
-  // Apply Fortress to API routes and specific paths
-  if (path.startsWith('/api') || path.startsWith('/admin')) {
-    const fortressResponse = await fortressMiddleware(request);
-    if (fortressResponse.status !== 200 && fortressResponse.status !== 304) {
-      return fortressResponse;
-    }
-  }
-  
-  // Your other middleware logic for other paths
-  // ...
-  
-  return NextResponse.next();
-}
-
-export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
-};
-`
-}
-
 function createEnvExample(options: FortressOptions) {
   return `# ============================================
 # Fortress Configuration (Mode: ${options.mode})
@@ -444,52 +309,29 @@ function installDependencies() {
   }
 }
 
-function handleExistingMiddleware(): void {
-  const middlewarePath = path.join(process.cwd(), 'middleware.ts')
-  const backupPath = path.join(process.cwd(), 'middleware.backup.ts')
-
-  // Create backup
-  fs.copyFileSync(middlewarePath, backupPath)
-  log(`📋 Created backup: middleware.backup.ts`, 'cyan')
-
-  // Create integration guide
-  const guidePath = path.join(
-    process.cwd(),
-    'fortress-middleware-integration.ts'
-  )
-  fs.writeFileSync(guidePath, createMiddlewareIntegrationGuide())
-  log(
-    `📖 Created integration guide: fortress-middleware-integration.ts`,
-    'green'
-  )
-
+function handleExistingMiddleware(): boolean {
   console.warn('')
   log('⚠️  EXISTING MIDDLEWARE DETECTED', 'yellow')
   console.warn('')
-  log('Your existing middleware.ts has been backed up to:', 'cyan')
-  log('  → middleware.backup.ts', 'bright')
+  log('Your project already has a middleware.ts file.', 'cyan')
+  log('Fortress will NOT override your existing middleware.', 'cyan')
   console.warn('')
-  log('Integration guide created at:', 'cyan')
-  log('  → fortress-middleware-integration.ts', 'bright')
+  log('📖 To integrate Fortress with your existing middleware:', 'bright')
   console.warn('')
-  log('Please choose one of these integration options:', 'yellow')
+  log('Please read the integration guide in the README:', 'yellow')
+  log(
+    '  → https://github.com/mindfiredigital/nextjs-fortress#middleware-integration',
+    'blue'
+  )
   console.warn('')
-  log('OPTION 1: Replace with Fortress (simplest)', 'bright')
-  log('  - Use Fortress as your only middleware', 'cyan')
-  log('  - Copy code from fortress-middleware-integration.ts', 'cyan')
+  log('Or check the documentation for manual setup:', 'yellow')
+  log(
+    '  → https://github.com/mindfiredigital/nextjs-fortress/blob/main/docs/INTEGRATION.md',
+    'blue'
+  )
   console.warn('')
-  log('OPTION 2: Combine with existing logic', 'bright')
-  log('  - Run Fortress checks first, then your logic', 'cyan')
-  log('  - See examples in fortress-middleware-integration.ts', 'cyan')
-  console.warn('')
-  log('OPTION 3: Chain multiple middleware', 'bright')
-  log('  - Advanced: Use middleware factory pattern', 'cyan')
-  log('  - Full example in fortress-middleware-integration.ts', 'cyan')
-  console.warn('')
-  log('OPTION 4: Selective path protection', 'bright')
-  log('  - Apply Fortress only to specific routes', 'cyan')
-  log('  - Example: /api/* and /admin/* only', 'cyan')
-  console.warn('')
+
+  return false // Indicates middleware was not created
 }
 
 function init() {
@@ -524,6 +366,8 @@ function init() {
   log('📝 Creating configuration files...', 'blue')
   console.warn('')
 
+  let middlewareCreated = false
+
   // Create fortress.config.ts
   const configPath = path.join(process.cwd(), 'fortress.config.ts')
   if (fs.existsSync(configPath)) {
@@ -536,10 +380,11 @@ function init() {
   // Handle middleware.ts
   const middlewarePath = path.join(process.cwd(), 'middleware.ts')
   if (fs.existsSync(middlewarePath)) {
-    handleExistingMiddleware()
+    middlewareCreated = handleExistingMiddleware()
   } else {
     fs.writeFileSync(middlewarePath, createMiddleware())
     log('✅ Created middleware.ts', 'green')
+    middlewareCreated = true
   }
 
   // Create .env.example
@@ -565,23 +410,39 @@ function init() {
   }
 
   console.warn('')
-  log('🎉 Fortress setup complete!', 'green')
-  console.warn('')
 
-  log('📚 Next steps:', 'bright')
-  console.warn('')
-  log('1. Add CSRF secret to .env:', 'cyan')
-  log('   CSRF_SECRET=$(openssl rand -hex 32)', 'magenta')
-  console.warn('')
-  log('2. Start dev server:', 'cyan')
-  log('   npm run dev', 'magenta')
-  console.warn('')
-  log('3. Test protection:', 'cyan')
-  log('   curl -X POST http://localhost:3000/api/fortress-test \\', 'magenta')
-  log('   -H "Content-Type: application/json" \\', 'magenta')
-  log('   -d \'{"__proto__": {"hacked": true}}\'', 'magenta')
-  console.warn('')
-  log('   Expected: 403 Forbidden (blocked by Fortress)', 'yellow')
+  // Different messages based on whether middleware was created
+  if (middlewareCreated) {
+    log('🎉 Fortress setup complete!', 'green')
+    console.warn('')
+    log('📚 Next steps:', 'bright')
+    console.warn('')
+    log('1. Add CSRF secret to .env:', 'cyan')
+    log('   CSRF_SECRET=$(openssl rand -hex 32)', 'magenta')
+    console.warn('')
+    log('2. Start dev server:', 'cyan')
+    log('   npm run dev', 'magenta')
+    console.warn('')
+    log('3. Test protection:', 'cyan')
+    log('   curl -X POST http://localhost:3000/api/fortress-test \\', 'magenta')
+    log('   -H "Content-Type: application/json" \\', 'magenta')
+    log('   -d \'{"__proto__": {"hacked": true}}\'', 'magenta')
+    console.warn('')
+    log('   Expected: 403 Forbidden (blocked by Fortress)', 'yellow')
+  } else {
+    log('⚠️  Fortress setup partially complete', 'yellow')
+    console.warn('')
+    log('✅ Created: fortress.config.ts', 'green')
+    log('⚠️  Skipped: middleware.ts (already exists)', 'yellow')
+    console.warn('')
+    log('📚 Required action:', 'bright')
+    log(
+      'You must manually integrate Fortress into your existing middleware.',
+      'cyan'
+    )
+    log('Please follow the integration guide in the README.', 'cyan')
+  }
+
   console.warn('')
   log('📖 Documentation:', 'bright')
   log('   https://github.com/mindfiredigital/nextjs-fortress', 'blue')
@@ -602,7 +463,7 @@ function showHelp() {
 
   log('What "fortress init" does:', 'bright')
   log('  1. Creates fortress.config.ts with security settings', 'cyan')
-  log('  2. Creates or updates middleware.ts', 'cyan')
+  log('  2. Creates middleware.ts (if not present)', 'cyan')
   log('  3. Creates .env.example with required variables', 'cyan')
   log('  4. Creates example protected API route', 'cyan')
   log('  5. Installs @mindfiredigital/nextjs-fortress', 'cyan')

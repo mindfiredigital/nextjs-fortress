@@ -28,62 +28,7 @@ This automatically:
 - ✅ Generates `.env.example` with configuration options
 - ✅ Creates an example protected API route
 
----
-
-## Core Security Features
-
-### 1. **Deserialization Protection** (CVE-2025-55182)
-Blocks prototype pollution and constructor injection attacks.
-
-```typescript
-// ❌ Automatically Blocked
-{
-  "__proto__": { "isAdmin": true },
-  "constructor": { "prototype": { "hacked": true } }
-}
-
-// ✅ Allowed
-{
-  "username": "john_doe",
-  "email": "john@example.com"
-}
-```
-
-### 2. **Injection Detection**
-Protects against SQL, Command, XSS, and Code injection.
-
-| Type | Example | Blocked |
-|------|---------|---------|
-| **SQL** | `admin' UNION SELECT password--` | ✅ |
-| **XSS** | `<script>alert('XSS')</script>` | ✅ |
-| **Command** | `; cat /etc/passwd` | ✅ |
-| **Code** | `eval('malicious')` | ✅ |
-
-### 3. **Encoding Bypass Protection**
-Prevents WAF bypass using alternative encodings like UTF-16LE.
-
-```typescript
-// ❌ Blocked - UTF-16LE detected
-Content-Type: application/json; charset=utf-16le
-
-// ❌ Blocked - BOM detected (FF FE)
-[0xFF, 0xFE, 0x48, 0x00]
-
-// ✅ Allowed - Standard UTF-8
-Content-Type: application/json; charset=utf-8
-```
-
-### 4. **CSRF Protection**
-Token-based cross-site request forgery prevention.
-
-### 5. **Rate Limiting**
-IP and session-based request throttling.
-
-### 6. **Content Validation**
-Payload size limits and content type checking.
-
-### 7. **Security Headers**
-Automatic security header configuration.
+**Note**: If you already have a `middleware.ts` file, the CLI will skip creation and you'll need to integrate manually (see below).
 
 ---
 
@@ -155,9 +100,13 @@ export const fortressConfig: FortressConfig = {
 }
 ```
 
-### 2. Add Middleware
+---
 
-Create or update `middleware.ts` in your project root:
+## 🔧 Middleware Integration
+
+### Option 1: New Project (No Existing Middleware)
+
+If you don't have a `middleware.ts` file, create one:
 
 ```typescript
 import { createFortressMiddleware } from '@mindfiredigital/nextjs-fortress'
@@ -169,6 +118,106 @@ export const config = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 }
 ```
+
+---
+
+### Option 2: Existing Middleware (Simple Integration)
+
+If you already have middleware, wrap your existing logic with Fortress:
+
+**Before (Your existing middleware):**
+```typescript
+import { NextRequest, NextResponse } from 'next/server'
+
+// This is exactly what is happening inside the "custom logic" part
+export async function middleware(request: NextRequest) {
+  const response = NextResponse.next()
+  response.headers.set('x-custom', 'value')
+  return response
+}
+
+export const config = {
+  matcher: ['/api/:path*'],
+}
+```
+
+**After (With Fortress protection):**
+```typescript
+import { createFortressMiddleware } from '@mindfiredigital/nextjs-fortress'
+import { fortressConfig } from './fortress.config'
+import { NextRequest, NextResponse } from 'next/server'
+
+// Option 1: Simple
+// export const middleware = createFortressMiddleware(fortressConfig)
+
+// Option 2: With custom logic - NO TYPE ERRORS
+async function myMiddleware(request: NextRequest) {
+  const response = NextResponse.next()
+  response.headers.set('x-custom', 'value')
+  return response
+}
+
+export const middleware = createFortressMiddleware(fortressConfig, myMiddleware)
+```
+
+---
+
+## Core Security Features
+
+### 1. **Deserialization Protection** (CVE-2025-55182)
+Blocks prototype pollution and constructor injection attacks.
+
+```typescript
+// ❌ Automatically Blocked
+{
+  "__proto__": { "isAdmin": true },
+  "constructor": { "prototype": { "hacked": true } }
+}
+
+// ✅ Allowed
+{
+  "username": "john_doe",
+  "email": "john@example.com"
+}
+```
+
+### 2. **Injection Detection**
+Protects against SQL, Command, XSS, and Code injection.
+
+| Type | Example | Blocked |
+|------|---------|---------|
+| **SQL** | `admin' UNION SELECT password--` | ✅ |
+| **XSS** | `<script>alert('XSS')</script>` | ✅ |
+| **Command** | `; cat /etc/passwd` | ✅ |
+| **Code** | `eval('malicious')` | ✅ |
+
+### 3. **Encoding Bypass Protection**
+Prevents WAF bypass using alternative encodings like UTF-16LE.
+
+```typescript
+// ❌ Blocked - UTF-16LE detected
+Content-Type: application/json; charset=utf-16le
+
+// ❌ Blocked - BOM detected (FF FE)
+[0xFF, 0xFE, 0x48, 0x00]
+
+// ✅ Allowed - Standard UTF-8
+Content-Type: application/json; charset=utf-8
+```
+
+### 4. **CSRF Protection**
+Token-based cross-site request forgery prevention.
+
+### 5. **Rate Limiting**
+IP and session-based request throttling.
+
+### 6. **Content Validation**
+Payload size limits and content type checking.
+
+### 7. **Security Headers**
+Automatic security header configuration.
+
+---
 
 ### 3. Protect API Routes
 
