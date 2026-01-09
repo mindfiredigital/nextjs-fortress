@@ -1,5 +1,11 @@
 # @mindfiredigital/nextjs-fortress
 
+## 1.2.0
+
+### Minor Changes
+
+- merge pull request #39 from mindfiredigital/dev
+
 ## 1.1.0
 
 ### Minor Changes
