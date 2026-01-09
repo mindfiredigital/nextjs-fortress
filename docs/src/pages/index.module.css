@@ -288,7 +288,7 @@
 
 /* Alert Banner */
 .alertBanner {
-  background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%);
+  background: linear-gradient(135deg, #178c03 0%, #1c7503 100%);
   padding: 1rem 0;
   color: white;
 }
