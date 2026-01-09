@@ -168,59 +168,6 @@ Body: [0xFF, 0xFE, ...] // __proto__ in UTF-16LE
 }
 ```
 
-## Basic Setup
-
-### 1. Create Configuration
-
-```typescript
-// fortress.config.ts
-import { FortressConfig } from 'nextjs-fortress';
-
-export const fortressConfig: FortressConfig = {
-  enabled: true,
-  mode: 'development',
-
-  modules: {
-    deserialization: {
-      enabled: true,
-      maxDepth: 10,
-      detectCircular: true,
-    },
-    injection: {
-      enabled: true,
-      checks: ['sql', 'command', 'xss', 'codeInjection'],
-    },
-    encoding: {
-      enabled: true,
-      blockNonUTF8: true,
-      detectBOM: true,
-    },
-    rateLimit: {
-      enabled: true,
-      byIP: { requests: 100, window: 60000 },
-    },
-  },
-};
-```
-
-### 2. Add Middleware
-
-```typescript
-// middleware.ts
-import { createFortressMiddleware } from 'nextjs-fortress';
-import { fortressConfig } from './fortress.config';
-
-export const middleware = createFortressMiddleware(fortressConfig);
-
-export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
-};
-```
-
-### 3. Done! 
-
-Your entire Next.js application is now protected.
-
 ## What Gets Protected
 
 ### Middleware (Automatic)
@@ -257,21 +204,6 @@ Your entire Next.js application is now protected.
 - Payload too large
 - Invalid encoding
 
-## Performance Characteristics
-
-```typescript
-// Validation overhead per request
-Deserialization: ~0.2ms
-Injection:       ~0.2ms
-Encoding:        ~0.1ms
-CSRF:           ~0.3ms
-Rate Limit:      ~0.1ms
-----------------------------
-Total:          ~0.9ms
-
-// Production average: <1ms per request
-```
-
 ## Browser Compatibility
 
 Works in all modern environments:
@@ -291,7 +223,6 @@ MIT License - See [LICENSE](https://github.com/mindfiredigital/nextjs-fortress/b
 ## Support
 
 - [Report Issues](https://github.com/mindfiredigital/nextjs-fortress/issues)
-- [Discussions](https://github.com/mindfiredigital/nextjs-fortress/discussions)
 
 ---
 

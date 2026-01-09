@@ -14,16 +14,7 @@ function HomepageHeader() {
     <header className={clsx('hero', styles.heroBanner)}>
       <div className="container">
         <div className={styles.heroContent}>
-          <div className={styles.logoContainer}>
-            <img 
-              src="/img/mindfire-logo.png" 
-              alt="Mindfire Digital" 
-              className={styles.mindfireLogo}
-            />
-          </div>
-          
           <div className={styles.fortressTitle}>
-            <span className={styles.fortressIcon}>🏰</span>
             <Heading as="h1" className="hero__title">
               nextjs-fortress
             </Heading>

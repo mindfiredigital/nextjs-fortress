@@ -363,9 +363,7 @@ Now that you're protected:
 
 ## Getting Help
 
-- 📖 [Documentation](https://fortress-docs.mindfire.com)
 - 🐛 [Report Issues](https://github.com/mindfiredigital/nextjs-fortress/issues)
-- 💬 [Discussions](https://github.com/mindfiredigital/nextjs-fortress/discussions)
 
 ---
 
