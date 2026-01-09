@@ -56,6 +56,16 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
+      label: 'Security Wrappers',
+      collapsible: true,
+      collapsed: false,
+      items:[
+        'wrappers/api-route',
+        'wrappers/server-action',
+      ]
+    },
+    {
+      type: 'category',
       label: 'About CVEs',
       collapsible: true,
       collapsed: false,

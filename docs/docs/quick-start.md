@@ -110,23 +110,69 @@ export const fortressConfig: FortressConfig = {
 };
 ```
 
-## Step 3: Middleware gets created on the application
+## Step 3: Middleware Integration
 
-Create `middleware.ts` in your project root:
+### Option 1: New Project (No Existing Middleware)
+
+If you don't have a `middleware.ts` file, create one:
 
 ```typescript
-// middleware.ts
-import { createFortressMiddleware } from 'nextjs-fortress';
-import { fortressConfig } from './fortress.config';
 
-export const middleware = createFortressMiddleware(fortressConfig);
+import { createFortressMiddleware } from '@mindfiredigital/nextjs-fortress'
+import { fortressConfig } from './fortress.config'
+
+export const middleware = createFortressMiddleware(fortressConfig)
 
 export const config = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
-};
+}
 ```
 
-## Step 4: Test Protection (1 minute)
+---
+
+### Option 2: Existing Middleware (Simple Integration)
+
+If you already have middleware, wrap your existing logic with Fortress:
+
+**Before (Your existing middleware):**
+```typescript
+import { NextRequest, NextResponse } from 'next/server'
+
+// This is exactly what is happening inside the "custom logic" part
+export async function middleware(request: NextRequest) {
+  const response = NextResponse.next()
+  response.headers.set('x-custom', 'value')
+  return response
+}
+
+export const config = {
+  matcher: ['/api/:path*'],
+}
+```
+
+**After (With Fortress protection):**
+```typescript
+import { createFortressMiddleware } from '@mindfiredigital/nextjs-fortress'
+import { fortressConfig } from './fortress.config'
+import { NextRequest, NextResponse } from 'next/server'
+
+// Option 1: Simple
+// export const middleware = createFortressMiddleware(fortressConfig)
+
+// Option 2: With custom logic - NO TYPE ERRORS
+async function myMiddleware(request: NextRequest) {
+  const response = NextResponse.next()
+  response.headers.set('x-custom', 'value')
+  return response
+}
+
+export const middleware = createFortressMiddleware(fortressConfig, myMiddleware)
+```
+
+---
+
+
+## Step 4: Test Protection
 
 ### Test 1: Prototype Pollution (CVE-2025-55182)
 

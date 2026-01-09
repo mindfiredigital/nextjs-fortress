@@ -143,7 +143,7 @@ export const config = {
 
 **After (With Fortress protection):**
 ```typescript
-import { createFortressMiddleware } from 'nextjs-fortress'
+import { createFortressMiddleware } from '@mindfiredigital/nextjs-fortress'
 import { fortressConfig } from './fortress.config'
 import { NextRequest, NextResponse } from 'next/server'
 
