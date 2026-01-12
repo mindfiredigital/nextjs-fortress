@@ -26,7 +26,7 @@ jobs:
 
       - name: 'Install dependencies and build'
         run: |
-          cd documentation
+          cd docs
           npm install
           npm run build
 
