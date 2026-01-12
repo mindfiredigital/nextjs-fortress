@@ -511,6 +511,4 @@ rateLimit: {
 ---
 
 **Related Documentation:**
-- [CSRF Protection](../csrf/overview.md)
-- [Content Validation](../content/overview.md)
-- [Security Headers](../headers/overview.md)
+- [CSRF Protection](../csrf/csrf-protection.md)

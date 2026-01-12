@@ -366,6 +366,4 @@ csrf: {
 ---
 
 **Related Documentation:**
-- [Security Headers](../headers/overview.md)
-- [Rate Limiting](../rate-limit/overview.md)
-- [Middleware Usage](../../usage/middleware.md)
+- [Rate Limiting](../rate-limit/rate-limiting.md)

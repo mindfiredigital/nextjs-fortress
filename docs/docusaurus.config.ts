@@ -74,32 +74,11 @@ const config: Config = {
               label: 'Quick Start',
               to: '/docs/quick-start',
             },
-            {
-              label: 'API Reference',
-              to: '/docs/api/configuration',
-            },
-          ],
-        },
-        {
-          title: 'Security',
-          items: [
-            {
-              label: 'CVE-2025-55182',
-              to: '/docs/security/cve-2025-55182',
-            },
-            {
-              label: 'Threat Detection',
-              to: '/docs/security/threat-detection',
-            },
           ],
         },
         {
           title: 'More',
           items: [
-            {
-              label: 'Blog',
-              to: '/blog',
-            },
             {
               label: 'GitHub',
               href: 'https://github.com/mindfiredigital/nextjs-fortress',
