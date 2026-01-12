@@ -584,6 +584,5 @@ export const action = secureServerAction(
 ---
 
 **Related Documentation:**
-- [API Routes Wrapper](./api-routes-wrapper.md)
-- [Middleware Usage](./middleware.md)
-- [CSRF Protection](../modules/csrf/overview.md)
+- [API Routes Wrapper](./api-route.md)
+- [CSRF Protection](../modules/csrf/csrf-protection.md)

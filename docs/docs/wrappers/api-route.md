@@ -475,6 +475,5 @@ export const POST = withFortress(
 ---
 
 **Related Documentation:**
-- [Server Actions Wrapper](./server-actions-wrapper.md)
-- [Middleware Usage](./middleware.md)
-- [Rate Limiting](../modules/rate-limit/overview.md)
+- [Server Actions Wrapper](./server-action.md)
+- [Rate Limiting](../modules/rate-limit/rate-limiting.md)

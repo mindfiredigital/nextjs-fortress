@@ -175,6 +175,6 @@ nextjs-fortress is open source because security should be accessible to everyone
 
 **Next Steps:**
 - [Quick Start Guide](./quick-start.md) - Get protected in 5 minutes
-- [CVE-2025-55182 Details](../cve/cve-2025-55182.md) - Deep dive into the vulnerability
+- [CVE Details](./cve/cve-2025-55182.md)
 
 **Remember:** Security isn't a feature, it's a requirement. Make your Next.js application fortress-grade today.

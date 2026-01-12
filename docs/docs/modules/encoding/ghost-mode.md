@@ -398,6 +398,4 @@ encoding: {
 ---
 
 **Related Documentation:**
-- [Deserialization Protection](../deserialization/overview.md)
-- [CVE-2025-55182 Details](../../cve/cve-2025-55182.md)
-- [BOM Detection](./bom-detection.md)
+- [Dangerous Keys Detection](../deserialization/dangerous-keys.md)
