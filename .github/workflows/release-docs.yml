@@ -45,7 +45,7 @@ jobs:
           # Enable dotglob to copy hidden files (like .gitignore)
           shopt -s dotglob
           # Copy the build from the docs-docusaurus/build folder
-          cp -r documentation/build/* /tmp/temp-directory/
+          cp -r docs/build/* /tmp/temp-directory/
           shopt -u dotglob
           # Stash any changes to prevent checkout conflicts
           git stash push
