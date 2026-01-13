@@ -356,3 +356,12 @@ export interface RateLimitResult {
 export type MiddlewareFunction = (
   req: NextRequest
 ) => NextResponse | Promise<NextResponse>
+
+/**
+ * Configuration options for selective middleware
+ */
+export interface SelectiveFortressOptions {
+  protectedPaths: string[]
+  excludedPaths?: string[]
+  customMiddleware?: MiddlewareFunction
+}

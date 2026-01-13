@@ -8,6 +8,7 @@ import {
   FileWarning,
   Network,
   CheckCircle2,
+  Shield,
 } from 'lucide-react'
 import { Attack, AttackKey } from '../../types'
 
@@ -216,5 +217,44 @@ export const ATTACKS: Record<AttackKey, Attack> = {
     },
     severity: 'medium',
     category: 'general',
+  },
+
+
+  publicTest: {
+    name: ' Public Route Test',
+    icon: CheckCircle2,
+    description: 'Test unprotected public endpoint',
+    payload: {
+      message: 'This should be allowed /api/public/info',
+      __proto__: { isAdmin: true },
+      constructor: { prototype: { hacked: true } },
+    },
+    severity: 'medium' as const,
+    category: 'general' as const,
+  },
+
+  adminTest: {
+    name: ' Admin Route Test',
+    icon: Shield,
+    description: 'Test protected admin endpoint',
+    payload: {
+      message: 'This should be blocked /api/admin/users',
+      __proto__: { isAdmin: true },
+      constructor: { prototype: { hacked: true } },
+    },
+    severity: 'critical' as const,
+    category: 'deserialization' as const,
+  },
+
+  secureTest: {
+    name: ' Secure Route Test',
+    icon: Lock,
+    description: 'Test protected secure endpoint',
+    payload: {
+       message: 'This should be blocked /api/secure/data',
+      data: "admin' OR '1'='1", 
+    },
+    severity: 'critical' as const,
+    category: 'injection' as const,
   },
 }

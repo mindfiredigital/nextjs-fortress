@@ -54,6 +54,9 @@ export type AttackKey =
   | 'utf16leBypass'
   | 'rateLimitTest'
   | 'validRequest'
+  | 'publicTest'      
+  | 'adminTest'       
+  | 'secureTest'      
 
 export interface ResultPanelProps {
   result: TestResult
@@ -90,4 +93,28 @@ export interface AttackListProps {
   attacks: [string, Attack][]
   selectedAttack: AttackKey
   onAttackSelect: (key: AttackKey) => void
+}
+
+export interface ApiResponse {
+  status: number
+  headers: Headers
+}
+
+export interface SelectiveAttackGroup {
+  category: string
+  icon: React.ComponentType<{ className?: string }>
+  description: string
+  attacks: AttackKey[]
+  expectedBehavior: string
+}
+
+export interface SelectiveAttackGroupsProps {
+  selectedAttack: AttackKey
+  onAttackSelect: (attackKey: AttackKey) => void
+}
+
+export interface SelectiveResultPanelProps {
+  result: TestResult
+  selectedAttack: AttackKey
+  onClear: () => void
 }
