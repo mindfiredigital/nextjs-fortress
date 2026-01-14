@@ -1,5 +1,7 @@
+import React from "react";
+
 export type AttackSeverity = 'critical' | 'high' | 'medium';
-export type AttackCategory = 'injection' | 'xss' | 'deserialization' | 'bypass' | 'dos';
+export type AttackCategory = 'injection' | 'xss' | 'deserialization' | 'bypass' | 'dos' | 'encoding' | 'general';
 
 export interface AttackPayload {
   [key: string]: string | number | boolean | object | undefined

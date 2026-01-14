@@ -186,7 +186,6 @@ function TrustedBy() {
 }
 
 export default function Home(): ReactNode {
-  const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
       title="nextjs-fortress - Universal Security for Next.js"

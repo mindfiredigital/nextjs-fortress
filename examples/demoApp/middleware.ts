@@ -1,9 +1,9 @@
 import { createSelectiveFortressMiddleware } from 'nextjs-fortress'
 import { fortressConfig } from './fortress.config'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 
 // Your existing custom middleware logic
-async function myMiddleware(request: NextRequest) {
+async function myMiddleware( ) {
   const response = NextResponse.next()
   response.headers.set('x-custom', 'value')
   response.headers.set('x-app-version', '1.0.0')

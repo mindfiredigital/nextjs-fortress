@@ -28,7 +28,7 @@ export const filterAttacksByCategory = (
     return entries
   }
   
-  return entries.filter(([_, attack]) => attack.category === category)
+  return entries.filter(([ , attack]) => attack.category === category)
 }
 
 export const getResultBorderColor = (blocked: boolean): string => {

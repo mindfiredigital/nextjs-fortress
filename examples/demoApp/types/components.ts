@@ -1,4 +1,5 @@
-import { Attack, AttackCategory, AttackKey , TestResult } from './index';
+import { Attack, AttackCategory , TestResult } from './index';
+import React from 'react';
 
 export interface Category {
   id: AttackCategory | 'all'
