@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: '✅ Request validated by Fortress',
+      message: 'Request validated by Fortress',
       received: body,
     })
   } catch (error) {
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   return NextResponse.json({
-    message: '🛡️ Fortress Active',
+    message: 'Fortress Active',
     protections: [
       'Deserialization (CVE-2025-55182)',
       'SQL Injection',

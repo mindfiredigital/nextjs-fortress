@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json({
       success: true,
-      message: '🔒 Secure endpoint - Fortress validated',
+      message: 'Secure endpoint - Fortress validated',
       received: body,
       note: 'This endpoint is PROTECTED by Fortress'
     })
