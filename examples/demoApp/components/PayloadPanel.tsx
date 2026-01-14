@@ -1,7 +1,7 @@
 // components/PayloadPanel.tsx
 import { LucideIcon } from 'lucide-react'
 import { PayloadPanelProps } from '../types'
-import { UI_LABELS, APP_INFO } from '../lib/constants/constants'
+import { UI_LABELS, APP_INFO } from '../lib/constants'
 
 export function PayloadPanel({ attack, loading, onTest }: PayloadPanelProps) {
   const AttackIcon = attack.icon as LucideIcon

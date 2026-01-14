@@ -1,24 +1,29 @@
-import { AttackPayload, TestResult, Attack } from '../../types'
-
-interface ApiResponse {
-  status: number
-  headers: Headers
-}
+import { AttackPayload, TestResult, Attack, ApiResponse, AttackKey } from '../../types'
 
 export class AttackService {
-  private static readonly API_ENDPOINT = '/api/test'
+  private static readonly DEFAULT_ENDPOINT = '/api/test'
   private static readonly REQUEST_DELAY = 100
 
-  static async testAttack(attack: Attack): Promise<TestResult> {
+  private static readonly ENDPOINT_MAP: Record<string, string> = {
+    publicTest: '/api/public/info',
+    adminTest: '/api/admin/users',
+    secureTest: '/api/secure/data',
+  }
+
+  static async testAttack(attack: Attack, attackKey?: AttackKey): Promise<TestResult> {
+    const endpoint = attackKey && this.ENDPOINT_MAP[attackKey] 
+      ? this.ENDPOINT_MAP[attackKey]
+      : this.DEFAULT_ENDPOINT
+
     const headers = this.buildHeaders(attack.payload)
 
-    const response = await fetch(this.API_ENDPOINT, {
+    const response = await fetch(endpoint, {
       method: 'POST',
       headers,
       body: JSON.stringify(attack.payload),
     })
 
-    return this.buildTestResult(response, attack)
+    return this.buildTestResult(response, attack, endpoint)
   }
 
   static async runRateLimitTest(
@@ -30,7 +35,7 @@ export class AttackService {
 
     for (let i = 0; i < requestCount; i++) {
       try {
-        const response = await fetch(this.API_ENDPOINT, {
+        const response = await fetch(this.DEFAULT_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ ...attack.payload, requestNumber: i + 1 }),
@@ -68,7 +73,8 @@ export class AttackService {
 
   private static buildTestResult(
     response: ApiResponse,
-    attack: Attack
+    attack: Attack,
+    endpoint: string
   ): TestResult {
     const isBlocked = response.status === 403 || response.status === 400
     const isSuccess = response.status === 200
@@ -78,14 +84,14 @@ export class AttackService {
       attack: attack.name,
       severity: attack.severity,
       responseStatus: response.status,
-      message: this.getStatusMessage(isBlocked, isSuccess, response.status),
+      message: this.getStatusMessage(isBlocked, isSuccess, response.status, endpoint),
       details: {
         rule: response.headers.get('x-fortress-rule') || 'none',
         pattern: JSON.stringify(attack.payload).substring(0, 50) + '...',
         confidence: parseFloat(
           response.headers.get('x-fortress-confidence') || '0'
         ),
-        action: `${isBlocked ? 'Blocked' : 'Allowed'} (${response.status})`,
+        action: `${isBlocked ? 'Blocked' : 'Allowed'} (${response.status}) at ${endpoint}`,
         timestamp: new Date().toLocaleTimeString(),
       },
     }
@@ -120,11 +126,12 @@ export class AttackService {
   private static getStatusMessage(
     isBlocked: boolean,
     isSuccess: boolean,
-    status: number
+    status: number,
+    endpoint: string
   ): string {
-    if (isBlocked) return ' Attack blocked by Fortress!'
-    if (isSuccess) return ' Request allowed'
-    return ` Unexpected: ${status}`
+    if (isBlocked) return ` Attack blocked by Fortress at ${endpoint}`
+    if (isSuccess) return ` Request allowed at ${endpoint}`
+    return ` Unexpected: ${status} at ${endpoint}`
   }
 
   private static delay(ms: number): Promise<void> {

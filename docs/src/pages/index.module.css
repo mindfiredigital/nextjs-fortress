@@ -51,7 +51,7 @@
   margin: 0;
   font-size: 3.5rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #2e8555 0%, #33925d 100%);
+  background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -96,10 +96,10 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: rgba(46, 133, 85, 0.1);
+  background: rgba(220, 38, 38, 0.1);
   backdrop-filter: blur(10px);
   border-radius: 20px;
-  border: 1px solid rgba(46, 133, 85, 0.3);
+  border: 1px solid rgba(220, 38, 38, 0.3);
   font-size: 0.9rem;
   font-weight: 600;
   color: #1a1a1a;
@@ -107,8 +107,8 @@
 }
 
 .badge:hover {
-  background: rgba(46, 133, 85, 0.2);
-  border-color: rgba(46, 133, 85, 0.5);
+  background: rgba(220, 38, 38, 0.2);
+  border-color: rgba(220, 38, 38, 0.5);
   transform: translateY(-2px);
 }
 
@@ -119,8 +119,8 @@
 }
 
 [data-theme='dark'] .badge:hover {
-  background: rgba(46, 133, 85, 0.2);
-  border-color: rgba(46, 133, 85, 0.5);
+  background: rgba(220, 38, 38, 0.2);
+  border-color: rgba(220, 38, 38, 0.5);
 }
 
 .badgeIcon {
@@ -145,26 +145,26 @@
 }
 
 .buttons .button--primary {
-  background: linear-gradient(135deg, #2e8555 0%, #33925d 100%);
+  background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
   border: none;
-  box-shadow: 0 4px 15px rgba(46, 133, 85, 0.4);
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
 }
 
 .buttons .button--primary:hover {
-  background: linear-gradient(135deg, #29784c 0%, #2e8555 100%);
-  box-shadow: 0 6px 20px rgba(46, 133, 85, 0.5);
+  background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.5);
   transform: translateY(-2px);
 }
 
 .buttons .button--secondary {
-  background: rgba(46, 133, 85, 0.1);
-  border: 2px solid rgba(46, 133, 85, 0.3);
-  color: #2e8555;
+  background: rgba(220, 38, 38, 0.1);
+  border: 2px solid rgba(220, 38, 38, 0.3);
+  color: #dc2626;
 }
 
 .buttons .button--secondary:hover {
-  background: rgba(46, 133, 85, 0.2);
-  border-color: rgba(46, 133, 85, 0.5);
+  background: rgba(220, 38, 38, 0.2);
+  border-color: rgba(220, 38, 38, 0.5);
   transform: translateY(-2px);
 }
 
@@ -269,7 +269,7 @@
 .statNumber {
   font-size: 3rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #2e8555 0%, #33925d 100%);
+  background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -288,7 +288,7 @@
 
 /* Alert Banner */
 .alertBanner {
-  background: linear-gradient(135deg, #178c03 0%, #1c7503 100%);
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
   padding: 1rem 0;
   color: white;
 }
@@ -347,7 +347,7 @@
 
 .step:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 30px rgba(46, 133, 85, 0.2);
+  box-shadow: 0 8px 30px rgba(220, 38, 38, 0.2);
 }
 
 .stepNumber {
@@ -356,7 +356,7 @@
   left: 1.5rem;
   width: 3rem;
   height: 3rem;
-  background: linear-gradient(135deg, #2e8555 0%, #33925d 100%);
+  background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
   color: white;
   border-radius: 50%;
   display: flex;
@@ -364,7 +364,7 @@
   justify-content: center;
   font-size: 1.5rem;
   font-weight: 800;
-  box-shadow: 0 4px 15px rgba(46, 133, 85, 0.4);
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
 }
 
 .stepContent h3 {

@@ -2,8 +2,6 @@
 import { AttackListItemProps } from '../types'
 import { getSeverityColor, getSeverityBadgeColor } from '../lib/utils/attackHelpers'
 
-
-
 export function AttackListItem({ attackKey, attack, isSelected, onSelect }: AttackListItemProps) {
   const AttackIcon = attack.icon
 

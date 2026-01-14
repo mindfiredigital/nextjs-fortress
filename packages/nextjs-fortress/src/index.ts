@@ -2,7 +2,12 @@
 
 import { DEFAULT_CONFIG, FortressConfig } from './types'
 
-export { createFortressMiddleware } from './middleware'
+export {
+  createFortressMiddleware,
+  createSelectiveFortressMiddleware,
+} from './middleware'
+
+export type { SelectiveFortressOptions } from './types'
 
 // Export middleware components (for advanced usage)
 export { RequestValidator } from './middleware/requestValidator'

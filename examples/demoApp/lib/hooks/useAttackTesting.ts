@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { AttackKey, TestResult } from '../../types'
-import { ATTACKS } from '../constants/attacks'
+import { ATTACKS } from '../mock/attacks'
 import { AttackService } from '../services/attackService'
 
 const MAX_HISTORY_ITEMS = 10
@@ -31,15 +31,12 @@ export const useAttackTesting = () => {
       if (attackKey === 'rateLimitTest') {
         result = await AttackService.runRateLimitTest(attack)
       } else {
-        result = await AttackService.testAttack(attack)
+        result = await AttackService.testAttack(attack, attackKey)
       }
 
       setTestResult(result)
       addToHistory(result)
     } catch (error) {
-      console.error('Test failed:', error)
-      
-      // Set error result
       setTestResult({
         blocked: false,
         attack: ATTACKS[attackKey].name,

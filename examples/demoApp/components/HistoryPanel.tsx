@@ -1,7 +1,7 @@
 // components/HistoryPanel.tsx
 import { Activity, CheckCircle2, XCircle } from 'lucide-react'
 import { HistoryPanelProps } from '../types'
-import { UI_LABELS, UI_CONFIG } from '../lib/constants/constants'
+import { UI_LABELS, UI_CONFIG } from '../lib/constants'
 
 export function HistoryPanel({ history }: HistoryPanelProps) {
   if (history.length === 0) return null

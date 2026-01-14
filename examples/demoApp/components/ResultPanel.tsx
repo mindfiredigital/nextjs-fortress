@@ -1,9 +1,8 @@
 // components/ResultPanel.tsx
 import { Shield, XCircle } from 'lucide-react'
 import { ResultPanelProps } from '../types'
-import { UI_LABELS } from '../lib/constants/constants'
+import { UI_LABELS, APP_INFO } from '../lib/constants'
 import { getResultBorderColor, getResultTextColor } from '../lib/utils/attackHelpers'
-
 
 export function ResultPanel({ result, onClear }: ResultPanelProps) {
   return (
@@ -36,7 +35,7 @@ export function ResultPanel({ result, onClear }: ResultPanelProps) {
       <div className="grid grid-cols-2 gap-3 text-xs font-mono">
         <div className="bg-black/30 p-3 rounded-lg">
           <span className="text-dark-text-tertiary block mb-1 text-2xs">
-            RULE
+            {APP_INFO.RULE}
           </span>
           <span className="text-primary-300">
             {result.details.rule}
@@ -44,7 +43,7 @@ export function ResultPanel({ result, onClear }: ResultPanelProps) {
         </div>
         <div className="bg-black/30 p-3 rounded-lg">
           <span className="text-dark-text-tertiary block mb-1 text-2xs">
-            STATUS
+            {APP_INFO.STATUS}
           </span>
           <span className="text-white">
             {result.responseStatus}
@@ -52,7 +51,7 @@ export function ResultPanel({ result, onClear }: ResultPanelProps) {
         </div>
         <div className="bg-black/30 p-3 rounded-lg">
           <span className="text-dark-text-tertiary block mb-1 text-2xs">
-            CONFIDENCE
+            {APP_INFO.CONFIDENCE}
           </span>
           <span className="text-white">
             {result.details.confidence * 100}%
@@ -60,7 +59,7 @@ export function ResultPanel({ result, onClear }: ResultPanelProps) {
         </div>
         <div className="bg-black/30 p-3 rounded-lg">
           <span className="text-dark-text-tertiary block mb-1 text-2xs">
-            TIME
+            {APP_INFO.TIME}
           </span>
           <span className="text-white">
             {result.details.timestamp}

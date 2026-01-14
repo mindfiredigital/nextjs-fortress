@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { AttackKey, AttackCategory } from '../types'
-import { ATTACKS } from '../lib/constants/attacks'
+import { ATTACKS } from '../lib/mock/attacks'
 import { useAttackTesting } from '../lib/hooks/useAttackTesting'
 import { filterAttacksByCategory } from '../lib/utils/attackHelpers'
 
