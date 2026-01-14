@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { Shield, Home, ArrowLeft } from 'lucide-react'
+import {NOT_FOUND_PAGE} from "../lib/constants"
 
 export default function NotFound() {
   return (
@@ -17,12 +18,12 @@ export default function NotFound() {
 
         {/* Error Message */}
         <div className="bg-dark-bg-secondary/50 backdrop-blur-sm border border-dark-border-primary rounded-2xl p-8 shadow-2xl">
-          <h1 className="text-6xl font-bold text-white mb-4">404</h1>
+          <h1 className="text-6xl font-bold text-white mb-4">{NOT_FOUND_PAGE.NOT_FOUND}</h1>
           <h2 className="text-2xl font-semibold text-primary-300 mb-4">
-            🛡️ Protected Route Not Found
+            {NOT_FOUND_PAGE.ROUTE_NOT_FOUND}
           </h2>
           <p className="text-dark-text-secondary mb-8 text-lg">
-            The page you're looking for doesn't exist or has been secured by Fortress.
+            {NOT_FOUND_PAGE.PAGE_DOES_NOT_EXIST}
           </p>
 
           {/* Action Buttons */}
@@ -32,7 +33,7 @@ export default function NotFound() {
               className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-glow-blue cursor-pointer"
             >
               <Home className="w-5 h-5" />
-              Go to Home
+              {NOT_FOUND_PAGE.GO_HOME}
             </Link>
             
             <button
@@ -40,7 +41,7 @@ export default function NotFound() {
               className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-dark-bg-tertiary hover:bg-dark-bg-secondary border border-dark-border-primary text-white font-semibold rounded-xl transition-all duration-200 cursor-pointer"
             >
               <ArrowLeft className="w-5 h-5" />
-              Go Back
+              {NOT_FOUND_PAGE.GO_BACK}
             </button>
           </div>
 
@@ -48,7 +49,7 @@ export default function NotFound() {
           <div className="mt-8 pt-8 border-t border-dark-border-primary">
             <p className="text-sm text-dark-text-tertiary">
               Protected by{' '}
-              <span className="text-primary-400 font-semibold">nextjs-fortress</span>
+              <span className="text-primary-400 font-semibold">{NOT_FOUND_PAGE.FORTRESS}</span>
             </p>
           </div>
         </div>

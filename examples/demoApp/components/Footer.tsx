@@ -1,6 +1,6 @@
 // components/Footer.tsx
 import { FooterProps } from '../types'
-import { APP_INFO, UI_LABELS } from '../lib/constants/constants'
+import { APP_INFO, UI_LABELS } from '../lib/constants'
 
 export function Footer({ history }: FooterProps) {
   const blockedCount = history.filter((t) => t.blocked).length

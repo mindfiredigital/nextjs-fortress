@@ -1,0 +1,22 @@
+export const APP_INFO = {
+  NAME: "nextjs-fortress",
+  DESCRIPTION: "Universal Security Validation Framework",
+  VERSION: "0.1.0",
+  TEST: "Test Firewall", 
+  CUSTOM: "Test Custom Protected Routes",
+  RULE: "RULE",
+  STATUS: "STATUS",
+  CONFIDENCE: "CONFIDENCE",
+  TIME: "TIME",
+  SELECT_MIDDLEWARE: "Selective Middleware Test",
+  TEST_PATH_SPECIFIC: "Test path-specific Fortress protection",
+  TESTING_MODE: "Testing Mode Active",
+  RETURN_HOME: "Return to Home",
+  TEST_RESULT: "Test Result",
+  CLEAR: "Clear",
+  TEST_PASSED: "Test Passed",
+  BEHAVIOUR_MATCHES: "Behavior matches expectations",
+  UNEXPECTED_RESULT: "Unexpected Result",
+  CHECK_MID_CONFIG: "Check middleware configuration",
+  ACTION: "ACTION"
+};

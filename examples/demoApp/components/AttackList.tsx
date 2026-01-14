@@ -1,7 +1,7 @@
 // components/AttackList.tsx
 import { Activity } from 'lucide-react'
 import { AttackKey, AttackListProps } from '../types'
-import { UI_LABELS } from '../lib/constants/constants'
+import { UI_LABELS } from '../lib/constants'
 import { AttackListItem } from './AttackListItem'
 
 export function AttackList({ attacks, selectedAttack, onAttackSelect }: AttackListProps) {

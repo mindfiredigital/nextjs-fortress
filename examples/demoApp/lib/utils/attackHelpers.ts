@@ -1,4 +1,4 @@
-import { Attack, AttackSeverity, AttackCategory } from '../../types'
+import { Attack, AttackSeverity, AttackCategory, AttackKey } from '../../types'
 
 export const getSeverityColor = (severity: AttackSeverity): string => {
   const colors: Record<AttackSeverity, string> = {
@@ -39,4 +39,16 @@ export const getResultBorderColor = (blocked: boolean): string => {
 
 export const getResultTextColor = (blocked: boolean): string => {
   return blocked ? 'text-green-400' : 'text-red-400'
+}
+
+export function getTestStatus(attackKey: AttackKey, status: number): 'pass' | 'fail' {
+  if (attackKey === 'publicTest') {
+    return status === 200 ? 'pass' : 'fail'
+  } else if (attackKey === 'adminTest' || attackKey === 'secureTest') {
+    return status === 403 ? 'pass' : 'fail'
+  } else if (attackKey === 'validRequest') {
+    return status === 200 ? 'pass' : 'fail'
+  } else {
+    return status === 403 ? 'pass' : 'fail'
+  }
 }

@@ -1,6 +1,7 @@
 // components/Header.tsx
-import { Shield, CheckCircle2 } from 'lucide-react'
-import { APP_INFO, UI_LABELS } from '../lib/constants/constants'
+import { Shield, CheckCircle2, FlaskConical } from 'lucide-react' // Added FlaskConical [cite: 46]
+import Link from 'next/link'
+import { APP_INFO, UI_LABELS } from '../lib/constants'
 
 export function Header() {
   return (
@@ -14,11 +15,22 @@ export function Header() {
       <p className="text-lg md:text-xl text-primary-200 mb-4">
         {APP_INFO.DESCRIPTION}
       </p>
-      <div className="inline-flex items-center gap-2 px-4 py-2 glass-effect rounded-full">
-        <CheckCircle2 className="w-5 h-5 text-success" />
-        <span className="text-success-light font-medium">
-          {UI_LABELS.ACTIVE_PROTECTION}
-        </span>
+      
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div className="inline-flex items-center gap-2 px-4 py-2 glass-effect rounded-full">
+          <CheckCircle2 className="w-5 h-5 text-success" />
+          <span className="text-success-light font-medium">
+            {UI_LABELS.ACTIVE_PROTECTION}
+          </span>
+        </div>
+
+        <Link 
+          href="/testSelective"
+          className="inline-flex items-center gap-2 px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-full transition-all duration-200 shadow-lg hover:shadow-glow-blue cursor-pointer"
+        >
+          <FlaskConical className="w-4 h-4" />
+          {APP_INFO.CUSTOM}
+        </Link>
       </div>
     </div>
   )

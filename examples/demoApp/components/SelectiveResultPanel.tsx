@@ -1,7 +1,8 @@
 import { Shield, XCircle, CheckCircle2 } from 'lucide-react'
 import { SelectiveResultPanelProps } from '@/types'
-import { getTestStatus } from '@/lib/constants/selectiveAttacks'
+import { getTestStatus } from '@/lib/utils/attackHelpers'
 import { getResultBorderColor, getResultTextColor } from '@/lib/utils/attackHelpers'
+import { APP_INFO } from '@/lib/constants'
 
 export function SelectiveResultPanel({ 
   result, 
@@ -19,13 +20,13 @@ export function SelectiveResultPanel({
           ) : (
             <XCircle className="w-6 h-6 text-danger" />
           )}
-          <h2 className="text-xl font-bold text-white">Test Result</h2>
+          <h2 className="text-xl font-bold text-white">{APP_INFO.TEST_RESULT}</h2>
         </div>
         <button
           onClick={onClear}
           className="text-xs text-dark-text-secondary hover:text-white transition-colors cursor-pointer px-3 py-1 rounded-lg hover:bg-dark-bg-tertiary/50"
         >
-          Clear
+          {APP_INFO.CLEAR}
         </button>
       </div>
 
@@ -49,10 +50,10 @@ export function SelectiveResultPanel({
             <CheckCircle2 className="w-6 h-6 text-green-400" />
             <div>
               <div className="font-bold text-green-300 text-sm">
-                 Test Passed
+                 {APP_INFO.TEST_PASSED}
               </div>
               <div className="text-xs text-green-400/80">
-                Behavior matches expectations
+                {APP_INFO.BEHAVIOUR_MATCHES}
               </div>
             </div>
           </>
@@ -61,10 +62,10 @@ export function SelectiveResultPanel({
             <XCircle className="w-6 h-6 text-yellow-400" />
             <div>
               <div className="font-bold text-yellow-300 text-sm">
-                 Unexpected Result
+                 {APP_INFO.UNEXPECTED_RESULT}
               </div>
               <div className="text-xs text-yellow-400/80">
-                Check middleware configuration
+                {APP_INFO.CHECK_MID_CONFIG}
               </div>
             </div>
           </>
@@ -75,7 +76,7 @@ export function SelectiveResultPanel({
       <div className="grid grid-cols-2 gap-3 text-xs font-mono">
         <div className="bg-black/30 p-3 rounded-lg">
           <span className="text-dark-text-tertiary block mb-1 text-2xs">
-            RULE
+            {APP_INFO.RULE}
           </span>
           <span className="text-primary-300">
             {result.details.rule}
@@ -83,13 +84,13 @@ export function SelectiveResultPanel({
         </div>
         <div className="bg-black/30 p-3 rounded-lg">
           <span className="text-dark-text-tertiary block mb-1 text-2xs">
-            STATUS
+            {APP_INFO.STATUS}
           </span>
           <span className="text-white">{result.responseStatus}</span>
         </div>
         <div className="bg-black/30 p-3 rounded-lg">
           <span className="text-dark-text-tertiary block mb-1 text-2xs">
-            CONFIDENCE
+            {APP_INFO.CONFIDENCE}
           </span>
           <span className="text-white">
             {result.details.confidence * 100}%
@@ -97,7 +98,7 @@ export function SelectiveResultPanel({
         </div>
         <div className="bg-black/30 p-3 rounded-lg">
           <span className="text-dark-text-tertiary block mb-1 text-2xs">
-            TIME
+            {APP_INFO.TIME}
           </span>
           <span className="text-white">
             {result.details.timestamp}
@@ -107,7 +108,7 @@ export function SelectiveResultPanel({
 
       <div className="bg-black/30 p-3 rounded-lg mt-3">
         <span className="text-dark-text-tertiary block mb-1 text-2xs">
-          ACTION
+          {APP_INFO.ACTION}
         </span>
         <span className="text-white text-xs">
           {result.details.action}

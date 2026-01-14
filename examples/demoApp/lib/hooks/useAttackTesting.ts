@@ -28,9 +28,6 @@ export const useAttackTesting = () => {
 
       let result: TestResult
 
-      console.log("attack",attack);
-      console.log("attack key",attackKey);
-
       if (attackKey === 'rateLimitTest') {
         result = await AttackService.runRateLimitTest(attack)
       } else {
@@ -40,8 +37,6 @@ export const useAttackTesting = () => {
       setTestResult(result)
       addToHistory(result)
     } catch (error) {
-      console.error('Test failed:', error)
-      
       setTestResult({
         blocked: false,
         attack: ATTACKS[attackKey].name,

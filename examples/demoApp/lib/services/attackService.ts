@@ -15,8 +15,6 @@ export class AttackService {
       ? this.ENDPOINT_MAP[attackKey]
       : this.DEFAULT_ENDPOINT
 
-    console.log("ENdpoint ",endpoint);
-
     const headers = this.buildHeaders(attack.payload)
 
     const response = await fetch(endpoint, {
@@ -24,9 +22,6 @@ export class AttackService {
       headers,
       body: JSON.stringify(attack.payload),
     })
-
-    console.log("body ",JSON.stringify(attack.payload));
-    console.log("Response ",response);
 
     return this.buildTestResult(response, attack, endpoint)
   }
