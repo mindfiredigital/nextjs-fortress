@@ -1,30 +1,187 @@
+/* ==================== THEME VARIABLES ==================== */
+:root {
+  --feature-bg: linear-gradient(135deg, rgba(10,10,10,0.95), rgba(26,26,26,1));
+  --feature-card: rgba(255,255,255,0.04);
+  --feature-border: rgba(255, 0, 51, 0.15);
+  --feature-glow: rgba(255, 0, 51, 0.3);
+  --text-feature: rgba(255,255,255,0.96);
+  --text-feature-desc: rgba(255,255,255,0.72);
+}
+
+[data-theme='light'] {
+  --feature-bg: linear-gradient(135deg, rgba(254,242,242,0.95), rgba(255,255,255,1));
+  --feature-card: rgba(220, 38, 38, 0.03);
+  --feature-border: rgba(220, 38, 38, 0.2);
+  --feature-glow: rgba(220, 38, 38, 0.25);
+  --text-feature: rgba(15,23,42,0.96);
+  --text-feature-desc: rgba(71,85,105,0.85);
+}
+
+/* ==================== FEATURES SECTION ==================== */
 .features {
-  display: flex;
-  align-items: center;
-  padding: 4rem 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  padding: 6rem 2rem;
+  width: 100%;
+  background: var(--feature-bg);
+  align-items: start;
+  position: relative;
+}
+
+/* Container sizing */
+.features .container { 
+  max-width: 1200px; 
+  margin: 0 auto; 
+}
+
+/* Grid row becomes responsive grid of feature cards */
+.features .row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
   width: 100%;
 }
 
-.featureIcon {
-  height: 120px;
-  width: 120px;
-  font-size: 64px;
+/* Feature card */
+.col {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Icon tile with glassmorphism and enhanced effects */
+.featureIcon {
+  height: 140px;
+  width: 140px;
+  font-size: 72px;
+  display: grid;
+  place-items: center;
   margin: 0 auto 1rem;
-  background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
-  border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(220, 38, 38, 0.3);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 18px;
+  background: var(--feature-card);
+  border: 2px solid var(--feature-border);
+  box-shadow: 0 16px 40px var(--feature-glow), inset 0 1px 0 rgba(255,255,255,0.03);
+  transition: transform 340ms cubic-bezier(.22,1,.36,1), 
+              box-shadow 340ms,
+              border-color 340ms;
+  backdrop-filter: blur(10px) saturate(120%);
+  position: relative;
+}
+
+.featureIcon::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, var(--feature-glow), transparent);
+  border-radius: 18px;
+  opacity: 0;
+  transition: opacity 340ms;
+  z-index: -1;
+  filter: blur(10px);
+}
+
+.featureIcon:hover::before {
+  opacity: 1;
 }
 
 .featureIcon:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 50px rgba(220, 38, 38, 0.4);
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 28px 80px var(--feature-glow), 
+              inset 0 1px 0 rgba(255,255,255,0.05);
+  border-color: rgba(220, 38, 38, 0.4);
 }
 
-[data-theme='dark'] .featureIcon {
-  background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
-  box-shadow: 0 10px 40px rgba(239, 68, 68, 0.3);
+[data-theme='light'] .featureIcon:hover {
+  border-color: rgba(220, 38, 38, 0.5);
+}
+
+/* Title & text */
+.features h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-feature);
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+.features .col:hover h3 {
+  color: #dc2626;
+}
+
+[data-theme='light'] .features .col:hover h3 {
+  color: #b91c1c;
+}
+
+.features p {
+  font-size: 0.98rem;
+  color: var(--text-feature-desc);
+  line-height: 1.6;
+  text-align: center;
+  margin: 0 auto 0.5rem;
+  max-width: 34ch;
+}
+
+/* Small columns spacing */
+.features .col { 
+  padding: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.features .col:hover {
+  transform: translateY(-4px);
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 996px) {
+  .features { 
+    padding: 4rem 1.25rem; 
+  }
+  
+  .featureIcon { 
+    height: 120px; 
+    width: 120px; 
+    font-size: 60px; 
+  }
+  
+  .features .row {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .features { 
+    padding: 3rem 1rem; 
+  }
+  
+  .featureIcon { 
+    height: 100px; 
+    width: 100px; 
+    font-size: 48px; 
+    margin-bottom: 0.75rem; 
+  }
+  
+  .features .row { 
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+  }
+  
+  .features h3 { 
+    font-size: 1rem; 
+  }
+  
+  .features p { 
+    font-size: 0.92rem; 
+    max-width: 44ch; 
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .featureIcon,
+  .features .col,
+  .features h3 {
+    transition-duration: 0.01ms !important;
+  }
 }

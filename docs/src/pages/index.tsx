@@ -5,96 +5,115 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import HomepageFeatures from '@site/src/components/HomepageFeatures';
 import Heading from '@theme/Heading';
+import { FaShieldAlt, FaBolt, FaLock } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
 
 import styles from './index.module.css';
 
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') as 'dark' | 'light' || 'dark';
+    setTheme(savedTheme);
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+  };
+
   return (
-    <header className={clsx('hero', styles.heroBanner)}>
-      <div className="container">
-        <div className={styles.heroContent}>
-          <div className={styles.fortressTitle}>
-            <Heading as="h1" className="hero__title">
-              nextjs-fortress
-            </Heading>
-          </div>
-          
-          <p className={styles.heroSubtitle}>
-            Universal Security Validation Framework for Next.js
-          </p>
-          
-          <p className={styles.heroDescription}>
-            Protect your Next.js application from <strong>CVE-2025-55182</strong> (React2Shell) 
-            and all major attack vectors with zero configuration.
-          </p>
-
-          <div className={styles.securityBadges}>
-            <span className={styles.badge}>
-              <span className={styles.badgeIcon}>🛡️</span>
-              CVE-2025-55182 Protected
-            </span>
-            <span className={styles.badge}>
-              <span className={styles.badgeIcon}>⚡</span>
-              {'<1ms Overhead'}
-            </span>
-            <span className={styles.badge}>
-              <span className={styles.badgeIcon}>🔒</span>
-              7 Security Layers
-            </span>
-          </div>
-
-          <div className={styles.buttons}>
-            <Link
-              className="button button--primary button--lg"
-              to="/docs/quick-start">
-              Get Started - 5 minutes ⚡
-            </Link>
-            <Link
-              className="button button--secondary button--lg"
-              to="/docs/intro">
-              Why Fortress? 🤔
-            </Link>
-          </div>
-
-          <div className={styles.codePreview}>
-            <div className={styles.codeHeader}>
-              <span className={styles.codeDot} style={{background: '#ff5f56'}}></span>
-              <span className={styles.codeDot} style={{background: '#ffbd2e'}}></span>
-              <span className={styles.codeDot} style={{background: '#27c93f'}}></span>
-              <span className={styles.codeTitle}>middleware.ts</span>
+    <>
+      <header className={clsx('hero', styles.heroBanner)}>
+        <div className="container">
+          <div className={styles.heroContent}>
+            <div className={styles.fortressTitle}>
+              <Heading as="h1" className="hero__title">
+                nextjs-fortress
+              </Heading>
             </div>
-            <pre className={styles.codeContent}>
-              <code>{`import { createFortressMiddleware } from 'nextjs-fortress';
+            
+            <p className={styles.heroSubtitle}>
+              Universal Security Validation Framework for Next.js
+            </p>
+            
+            <p className={styles.heroDescription}>
+              Protect your Next.js application from <strong>CVE-2025-55182</strong> (React2Shell) 
+              and all major attack vectors with zero configuration.
+            </p>
+
+            <div className={styles.securityBadges}>
+              <span className={styles.badge} tabIndex={0} role="status" aria-label="Protected against CVE-2025-55182">
+                <span className={styles.badgeIcon}><FaShieldAlt aria-hidden /></span>
+                CVE-2025-55182 Protected
+              </span>
+              <span className={styles.badge}>
+                <span className={styles.badgeIcon}>⚡</span>
+                {'<1ms Overhead'}
+              </span>
+              <span className={styles.badge}>
+                <span className={styles.badgeIcon}>🔒</span>
+                7 Security Layers
+              </span>
+            </div>
+
+            <div className={styles.buttons}>
+              <Link
+                className="button button--primary button--lg"
+                to="/docs/quick-start">
+                Get Started - 5 minutes ⚡
+              </Link>
+              <Link
+                className="button button--secondary button--lg"
+                to="/docs/intro">
+                Why Fortress? 🤔
+              </Link>
+            </div>
+
+            <div className={styles.codePreview}>
+              <div className={styles.codeHeader}>
+                <span className={styles.codeDot} style={{background: '#ff5f56'}}></span>
+                <span className={styles.codeDot} style={{background: '#ffbd2e'}}></span>
+                <span className={styles.codeDot} style={{background: '#27c93f'}}></span>
+                <span className={styles.codeTitle}>middleware.ts</span>
+              </div>
+              <pre className={styles.codeContent}>
+                <code>{`import { createFortressMiddleware } from 'nextjs-fortress';
 import { fortressConfig } from './fortress.config';
 
 export const middleware = createFortressMiddleware(fortressConfig);
 
 // ✅ Your entire app is now protected!`}</code>
-            </pre>
-          </div>
+              </pre>
+            </div>
 
-          <div className={styles.statsContainer}>
-            <div className={styles.stat}>
-              <div className={styles.statNumber}>7</div>
-              <div className={styles.statLabel}>Security Layers</div>
-            </div>
-            <div className={styles.stat}>
-              <div className={styles.statNumber}>{'<1ms'}</div>
-              <div className={styles.statLabel}>Overhead</div>
-            </div>
-            <div className={styles.stat}>
-              <div className={styles.statNumber}>100%</div>
-              <div className={styles.statLabel}>CVE Protected</div>
-            </div>
-            <div className={styles.stat}>
-              <div className={styles.statNumber}>0</div>
-              <div className={styles.statLabel}>Config Required</div>
+            <div className={styles.statsContainer}>
+              <div className={styles.stat}>
+                <div className={styles.statNumber}>7</div>
+                <div className={styles.statLabel}>Security Layers</div>
+              </div>
+              <div className={styles.stat}>
+                <div className={styles.statNumber}>{'<1ms'}</div>
+                <div className={styles.statLabel}>Overhead</div>
+              </div>
+              <div className={styles.stat}>
+                <div className={styles.statNumber}>100%</div>
+                <div className={styles.statLabel}>CVE Protected</div>
+              </div>
+              <div className={styles.stat}>
+                <div className={styles.statNumber}>0</div>
+                <div className={styles.statLabel}>Config Required</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </>
   );
 }
 
