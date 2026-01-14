@@ -1,0 +1,192 @@
+// types/config.ts - Configuration type definitions
+
+import { SecurityEvent } from './events'
+
+/**
+ * Deserialization validation configuration
+ */
+export interface DeserializationConfig {
+  enabled: boolean
+  native?: boolean
+  maxDepth: number
+  detectCircular: boolean
+  blockList?: string[]
+  dangerousPatterns?: string[]
+}
+
+/**
+ * Injection detection configuration
+ */
+export interface InjectionConfig {
+  enabled: boolean
+  checks: Array<'sql' | 'command' | 'xss' | 'codeInjection'>
+  customPatterns?: RegExp[]
+}
+
+/**
+ * Encoding validation configuration
+ */
+export interface EncodingConfig {
+  enabled: boolean
+  blockNonUTF8: boolean
+  detectBOM: boolean
+  allowedEncodings?: string[]
+}
+
+/**
+ * CSRF protection configuration
+ */
+export interface CSRFConfig {
+  enabled: boolean
+  tokenSecret?: string
+  cookieName: string
+  headerName?: string
+  tokenLength?: number
+  expiryMs?: number
+}
+
+/**
+ * Rate limiting configuration
+ */
+export interface RateLimitConfig {
+  enabled: boolean
+  byIP?: {
+    requests: number
+    window: number
+  }
+  bySession?: {
+    requests: number
+    window: number
+  }
+  endpoints?: Record<string, { requests: number; window: number }>
+  whitelist?: string[]
+  backoff?: {
+    enabled: boolean
+    multiplier?: number
+    maxDelay?: number
+  }
+}
+
+/**
+ * Content validation configuration
+ */
+export interface ContentConfig {
+  enabled: boolean
+  maxPayloadSize: number
+  expectedContentTypes?: string[]
+  requiredHeaders?: string[]
+  forbiddenHeaders?: string[]
+}
+
+/**
+ * Security headers configuration
+ */
+export interface SecurityHeadersConfig {
+  enabled: boolean
+  headers?: Record<string, string>
+  cors?: {
+    allowedOrigins: string[]
+    methods: string[]
+    credentials: boolean
+  }
+}
+
+/**
+ * Logging configuration
+ */
+export interface LoggingConfig {
+  enabled: boolean
+  level: 'debug' | 'info' | 'warn' | 'error'
+  destination: 'console' | 'file' | 'external'
+  externalEndpoint?: string
+}
+
+/**
+ * Main Fortress configuration
+ */
+export interface FortressConfig {
+  enabled: boolean
+  mode: 'development' | 'staging' | 'production'
+  logging: LoggingConfig
+
+  modules: {
+    deserialization: DeserializationConfig
+    injection: InjectionConfig
+    encoding: EncodingConfig
+    csrf: CSRFConfig
+    rateLimit: RateLimitConfig
+    content: ContentConfig
+    securityHeaders: SecurityHeadersConfig
+  }
+
+  whitelist?: {
+    paths?: string[]
+    ips?: string[]
+  }
+
+  onSecurityEvent?: (event: SecurityEvent) => void | Promise<void>
+
+  performance?: {
+    useNativeAddon?: boolean
+    cacheValidationResults?: boolean
+    cacheTTL?: number
+  }
+}
+
+/**
+ * Default safe configuration
+ */
+export const DEFAULT_CONFIG: FortressConfig = {
+  enabled: true,
+  mode: 'production',
+  logging: {
+    enabled: true,
+    level: 'warn',
+    destination: 'console',
+  },
+  modules: {
+    deserialization: {
+      enabled: true,
+      native: false,
+      maxDepth: 10,
+      detectCircular: true,
+    },
+    injection: {
+      enabled: true,
+      checks: ['sql', 'command', 'xss', 'codeInjection'],
+    },
+    encoding: {
+      enabled: true,
+      blockNonUTF8: true,
+      detectBOM: true,
+    },
+    csrf: {
+      enabled: true,
+      cookieName: '_csrf',
+      headerName: 'X-CSRF-Token',
+      tokenLength: 32,
+      expiryMs: 24 * 60 * 60 * 1000, // 24 hours
+    },
+    rateLimit: {
+      enabled: true,
+      byIP: { requests: 100, window: 60000 },
+      bySession: { requests: 50, window: 60000 },
+    },
+    content: {
+      enabled: true,
+      maxPayloadSize: 1024 * 1024, // 1MB
+    },
+    securityHeaders: {
+      enabled: true,
+    },
+  },
+  whitelist: {
+    paths: ['/_next', '/api/health', '/favicon.ico'],
+    ips: [],
+  },
+  performance: {
+    useNativeAddon: false,
+    cacheValidationResults: true,
+    cacheTTL: 3600000, // 1 hour
+  },
+}
