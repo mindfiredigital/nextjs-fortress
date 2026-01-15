@@ -7,30 +7,30 @@ export function HistoryPanel({ history }: HistoryPanelProps) {
   if (history.length === 0) return null
 
   return (
-    <div className="glass-effect rounded-2xl p-6 animate-fade-in">
-      <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-        <Activity className="w-5 h-5 text-warning" />
+    <div className="glass-effect rounded-xl p-6 animate-fade-in shadow-professional-lg">
+      <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+        <Activity className="w-5 h-5 text-red-700" />
         {UI_LABELS.HISTORY_TITLE} ({history.length}/{UI_CONFIG.MAX_HISTORY_ITEMS})
       </h3>
-      <div className="space-y-2 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-primary-500/50 scrollbar-track-transparent">
+      <div className="space-y-2 max-h-64 overflow-y-auto scrollbar-thin">
         {history.map((result, idx) => (
           <div
             key={idx}
-            className="bg-black/20 rounded-lg p-3 text-xs hover:bg-black/30 transition-colors cursor-default"
+            className="bg-black/30 rounded-lg p-3 border border-zinc-800/30 hover:bg-black/40 transition-colors cursor-default"
           >
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-white font-medium">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-white font-medium text-xs">
                 {result.attack}
               </span>
               {result.blocked ? (
-                <CheckCircle2 className="w-4 h-4 text-success" />
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
               ) : (
-                <XCircle className="w-4 h-4 text-danger" />
+                <XCircle className="w-4 h-4 text-red-500" />
               )}
             </div>
-            <div className="flex justify-between text-dark-text-secondary">
+            <div className="flex justify-between text-xs text-gray-400">
               <span>{result.details.timestamp}</span>
-              <span>{result.responseStatus}</span>
+              <span className="font-mono font-medium">{result.responseStatus}</span>
             </div>
           </div>
         ))}
