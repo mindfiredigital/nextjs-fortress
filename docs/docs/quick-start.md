@@ -174,7 +174,7 @@ export const middleware = createFortressMiddleware(fortressConfig, myMiddleware)
 ### Option 3: Middleware implementation in custom allowed paths
 
 ```typescript
-import { createSelectiveFortressMiddleware } from 'nextjs-fortress'
+import { createSelectiveFortressMiddleware } from '@mindfiredigital/nextjs-fortress'
 import { fortressConfig } from './fortress.config'
 import { NextRequest, NextResponse } from 'next/server'
 
