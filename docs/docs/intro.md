@@ -97,15 +97,6 @@ export async function POST(request: Request) {
 - Validates prototype chain
 - Detects circular references
 
-### Zero Performance Impact
-
-```typescript
-// Benchmark: 1000 requests
-Without fortress: 10ms
-With fortress:    11ms
-Overhead:        +1ms (10%)
-```
-
 ### Framework Agnostic
 
 Works with:
