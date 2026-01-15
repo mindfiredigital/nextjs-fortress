@@ -1,3 +1,4 @@
+// components/FortressDemo.tsx
 'use client'
 
 import { useMemo, useState } from 'react'
@@ -41,7 +42,7 @@ export default function FortressDemo() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         <Header />
         
