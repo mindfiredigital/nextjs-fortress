@@ -1,3 +1,4 @@
+// app/testSelective/page.tsx
 'use client'
 
 import { ATTACKS } from '../../lib/mock/attacks'
@@ -33,12 +34,12 @@ export default function SelectiveMiddlewareTest() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         <SelectiveHeader />
 
         <div className="grid lg:grid-cols-2 gap-6">
-          {/* Left Column - Attack Selection (NEW COMPONENT) */}
+          {/* Left Column - Attack Selection */}
           <SelectiveAttackGroups
             selectedAttack={selectedAttack}
             onAttackSelect={handleAttackSelect}
