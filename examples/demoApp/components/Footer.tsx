@@ -6,7 +6,7 @@ export function Footer({ history }: FooterProps) {
   const blockedCount = history.filter((t) => t.blocked).length
 
   return (
-    <footer className="mt-12 text-center text-slate-500 text-xs font-mono animate-fade-in">
+    <footer className="mt-12 text-center text-gray-500 text-xs font-mono animate-fade-in">
       <p>
         {APP_INFO.NAME} v{APP_INFO.VERSION} •{' '}
         {blockedCount}/{history.length}{' '}
