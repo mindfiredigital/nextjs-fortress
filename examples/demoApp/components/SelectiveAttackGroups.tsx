@@ -1,3 +1,4 @@
+// components/SelectiveAttackGroups.tsx
 import { ATTACKS } from '@/lib/mock/attacks'
 import { SELECTIVE_ATTACKS } from '@/lib/constants/selectiveAttacks'
 import { SelectiveAttackGroupsProps} from '@/types'
@@ -11,19 +12,19 @@ export function SelectiveAttackGroups({
       {SELECTIVE_ATTACKS.map((group) => {
         const Icon = group.icon
         return (
-          <div key={group.category} className="glass-effect rounded-2xl p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <Icon className="w-6 h-6 text-primary-400" />
-              <h2 className="text-xl font-bold text-white">
+          <div key={group.category} className="glass-effect rounded-xl p-6 shadow-professional-lg">
+            <div className="flex items-center gap-2 mb-4">
+              <Icon className="w-5 h-5 text-red-700" />
+              <h2 className="text-xl font-semibold text-white">
                 {group.category}
               </h2>
             </div>
             
-            <p className="text-sm text-dark-text-secondary mb-4">
+            <p className="text-sm text-gray-400 mb-4 leading-relaxed">
               {group.description}
             </p>
 
-            <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 mb-4">
+            <div className="bg-blue-950/20 border border-blue-800/30 rounded-lg p-3 mb-4">
               <p className="text-xs text-blue-300">
                 <span className="font-semibold">Expected:</span> {group.expectedBehavior}
               </p>
@@ -40,23 +41,23 @@ export function SelectiveAttackGroups({
                     key={attackKey}
                     onClick={() => onAttackSelect(attackKey)}
                     className={`
-                      w-full text-left p-3 rounded-xl 
-                      transition-all duration-200 cursor-pointer
-                      hover:scale-[1.02] active:scale-[0.98]
+                      w-full text-left p-3.5 rounded-lg 
+                      transition-all duration-200 cursor-pointer border
+                      hover:translate-x-1
                       ${
                         isSelected
-                          ? 'bg-primary-500/30 border-2 border-primary-400 shadow-glow-blue'
-                          : 'bg-dark-bg-secondary/30 border-2 border-transparent hover:bg-dark-bg-tertiary/50 hover:border-primary-400/30'
+                          ? 'bg-red-900/20 border-red-800/40 shadow-professional'
+                          : 'bg-zinc-900/30 border-zinc-800/30 hover:bg-zinc-800/40 hover:border-zinc-700/40'
                       }
                     `}
                   >
                     <div className="flex items-start gap-3">
-                      <AttackIcon className="w-5 h-5 mt-1 text-primary-400" />
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-white text-sm">
+                      <AttackIcon className="w-5 h-5 mt-0.5 text-gray-400" />
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-white text-sm mb-1">
                           {attack.name}
                         </h3>
-                        <p className="text-xs text-dark-text-secondary mt-1">
+                        <p className="text-xs text-gray-400 leading-relaxed">
                           {attack.description}
                         </p>
                       </div>
