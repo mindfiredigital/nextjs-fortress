@@ -32,47 +32,49 @@ function HomepageHeader() {
       <header className={clsx('hero', styles.heroBanner)}>
         <div className="container">
           <div className={styles.heroContent}>
-            <div className={styles.fortressTitle}>
-              <Heading as="h1" className="hero__title">
-                nextjs-fortress
-              </Heading>
-            </div>
-            
-            <p className={styles.heroSubtitle}>
-              Universal Security Validation Framework for Next.js
-            </p>
-            
-            <p className={styles.heroDescription}>
-              Protect your Next.js application from <strong>CVE-2025-55182</strong> (React2Shell) 
-              and all major attack vectors with zero configuration.
-            </p>
+            <div className={styles.heroMainContent}>
+              <div className={styles.fortressTitle}>
+                <Heading as="h1" className="hero__title">
+                  nextjs-fortress
+                </Heading>
+              </div>
+              
+              <p className={styles.heroSubtitle}>
+                Universal Security Validation Framework for Next.js
+              </p>
+              
+              <p className={styles.heroDescription}>
+                Protect your Next.js application from <strong>CVE-2025-55182</strong> (React2Shell) 
+                and all major attack vectors with zero configuration.
+              </p>
 
-            <div className={styles.securityBadges}>
-              <span className={styles.badge} tabIndex={0} role="status" aria-label="Protected against CVE-2025-55182">
-                <span className={styles.badgeIcon}><FaShieldAlt aria-hidden /></span>
-                CVE-2025-55182 Protected
-              </span>
-              <span className={styles.badge}>
-                <span className={styles.badgeIcon}>⚡</span>
-                {'<1ms Overhead'}
-              </span>
-              <span className={styles.badge}>
-                <span className={styles.badgeIcon}>🔒</span>
-                7 Security Layers
-              </span>
-            </div>
+              <div className={styles.securityBadges}>
+                <span className={styles.badge} tabIndex={0} role="status" aria-label="Protected against CVE-2025-55182">
+                  <span className={styles.badgeIcon}><FaShieldAlt aria-hidden /></span>
+                  CVE-2025-55182 Protected
+                </span>
+                <span className={styles.badge}>
+                  <span className={styles.badgeIcon}>⚡</span>
+                  {'<1ms Overhead'}
+                </span>
+                <span className={styles.badge}>
+                  <span className={styles.badgeIcon}>🔒</span>
+                  7 Security Layers
+                </span>
+              </div>
 
-            <div className={styles.buttons}>
-              <Link
-                className="button button--primary button--lg"
-                to="/docs/quick-start">
-                Get Started - 5 minutes ⚡
-              </Link>
-              <Link
-                className="button button--secondary button--lg"
-                to="/docs/intro">
-                Why Fortress? 🤔
-              </Link>
+              <div className={styles.buttons}>
+                <Link
+                  className="button button--primary button--lg"
+                  to="/docs/quick-start">
+                  Get Started - 5 minutes ⚡
+                </Link>
+                <Link
+                  className="button button--secondary button--lg"
+                  to="/docs/intro">
+                  Why Fortress? 🤔
+                </Link>
+              </div>
             </div>
 
             <div className={styles.codePreview}>

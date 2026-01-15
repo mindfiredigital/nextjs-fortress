@@ -1,23 +1,23 @@
 /* ==================== THEME VARIABLES ==================== */
 :root {
-  /* Dark Theme */
+  /* Dark Theme - Neon Red */
   --bg-dark-1: #0a0a0a;
-  --bg-dark-2: #1a1a1a;
-  --bg-dark-3: #0f172a;
+  --bg-dark-2: #1a0a0a;
+  --bg-dark-3: #150505;
   --text-primary: #ffffff;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
+  --text-secondary: #ffcccc;
+  --text-muted: #cc9999;
   
-  /* Neon Red Accents for Dark */
-  --accent-red: #ff0033;
-  --accent-red-glow: rgba(255, 0, 51, 0.5);
-  --accent-rose: #ff1654;
-  --accent-pink: #ff3377;
+  /* Neon Red Accents */
+  --accent-red: #ff0000;
+  --accent-red-glow: rgba(255, 0, 0, 0.6);
+  --accent-rose: #cc0000;
+  --accent-pink: #ff3333;
   
   /* Glass Effects */
-  --glass-bg: rgba(15, 23, 42, 0.6);
-  --glass-border: rgba(255, 0, 51, 0.3);
-  --border-subtle: rgba(148, 163, 184, 0.2);
+  --glass-bg: rgba(30, 10, 10, 0.6);
+  --glass-border: rgba(255, 0, 0, 0.4);
+  --border-subtle: rgba(255, 0, 0, 0.25);
 }
 
 [data-theme='light'] {
@@ -58,7 +58,7 @@
   justify-content: center;
   font-size: 24px;
   transition: all 0.3s ease;
-  box-shadow: 0 0 20px rgba(220, 38, 38, 0.2);
+  box-shadow: 0 0 20px var(--accent-red-glow);
 }
 
 .themeToggle:hover {
@@ -119,9 +119,24 @@
   }
 }
 
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
 /* ==================== HERO BANNER ==================== */
 .heroBanner {
-  padding: 8rem 2rem 4rem;
+  padding: 4rem 2rem 5rem;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -153,6 +168,27 @@
   z-index: 1;
 }
 
+/* Hero Main Content with Glassmorphism */
+.heroMainContent {
+  padding: 3rem 2.5rem;
+  margin-bottom: 3rem;
+  border-radius: 20px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid var(--glass-border);
+  box-shadow: 0 16px 48px var(--accent-red-glow),
+              inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.4s ease;
+}
+
+.heroMainContent:hover {
+  border-color: var(--accent-red);
+  box-shadow: 0 20px 60px var(--accent-red-glow),
+              0 0 100px rgba(255, 0, 0, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
 /* Fortress Title */
 .fortressTitle {
   display: flex;
@@ -161,6 +197,7 @@
   gap: 1rem;
   margin-bottom: 1.5rem;
   animation: fadeInDown 0.8s ease-out;
+  overflow: hidden;
 }
 
 .fortressIcon {
@@ -178,6 +215,20 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   filter: drop-shadow(0 0 30px var(--accent-red-glow));
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 3px solid var(--accent-red);
+  animation: typing 3s steps(16) 0.5s 1 normal both,
+             blink 0.75s step-end infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fortressTitle h1 {
+    animation: typing 3s steps(16) 0.5s 1 normal both,
+               blink 0.75s step-end infinite;
+  }
 }
 
 /* Hero Text */
@@ -224,11 +275,11 @@
   font-weight: 600;
   color: var(--accent-red);
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 0 20px rgba(220, 38, 38, 0.1);
+  box-shadow: 0 0 20px var(--accent-red-glow);
 }
 
 .badge:hover {
-  background: rgba(220, 38, 38, 0.15);
+  background: rgba(255, 0, 0, 0.2);
   border-color: var(--accent-red);
   transform: translateY(-3px);
   box-shadow: 0 8px 20px var(--accent-red-glow);
@@ -301,7 +352,7 @@
 }
 
 .buttons .button--secondary:hover {
-  background: rgba(220, 38, 38, 0.15);
+  background: rgba(255, 0, 0, 0.2);
   border-color: var(--accent-red);
   transform: translateY(-3px);
   box-shadow: 0 10px 25px var(--accent-red-glow);
@@ -391,11 +442,11 @@
   border: 2px solid var(--border-subtle);
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
-  box-shadow: 0 0 20px rgba(220, 38, 38, 0.1);
+  box-shadow: 0 0 20px var(--accent-red-glow);
 }
 
 .stat:hover {
-  background: rgba(220, 38, 38, 0.1);
+  background: rgba(255, 0, 0, 0.15);
   border-color: var(--accent-red);
   transform: translateY(-5px);
   box-shadow: 0 0 30px var(--accent-red-glow);
@@ -423,9 +474,9 @@
 /* Alert Banner */
 .alertBanner {
   background: linear-gradient(135deg, var(--accent-rose) 0%, var(--accent-pink) 100%);
-  padding: 1.5rem 0;
+  padding: 1.2rem 0;
   color: white;
-  border-bottom: 2px solid rgba(220, 38, 38, 0.5);
+  border-bottom: 2px solid rgba(255, 0, 0, 0.5);
   box-shadow: 0 4px 20px var(--accent-red-glow);
 }
 
@@ -486,7 +537,7 @@
   padding: 2.5rem;
   background: var(--glass-bg);
   border-radius: 14px;
-  box-shadow: 0 8px 25px rgba(220, 38, 38, 0.15);
+  box-shadow: 0 8px 25px var(--accent-red-glow);
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   border: 2px solid var(--border-subtle);
   backdrop-filter: blur(10px);
@@ -567,7 +618,12 @@
 /* Responsive */
 @media screen and (max-width: 996px) {
   .heroBanner {
-    padding: 6rem 2rem 3rem;
+    padding: 3rem 2rem 4rem;
+  }
+
+  .heroMainContent {
+    padding: 2.5rem 2rem;
+    margin-bottom: 2.5rem;
   }
 
   .fortressTitle h1 {
@@ -617,8 +673,19 @@
 }
 
 @media screen and (max-width: 640px) {
+  .heroBanner {
+    padding: 2.5rem 1rem 3rem;
+  }
+
+  .heroMainContent {
+    padding: 2rem 1.5rem;
+    margin-bottom: 2rem;
+  }
+
   .fortressTitle h1 {
     font-size: 2rem;
+    animation: none;
+    border-right: none;
   }
 
   .heroSubtitle {
@@ -647,6 +714,10 @@
     height: 45px;
     top: 15px;
     right: 15px;
+  }
+
+  .alertBanner {
+    padding: 1rem 0;
   }
 }
 
