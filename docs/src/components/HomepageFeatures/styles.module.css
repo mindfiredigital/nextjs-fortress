@@ -1,30 +1,52 @@
 /* ==================== THEME VARIABLES ==================== */
 :root {
-  --feature-bg: linear-gradient(135deg, rgba(10,10,10,0.95), rgba(26,26,26,1));
-  --feature-card-bg: rgba(20, 10, 10, 0.4);
-  --feature-card-border: rgba(255, 0, 0, 0.35);
-  --feature-card-glow: rgba(255, 0, 0, 0.2);
-  --feature-icon-bg: rgba(30, 10, 10, 0.6);
-  --feature-icon-border: rgba(255, 0, 0, 0.45);
-  --feature-icon-glow: rgba(255, 0, 0, 0.4);
-  --text-feature: rgba(255,255,255,0.96);
-  --text-feature-desc: rgba(255,255,255,0.72);
-  --accent-red: #ff0000;
-  --accent-rose: #cc0000;
+  /* Light Theme */
+  --feature-bg: #ffffff;
+  --feature-card-bg: rgba(255, 255, 255, 0.8);
+  --feature-card-border: rgba(0, 0, 0, 0.1);
+  --feature-icon-bg: #fafafa;
+  --feature-icon-border: rgba(220, 38, 38, 0.2);
+  --text-feature: #1a1a1a;
+  --text-feature-desc: #4a4a4a;
+  --accent-red: #dc2626;
+  --accent-red-hover: #b91c1c;
+  --accent-red-light: #fee2e2;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-red: 0 4px 16px rgba(220, 38, 38, 0.15);
 }
 
-[data-theme='light'] {
-  --feature-bg: linear-gradient(135deg, rgba(254,242,242,0.95), rgba(255,255,255,1));
-  --feature-card-bg: rgba(254, 242, 242, 0.6);
-  --feature-card-border: rgba(220, 38, 38, 0.25);
-  --feature-card-glow: rgba(220, 38, 38, 0.12);
-  --feature-icon-bg: rgba(254, 242, 242, 0.7);
-  --feature-icon-border: rgba(220, 38, 38, 0.35);
-  --feature-icon-glow: rgba(220, 38, 38, 0.25);
-  --text-feature: rgba(15,23,42,0.96);
-  --text-feature-desc: rgba(71,85,105,0.85);
+[data-theme='dark'] {
+  /* Dark Theme - Clean and Clear */
+  --feature-bg: #1a1a1a;
+  --feature-card-bg: rgba(38, 38, 38, 0.8);
+  --feature-card-border: rgba(255, 255, 255, 0.1);
+  --feature-icon-bg: #262626;
+  --feature-icon-border: rgba(220, 38, 38, 0.25);
+  --text-feature: #ffffff;
+  --text-feature-desc: #e5e5e5;
   --accent-red: #dc2626;
-  --accent-rose: #b91c1c;
+  --accent-red-hover: #b91c1c;
+  --accent-red-light: #3f1515;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-red: 0 4px 16px rgba(220, 38, 38, 0.2);
+}
+
+/* Scroll animations */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* ==================== FEATURES SECTION ==================== */
@@ -32,25 +54,12 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 3rem;
-  padding: 6rem 2rem;
+  padding: 5rem 2rem;
   width: 100%;
   background: var(--feature-bg);
   align-items: start;
   position: relative;
-}
-
-/* Add subtle background pattern */
-.features::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at 20% 50%, var(--feature-card-glow) 0%, transparent 50%),
-              radial-gradient(circle at 80% 80%, var(--feature-card-glow) 0%, transparent 50%);
-  pointer-events: none;
-  opacity: 0.3;
+  transition: background 0.3s ease;
 }
 
 /* Container sizing */
@@ -65,7 +74,7 @@
 .features .row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 3rem;
+  gap: 2.5rem;
   width: 100%;
 }
 
@@ -73,12 +82,37 @@
 .featureCard {
   display: flex;
   flex-direction: column;
+  animation: fadeInScale 0.5s ease-out backwards;
 }
 
 .featureCard:nth-last-child(-n + 3) {
   margin-top: 50px;
 }
 
+
+.featureCard:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.featureCard:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.featureCard:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.featureCard:nth-child(4) {
+  animation-delay: 0.25s;
+}
+
+.featureCard:nth-child(5) {
+  animation-delay: 0.3s;
+}
+
+.featureCard:nth-child(6) {
+  animation-delay: 0.35s;
+}
 
 /* Feature card with glassmorphism */
 .featureCardInner {
@@ -91,15 +125,15 @@
   
   /* Glassmorphism effect */
   background: var(--feature-card-bg);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   
   /* Border with red tint */
-  border: 1.5px solid var(--feature-card-border);
+  border: 2px solid var(--feature-card-border);
   
-  /* Subtle red glow shadow */
-  box-shadow: 0 8px 32px var(--feature-card-glow),
-              inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  /* Enhanced shadows */
+  box-shadow: 0 10px 36px rgba(220, 38, 38, 0.12),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08);
   
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
               box-shadow 0.4s ease,
@@ -117,34 +151,29 @@
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, var(--feature-icon-glow) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(220, 38, 38, 0.15) 0%, transparent 70%);
   opacity: 0;
   transition: opacity 0.4s ease;
   pointer-events: none;
 }
 
 .featureCardInner:hover::before {
-  opacity: 0.4;
+  opacity: 0.6;
 }
 
 .featureCardInner:hover {
   transform: translateY(-8px);
   border-color: var(--accent-red);
-  background: rgba(30, 10, 10, 0.6);
-  box-shadow: 0 16px 48px var(--feature-icon-glow),
-              0 0 80px var(--feature-card-glow),
-              inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-[data-theme='light'] .featureCardInner:hover {
-  background: rgba(254, 242, 242, 0.75);
+  background: var(--accent-red-light);
+  box-shadow: 0 18px 56px rgba(220, 38, 38, 0.18),
+              0 0 80px rgba(220, 38, 38, 0.1),
+              inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 /* Icon tile with enhanced glassmorphism */
 .featureIcon {
   height: 120px;
   width: 120px;
-  font-size: 60px;
   display: grid;
   place-items: center;
   margin: 0 auto 1rem;
@@ -152,41 +181,44 @@
   
   /* Glassmorphism for icon */
   background: var(--feature-icon-bg);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   
   /* Red tinted border */
   border: 2px solid var(--feature-icon-border);
   
-  /* Red glow */
-  box-shadow: 0 12px 40px var(--feature-icon-glow),
-              inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  /* Enhanced red glow */
+  box-shadow: 0 12px 40px rgba(220, 38, 38, 0.12),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08);
   
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
               box-shadow 0.4s ease,
-              border-color 0.4s ease;
+              border-color 0.4s ease,
+              background 0.4s ease;
   position: relative;
+  color: var(--accent-red);
 }
 
 /* Icon hover glow */
 .featureIcon::before {
   content: '';
   position: absolute;
-  inset: -3px;
-  background: linear-gradient(135deg, var(--feature-icon-glow), transparent);
-  border-radius: 18px;
+  inset: -4px;
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.2), transparent);
+  border-radius: 20px;
   opacity: 0;
   transition: opacity 0.4s ease;
   z-index: -1;
-  filter: blur(12px);
+  filter: blur(16px);
 }
 
 .featureCardInner:hover .featureIcon {
   transform: translateY(-6px) scale(1.05);
   border-color: var(--accent-red);
-  box-shadow: 0 20px 60px var(--feature-icon-glow),
-              0 0 100px var(--feature-card-glow),
-              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  background: var(--accent-red-light);
+  box-shadow: 0 20px 60px rgba(220, 38, 38, 0.18),
+              0 0 80px rgba(220, 38, 38, 0.08),
+              inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 .featureCardInner:hover .featureIcon::before {
@@ -195,13 +227,12 @@
 
 /* Title & text */
 .features h3 {
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 1.15rem;
+  font-weight: 600;
   margin: 0 0 0.75rem;
   color: var(--text-feature);
   text-align: center;
   transition: color 0.3s ease;
-  letter-spacing: -0.01em;
 }
 
 .featureCardInner:hover h3 {
@@ -209,7 +240,7 @@
 }
 
 .features p {
-  font-size: 0.98rem;
+  font-size: 0.95rem;
   color: var(--text-feature-desc);
   line-height: 1.7;
   text-align: center;
@@ -221,13 +252,11 @@
 @media screen and (max-width: 996px) {
   .features { 
     padding: 4rem 1.5rem;
-    margin-top: 1.5rem;
   }
   
   .featureIcon { 
     height: 110px; 
     width: 110px; 
-    font-size: 54px; 
   }
   
   .features .row {
@@ -243,14 +272,11 @@
 @media screen and (max-width: 600px) {
   .features { 
     padding: 3rem 1rem;
-    margin-top: 1rem;
   }
   
   .featureIcon { 
     height: 100px; 
     width: 100px; 
-    font-size: 48px; 
-    margin-bottom: 0.75rem; 
   }
   
   .features .row { 
@@ -267,8 +293,7 @@
   }
   
   .features p { 
-    font-size: 0.92rem; 
-    max-width: 44ch; 
+    font-size: 0.9rem; 
   }
 }
 
@@ -276,9 +301,7 @@
 @media (prefers-reduced-motion: reduce) {
   .featureIcon,
   .featureCardInner,
-  .features h3,
-  .featureIcon::before,
-  .featureCardInner::before {
+  .features h3 {
     transition-duration: 0.01ms !important;
     animation: none !important;
   }

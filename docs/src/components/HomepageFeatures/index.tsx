@@ -1,18 +1,19 @@
 import type {ReactNode} from 'react';
 import clsx from 'clsx';
 import Heading from '@theme/Heading';
+import { Shield, Zap, Layers, Ghost, Settings, BarChart3 } from 'lucide-react';
 import styles from './styles.module.css';
 
 type FeatureItem = {
   title: string;
-  icon: string;
+  icon: ReactNode;
   description: ReactNode;
 };
 
 const FeatureList: FeatureItem[] = [
   {
-    title: '🛡️ CVE-2025-55182 Protection',
-    icon: '🔒',
+    title: 'CVE-2025-55182 Protection',
+    icon: <Shield size={48} />,
     description: (
       <>
         Complete protection against React2Shell vulnerability. Blocks prototype 
@@ -22,8 +23,8 @@ const FeatureList: FeatureItem[] = [
     ),
   },
   {
-    title: '⚡ Zero Performance Impact',
-    icon: '🚀',
+    title: 'Zero Performance Impact',
+    icon: <Zap size={48} />,
     description: (
       <>
         Less than 1ms overhead per request. Optimized validation algorithms ensure 
@@ -32,8 +33,8 @@ const FeatureList: FeatureItem[] = [
     ),
   },
   {
-    title: '🎯 7 Layers of Protection',
-    icon: '🛡️',
+    title: '7 Layers of Protection',
+    icon: <Layers size={48} />,
     description: (
       <>
         Deserialization, Injection Detection, Encoding Validation, CSRF, Rate 
@@ -42,8 +43,8 @@ const FeatureList: FeatureItem[] = [
     ),
   },
   {
-    title: '👻 Ghost Mode Defense',
-    icon: '🔍',
+    title: 'Ghost Mode Defense',
+    icon: <Ghost size={48} />,
     description: (
       <>
         Detects UTF-16LE encoding bypasses that trick WAFs. Prevents sophisticated 
@@ -52,8 +53,8 @@ const FeatureList: FeatureItem[] = [
     ),
   },
   {
-    title: '🔧 Zero Configuration',
-    icon: '⚙️',
+    title: 'Zero Configuration',
+    icon: <Settings size={48} />,
     description: (
       <>
         Works out of the box with sensible defaults. Add one middleware file and 
@@ -62,8 +63,8 @@ const FeatureList: FeatureItem[] = [
     ),
   },
   {
-    title: '📊 Security Logging',
-    icon: '📈',
+    title: 'Security Logging',
+    icon: <BarChart3 size={48} />,
     description: (
       <>
         Comprehensive security event logging with severity levels, confidence 
