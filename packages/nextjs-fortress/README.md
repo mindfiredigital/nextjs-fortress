@@ -8,6 +8,10 @@ Protect your Next.js apps against CVE-2025-55182, injection attacks, encoding by
 
 ## Quick Start
 
+### Demo Video
+
+[![Watch the NextJS Fortress Demo](./public/@mindfiredigitalnextjs-fortress.png)](https://youtu.be/u2sZN_lTsGo)
+
 ### Installation
 
 ```bash
