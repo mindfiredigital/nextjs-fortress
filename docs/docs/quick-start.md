@@ -7,6 +7,10 @@ Get your Next.js application protected from CVE-2025-55182 in under 5 minutes.
 - Next.js 12.0.0 or higher
 - Node.js 16.0.0 or higher
 
+## Demo Video
+
+[![Watch the NextJS Fortress Demo](../../packages/nextjs-fortress/public/@mindfiredigitalnextjs-fortress.png)](https://youtu.be/u2sZN_lTsGo)
+
 ## Step 1: Install (30 seconds)
 
 ```bash
