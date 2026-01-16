@@ -231,40 +231,6 @@ export const fortressConfig: FortressConfig = {
 };
 ```
 
-## How to Initialize
-
-```typescript
-import { FortressConfig } from 'nextjs-fortress';
-
-export const fortressConfig: FortressConfig = {
-  enabled: true,
-  mode: 'development',
-
-  modules: {
-    deserialization: {
-      enabled: true,
-      maxDepth: 10,
-      detectCircular: true,      // Enable this!
-      
-      blockList: [
-        '__proto__',
-        'constructor',
-        'prototype',
-      ],
-    },
-  },
-
-  onSecurityEvent: async (event) => {
-    if (event.detection.rule === 'circular_reference') {
-      console.warn('Circular reference attack blocked:', {
-        ip: event.request.ip,
-        path: event.request.path,
-      });
-    }
-  },
-};
-```
-
 ## Summary
 
 **What happens without circular reference detection:**
