@@ -42,7 +42,6 @@ checkAdmin({}); // "ACCESS GRANTED"
 **What Happens Without Protection:**
 - All objects inherit malicious properties
 - Authentication logic bypassed
-- Authorization checks fl
 
 **Impact:**
 - Complete security bypass - Any user becomes admin
