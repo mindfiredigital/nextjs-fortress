@@ -49,7 +49,7 @@ Attackers trick authenticated users' browsers into making malicious requests:
 - User's cookies sent automatically
 - Account deleted without consent
 
-**Impact: Account deleti Data lo Security settings chang Privacy violations
+**Impact**: Account deleti Data lo Security settings chang Privacy violations
 
 #### 3. **JSON API Exploitation**
 
@@ -202,48 +202,6 @@ public async validate(
 }
 ```
 
-## Configuration
-
-### Basic Setup
-
-```typescript
-import { FortressConfig } from 'nextjs-fortress';
-
-export const fortressConfig: FortressConfig = {
-  modules: {
-    csrf: {
-      enabled: true,
-      cookieName: '_csrf',
-      tokenSecret: process.env.CSRF_SECRET,
-    },
-  },
-};
-```
-
-### Custom Token Settings
-
-```typescript
-export const fortressConfig: FortressConfig = {
-  modules: {
-    csrf: {
-      enabled: true,
-      cookieName: '_csrf',
-      headerName: 'X-CSRF-Token',
-      tokenSecret: process.env.CSRF_SECRET,
-      tokenLength: 32,                    // 32 bytes = 64 hex chars
-      expiryMs: 24 * 60 * 60 * 1000,     // 24 hours
-    },
-  },
-};
-```
-
-### Environment Variables
-
-```bash
-# .env
-CSRF_SECRET=your-secret-key-here-minimum-32-characters
-```
-
 ## Attack Prevention Examples
 
 ### Example 1: Form Submission Attack
@@ -297,7 +255,7 @@ X-CSRF-Token: old-token.signature
 ## How to Initialize
 
 ```typescript
-import { FortressConfig, FortressLogger } from 'nextjs-fortress';
+import { FortressConfig, FortressLogger } from '@mindfiredigital/nextjs-fortress';
 
 export const fortressConfig: FortressConfig = {
   enabled: true,
