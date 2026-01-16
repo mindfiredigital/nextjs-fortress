@@ -162,54 +162,10 @@ private checkDepth(obj: unknown, currentDepth: number): ValidationResult {
 **2. Efficient Checking** - O(n) time, O(d) space
 **3. Configurable Limits** - Adjust based on your needs
 
-## Configuration
-
-### Basic Setup
-
-```typescript
-import { FortressConfig } from 'nextjs-fortress';
-
-export const fortressConfig: FortressConfig = {
-  modules: {
-    deserialization: {
-      enabled: true,
-      maxDepth: 10,  // Blocks after 10 levels
-      detectCircular: true,
-    },
-  },
-};
-```
-
-### Choosing the Right Depth Limit
-
-| Use Case | Recommended Depth | Reasoning |
-|----------|-------------------|-----------|
-| Simple APIs | 5-7 | Most API requests don't need deep nesting |
-| E-commerce | 7-10 | Product data, orders, cart items |
-| Social Media | 8-10 | Posts, comments, nested threads |
-| Complex Forms | 10-15 | Multi-step forms, nested fields |
-| Admin Dashboards | 15-20 | Complex analytics, nested reports |
-
-### Environment-Based Configuration
-
-```typescript
-const maxDepth = process.env.NODE_ENV === 'production' ? 10 : 15;
-
-export const fortressConfig: FortressConfig = {
-  modules: {
-    deserialization: {
-      enabled: true,
-      maxDepth: maxDepth,
-      detectCircular: true,
-    },
-  },
-};
-```
-
 ## How to Initialize
 
 ```typescript
-import { FortressConfig } from 'nextjs-fortress';
+import { FortressConfig } from '@mindfiredigital/nextjs-fortress';
 
 export const fortressConfig: FortressConfig = {
   enabled: true,

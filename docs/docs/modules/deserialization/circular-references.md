@@ -181,50 +181,34 @@ const seen = new WeakSet(); // Doesn't prevent GC
 seen.has(obj); // O(1) lookup
 ```
 
-## Configuration
-
-### Basic Setup
+## How to Initialize
 
 ```typescript
-import { FortressConfig } from 'nextjs-fortress';
+import { FortressConfig } from '@mindfiredigital/nextjs-fortress';
 
 export const fortressConfig: FortressConfig = {
+  enabled: true,
+  mode: 'development',
+
   modules: {
     deserialization: {
       enabled: true,
-      detectCircular: true,  // Enable circular detection
       maxDepth: 10,
-    },
-  },
-};
-```
-
-### With Custom Handling
-
-```typescript
-import { FortressConfig, FortressLogger } from 'nextjs-fortress';
-
-export const fortressConfig: FortressConfig = {
-  modules: {
-    deserialization: {
-      enabled: true,
-      detectCircular: true,
-      maxDepth: 10,
+      detectCircular: true,      // Enable this!
+      
+      blockList: [
+        '__proto__',
+        'constructor',
+        'prototype',
+      ],
     },
   },
 
   onSecurityEvent: async (event) => {
     if (event.detection.rule === 'circular_reference') {
-      const logger = new FortressLogger({
-        enabled: true,
-        level: 'warn',
-        destination: 'console',
-      });
-
-      logger.warn('🔄 Circular Reference Attack Blocked', {
+      console.warn('Circular reference attack blocked:', {
         ip: event.request.ip,
         path: event.request.path,
-        timestamp: event.timestamp,
       });
     }
   },

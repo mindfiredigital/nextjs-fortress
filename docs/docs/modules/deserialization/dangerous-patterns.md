@@ -166,82 +166,6 @@ export const DEFAULT_DANGEROUS_PATTERNS = [
 **3. Regex-Based** - Flexible pattern matching
 **4. Fast Scanning** - Single stringify operation
 
-## Configuration
-
-### Basic Setup (Default Patterns)
-
-```typescript
-import { FortressConfig } from 'nextjs-fortress';
-
-export const fortressConfig: FortressConfig = {
-  modules: {
-    deserialization: {
-      enabled: true,
-      maxDepth: 10,
-      detectCircular: true,
-      // Default dangerous patterns automatically applied
-    },
-  },
-};
-```
-
-### Custom Patterns
-
-```typescript
-import { FortressConfig } from 'nextjs-fortress';
-
-export const fortressConfig: FortressConfig = {
-  modules: {
-    deserialization: {
-      enabled: true,
-      maxDepth: 10,
-      detectCircular: true,
-      
-      // Add your own dangerous patterns
-      dangerousPatterns: [
-        'admin_override',      // App-specific
-        'bypass_auth',         // App-specific
-        'internal_api',        // App-specific
-        'debug_mode',          // App-specific
-      ],
-    },
-  },
-};
-```
-
-### Strict Security Mode
-
-```typescript
-export const fortressConfig: FortressConfig = {
-  modules: {
-    deserialization: {
-      enabled: true,
-      dangerousPatterns: [
-        // Default patterns
-        'resolved_model',
-        '_response',
-        'child_process',
-        'require',
-        'eval',
-        
-        // Additional strict patterns
-        'script',
-        'fetch',
-        'xmlhttprequest',
-        'websocket',
-        'indexeddb',
-        'localstorage',
-        'sessionstorage',
-        'navigator',
-        'location',
-        'document',
-        'window',
-      ],
-    },
-  },
-};
-```
-
 ## Pattern Categories
 
 ### React Server Components (RSC) Patterns
@@ -290,7 +214,7 @@ export const fortressConfig: FortressConfig = {
 ## How to Initialize
 
 ```typescript
-import { FortressConfig, FortressLogger } from 'nextjs-fortress';
+import { FortressConfig, FortressLogger } from '@mindfiredigital/nextjs-fortress';
 
 export const fortressConfig: FortressConfig = {
   enabled: true,
