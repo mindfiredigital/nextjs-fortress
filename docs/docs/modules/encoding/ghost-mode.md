@@ -229,58 +229,6 @@ export const DANGEROUS_ENCODINGS = [
 ] as const;
 ```
 
-## Configuration
-
-### Basic Setup
-
-```typescript
-import { FortressConfig } from 'nextjs-fortress';
-
-export const fortressConfig: FortressConfig = {
-  modules: {
-    encoding: {
-      enabled: true,
-      blockNonUTF8: true,       // Block non-UTF-8 encodings
-      detectBOM: true,          // Detect byte order marks
-    },
-  },
-};
-```
-
-### Whitelist Specific Encodings
-
-```typescript
-export const fortressConfig: FortressConfig = {
-  modules: {
-    encoding: {
-      enabled: true,
-      blockNonUTF8: false,      // Allow non-UTF-8
-      detectBOM: true,
-      allowedEncodings: [        // But only these
-        'utf-8',
-        'ascii',
-        'iso-8859-1',            // Latin-1 for legacy systems
-      ],
-    },
-  },
-};
-```
-
-### Maximum Security
-
-```typescript
-export const fortressConfig: FortressConfig = {
-  modules: {
-    encoding: {
-      enabled: true,
-      blockNonUTF8: true,        // Strict UTF-8 only
-      detectBOM: true,           // Check all BOMs
-      allowedEncodings: ['utf-8'], // Nothing else
-    },
-  },
-};
-```
-
 ## Attack Examples
 
 ### Example 1: UTF-16LE Ghost Mode
@@ -328,7 +276,7 @@ Content-Type: application/json; charset=utf-16be
 ## How to Initialize
 
 ```typescript
-import { FortressConfig, FortressLogger } from 'nextjs-fortress';
+import { FortressConfig, FortressLogger } from '@mindfiredigital/nextjs-fortress';
 
 export const fortressConfig: FortressConfig = {
   enabled: true,
