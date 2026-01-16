@@ -190,39 +190,6 @@ private extractStrings(input: unknown, depth: number = 0): string[] {
 }
 ```
 
-## Configuration
-
-### Basic Setup
-
-```typescript
-export const fortressConfig: FortressConfig = {
-  modules: {
-    injection: {
-      enabled: true,
-      checks: ['sql'], // Only check SQL injection
-    },
-  },
-};
-```
-
-### With Custom Patterns
-
-```typescript
-export const fortressConfig: FortressConfig = {
-  modules: {
-    injection: {
-      enabled: true,
-      checks: ['sql'],
-      customPatterns: [
-        /\bTRUNCATE\b.*\bTABLE\b/gi,     // TRUNCATE TABLE
-        /\bALTER\b.*\bTABLE\b/gi,        // ALTER TABLE
-        /\bCREATE\b.*\bDATABASE\b/gi,    // CREATE DATABASE
-      ],
-    },
-  },
-};
-```
-
 ## Attack Examples
 
 ### Example 1: Login Bypass
@@ -301,7 +268,7 @@ export const SQL_KEYWORDS = [
 ## How to Initialize
 
 ```typescript
-import { FortressConfig, FortressLogger } from 'nextjs-fortress';
+import { FortressConfig, FortressLogger } from '@mindfiredigital/nextjs-fortress';
 
 export const fortressConfig: FortressConfig = {
   enabled: true,
@@ -310,7 +277,7 @@ export const fortressConfig: FortressConfig = {
   modules: {
     injection: {
       enabled: true,
-      checks: ['sql', 'command', 'xss', 'codeInjection'],
+      checks: ['sql'],
       
       // Optional: Add custom SQL patterns
       customPatterns: [
