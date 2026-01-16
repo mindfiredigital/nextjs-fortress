@@ -11,13 +11,13 @@ Get your Next.js application protected from CVE-2025-55182 in under 5 minutes.
 
 [![Watch the NextJS Fortress Demo](../../packages/nextjs-fortress/public/@mindfiredigitalnextjs-fortress.png)](https://youtu.be/u2sZN_lTsGo)
 
-## Step 1: Install (30 seconds)
+## Step 1: Install 
 
 ```bash
 npm install @mindfiredigital/nextjs-fortress
 ```
 
-Or use the CLI:
+Or use the CLI:  
 
 ```bash
 npx fortress init
