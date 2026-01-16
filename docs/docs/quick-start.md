@@ -407,8 +407,8 @@ Now that you're protected:
 
 ## Getting Help
 
-- 🐛 [Report Issues](https://github.com/mindfiredigital/nextjs-fortress/issues)
+- [Report Issues](https://github.com/mindfiredigital/nextjs-fortress/issues)
 
 ---
 
-**🎉 Congratulations!** Your Next.js application is now protected from CVE-2025-55182 and all major attack vectors.
+**Congratulations!** Your Next.js application is now protected from CVE-2025-55182 and all major attack vectors.
