@@ -115,10 +115,6 @@ export async function POST(request: Request) {
 }
 ```
 
-**Attack Success Rate:** ~95%
-**Time to Exploit:** \<5 minutes
-**Detection Rate:** \<10%
-
 ### After nextjs-fortress
 
 ```typescript
