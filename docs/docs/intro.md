@@ -216,4 +216,4 @@ MIT License - See [LICENSE](https://github.com/mindfiredigital/nextjs-fortress/b
 
 ---
 
-**⚠️ Security Advisory:** CVE-2025-55182 is actively being exploited. Install nextjs-fortress immediately to protect your application.
+**Security Advisory:** CVE-2025-55182 is actively being exploited. Install nextjs-fortress immediately to protect your application.
