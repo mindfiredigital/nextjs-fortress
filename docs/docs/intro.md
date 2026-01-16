@@ -18,7 +18,7 @@ nextjs-fortress provides **7 layers of protection** that work together to secure
 
 ## Why You Need It
 
-On January 5, 2025, the React2Shell vulnerability (CVE-2025-55182) was discovered in React Server Components. This critical vulnerability affects **every Next.js application** using Server Actions or Server Components.
+On November 29, 2025, the React2Shell vulnerability (CVE-2025-55182) was discovered in React Server Components. This critical vulnerability affects **every Next.js application** using Server Actions or Server Components.
 
 Without protection:
 - Attackers can pollute JavaScript prototypes
@@ -30,7 +30,6 @@ Without protection:
 With nextjs-fortress:
 - All attack vectors blocked automatically
 - Zero configuration required
-- \<1ms performance overhead
 - Works with existing code
 - Comprehensive security logging
 
