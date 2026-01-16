@@ -160,8 +160,7 @@ private checkDepth(obj: unknown, currentDepth: number): ValidationResult {
 
 **1. Early Detection** - Stops immediately when limit exceeded
 **2. Efficient Checking** - O(n) time, O(d) space
-**3. Fast Performance** - \<1ms for normal payloads
-**4. Configurable Limits** - Adjust based on your needs
+**3. Configurable Limits** - Adjust based on your needs
 
 ## Configuration
 
