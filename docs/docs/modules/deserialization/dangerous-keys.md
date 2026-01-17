@@ -42,7 +42,6 @@ checkAdmin({}); // "ACCESS GRANTED"
 **What Happens Without Protection:**
 - All objects inherit malicious properties
 - Authentication logic bypassed
-- Authorization checks fl
 
 **Impact:**
 - Complete security bypass - Any user becomes admin
@@ -221,95 +220,6 @@ private checkDangerousKeys(
 **3. Prototype Validation** - Detects swapped prototype chains
 **4. Deep Scanning** - Recursively checks all nested levels
 
-## Configuration
-
-### Basic Setup
-
-```typescript
-import { FortressConfig } from 'nextjs-fortress';
-
-export const fortressConfig: FortressConfig = {
-  modules: {
-    deserialization: {
-      enabled: true,
-      blockList: [
-        '__proto__',
-        'constructor',
-        'prototype',
-        '__defineGetter__',
-        '__defineSetter__',
-        '__lookupGetter__',
-        '__lookupSetter__',
-        'toString',
-        'valueOf',
-        'hasOwnProperty',
-      ],
-    },
-  },
-};
-```
-
-### Custom Blocklist
-
-```typescript
-// Add application-specific dangerous keys
-export const fortressConfig: FortressConfig = {
-  modules: {
-    deserialization: {
-      enabled: true,
-      blockList: [
-        // Default dangerous keys
-        '__proto__',
-        'constructor',
-        'prototype',
-        
-        // Add custom keys for your app
-        'isAdmin',
-        'isModerator',
-        'permissions',
-        'role',
-      ],
-    },
-  },
-};
-```
-
-### Maximum Security Mode
-
-```typescript
-export const fortressConfig: FortressConfig = {
-  modules: {
-    deserialization: {
-      enabled: true,
-      blockList: [
-        // Standard dangerous keys
-        '__proto__',
-        'constructor',
-        'prototype',
-        
-        // Object manipulation
-        '__defineGetter__',
-        '__defineSetter__',
-        '__lookupGetter__',
-        '__lookupSetter__',
-        
-        // Common injection targets
-        'toString',
-        'valueOf',
-        'hasOwnProperty',
-        
-        // Node.js internals
-        '__dirname',
-        '__filename',
-        'require',
-        'module',
-        'exports',
-      ],
-    },
-  },
-};
-```
-
 ## The Blocklist Explained
 
 | Key | Why Dangerous | Attack Vector |
@@ -326,7 +236,7 @@ export const fortressConfig: FortressConfig = {
 ## How to Initialize
 
 ```typescript
-import { FortressConfig, FortressLogger } from 'nextjs-fortress';
+import { FortressConfig, FortressLogger } from '@mindfiredigital/nextjs-fortress';
 
 export const fortressConfig: FortressConfig = {
   enabled: true,

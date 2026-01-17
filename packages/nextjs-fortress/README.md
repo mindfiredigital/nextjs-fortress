@@ -1,4 +1,4 @@
-# 🛡️ @mindfiredigital/nextjs-fortress
+# @mindfiredigital/nextjs-fortress
 
 **Production-ready security validation middleware for Next.js applications**
 
@@ -6,7 +6,11 @@ Protect your Next.js apps against CVE-2025-55182, injection attacks, encoding by
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
+
+### Demo Video
+
+[![Watch the NextJS Fortress Demo](./public/@mindfiredigitalnextjs-fortress.png)](https://youtu.be/u2sZN_lTsGo)
 
 ### Installation
 
@@ -32,7 +36,7 @@ This automatically:
 
 ---
 
-## 📖 Complete Setup Guide
+## Complete Setup Guide
 
 ### 1. Create Configuration
 
@@ -102,7 +106,7 @@ export const fortressConfig: FortressConfig = {
 
 ---
 
-## 🔧 Middleware Integration
+## Middleware Integration
 
 ### Option 1: New Project (No Existing Middleware)
 
@@ -165,7 +169,7 @@ export const middleware = createFortressMiddleware(fortressConfig, myMiddleware)
 ### Option 3: Middleware implementation in custom allowed paths
 
 ```typescript
-import { createSelectiveFortressMiddleware } from 'nextjs-fortress'
+import { createSelectiveFortressMiddleware } from '@mindfiredigital/nextjs-fortress'
 import { fortressConfig } from './fortress.config'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -319,7 +323,7 @@ export const updateUserProfile = secureServerAction(
 
 ---
 
-## 🎯 Attack Protection Matrix
+## Attack Protection Matrix
 
 | Attack Type | Severity | Protected |
 |------------|----------|-----------|
@@ -341,7 +345,7 @@ export const updateUserProfile = secureServerAction(
 
 ---
 
-## ⚙️ Configuration Reference
+## Configuration Reference
 
 ### Module Configuration
 
@@ -470,7 +474,7 @@ securityHeaders: {
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ### Running Tests
 
@@ -513,7 +517,7 @@ describe('CVE-2025-55182 Protection', () => {
 
 ---
 
-## 🔒 Environment Variables
+## Environment Variables
 
 Create a `.env` file in your project root:
 
@@ -535,19 +539,19 @@ FORTRESS_MAX_PAYLOAD_SIZE=1048576
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions! Please see [CONTRIBUTING.md](https://github.com/mindfiredigital/nextjs-fortress/blob/main/CONTRIBUTING.md) for guidelines.
 
 ---
 
-## 📄 License
+## License
 
 MIT © [Mindfire Digital LLP](https://github.com/mindfiredigital)
 
 ---
 
-## 🆘 Support
+## Support
 
 - **Issues**: [GitHub Issues](https://github.com/mindfiredigital/nextjs-fortress/issues)
 - **Documentation**: [Full Docs](https://github.com/mindfiredigital/nextjs-fortress#readme)
@@ -555,7 +559,7 @@ MIT © [Mindfire Digital LLP](https://github.com/mindfiredigital)
 
 ---
 
-## 🌟 Acknowledgments
+## Acknowledgments
 
 Built to protect against:
 - **CVE-2025-55182** (Prototype Pollution in Next.js)
@@ -566,7 +570,7 @@ Special thanks to the security research community.
 
 ---
 
-## 🎓 Learn More
+## Learn More
 
 - [Next.js Security](https://nextjs.org/docs/app/building-your-application/configuring/security)
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)

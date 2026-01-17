@@ -3,8 +3,10 @@
 import Link from 'next/link'
 import { Shield, Home, ArrowLeft } from 'lucide-react'
 import {NOT_FOUND_PAGE} from "../lib/constants"
+import { useRouter } from 'next/navigation'
 
 export default function NotFound() {
+  const router = useRouter()
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4">
       <div className="max-w-2xl w-full text-center">
@@ -37,7 +39,7 @@ export default function NotFound() {
             </Link>
             
             <button
-              onClick={() => window.history.back()}
+              onClick={() => router.back()}
               className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-dark-bg-tertiary hover:bg-dark-bg-secondary border border-dark-border-primary text-white font-semibold rounded-xl transition-all duration-200 cursor-pointer"
             >
               <ArrowLeft className="w-5 h-5" />

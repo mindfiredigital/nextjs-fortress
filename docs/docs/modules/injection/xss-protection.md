@@ -160,42 +160,6 @@ private checkPatterns(
 }
 ```
 
-## Configuration
-
-### Basic Setup
-
-```typescript
-import { FortressConfig } from 'nextjs-fortress';
-
-export const fortressConfig: FortressConfig = {
-  modules: {
-    injection: {
-      enabled: true,
-      checks: ['xss'], // Enable XSS detection
-    },
-  },
-};
-```
-
-### With Custom Patterns
-
-```typescript
-export const fortressConfig: FortressConfig = {
-  modules: {
-    injection: {
-      enabled: true,
-      checks: ['xss'],
-      customPatterns: [
-        /<style.*>.*<\/style>/gi,        // Style injection
-        /expression\(/gi,                 // CSS expressions
-        /<link[^>]*>/gi,                  // Link tags
-        /<base[^>]*>/gi,                  // Base tag hijacking
-      ],
-    },
-  },
-};
-```
-
 ## Attack Examples
 
 ### Example 1: Cookie Theft
@@ -258,7 +222,7 @@ POST /api/content
 ## How to Initialize
 
 ```typescript
-import { FortressConfig, FortressLogger } from 'nextjs-fortress';
+import { FortressConfig, FortressLogger } from '@mindfiredigital/nextjs-fortress';
 
 export const fortressConfig: FortressConfig = {
   enabled: true,

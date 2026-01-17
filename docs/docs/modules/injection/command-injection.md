@@ -152,42 +152,6 @@ private checkPatterns(
 }
 ```
 
-## Configuration
-
-### Basic Setup
-
-```typescript
-import { FortressConfig } from 'nextjs-fortress';
-
-export const fortressConfig: FortressConfig = {
-  modules: {
-    injection: {
-      enabled: true,
-      checks: ['command'], // Enable command injection detection
-    },
-  },
-};
-```
-
-### With Custom Patterns
-
-```typescript
-export const fortressConfig: FortressConfig = {
-  modules: {
-    injection: {
-      enabled: true,
-      checks: ['command'],
-      customPatterns: [
-        /\bsudo\b/gi,           // Sudo commands
-        /\brm\s+-rf/gi,         // Force remove
-        /\bkill\b.*-9/gi,       // Kill processes
-        /\bchmod\b.*777/gi,     // Permission changes
-      ],
-    },
-  },
-};
-```
-
 ## Attack Examples
 
 ### Example 1: Semicolon Command Chaining
@@ -265,7 +229,7 @@ $   // Variable/command substitution
 ## How to Initialize
 
 ```typescript
-import { FortressConfig, FortressLogger } from 'nextjs-fortress';
+import { FortressConfig, FortressLogger } from '@mindfiredigital/nextjs-fortress';
 
 export const fortressConfig: FortressConfig = {
   enabled: true,

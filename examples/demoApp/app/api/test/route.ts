@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
       message: 'Request validated by Fortress',
       received: body,
     })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
   }
 }

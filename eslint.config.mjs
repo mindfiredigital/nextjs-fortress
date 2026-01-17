@@ -21,7 +21,7 @@ export default [
     // Point specifically to the workspaces
     files: [
       "packages/nextjs-fortress/src/**/*.ts",
-      "examples/demoApp/src/**/*.{ts,tsx}" 
+      "examples/demoApp/**/*.{ts,tsx}" 
     ],
     languageOptions: {
       parser: tsParser,
@@ -35,7 +35,7 @@ export default [
         // This is key: it tells ESLint to respect the project's types
         project: [
           "./packages/nextjs-fortress/tsconfig.json",
-          "./examples/demo-app/tsconfig.json",
+          "./examples/demoApp/tsconfig.json",
         ],
       },
     },

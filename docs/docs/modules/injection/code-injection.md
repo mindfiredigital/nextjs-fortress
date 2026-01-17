@@ -29,7 +29,7 @@ const result = eval(userInput);
 - Full Node.js API access
 - Server compromise
 
-**Impact: Remote code executi Full API acce File system contr Network access
+**Impact**: Remote code executi Full API acce File system contr Network access
 
 #### 2. **Function Constructor Attack**
 
@@ -150,42 +150,6 @@ private checkPatterns(
 }
 ```
 
-## Configuration
-
-### Basic Setup
-
-```typescript
-import { FortressConfig } from 'nextjs-fortress';
-
-export const fortressConfig: FortressConfig = {
-  modules: {
-    injection: {
-      enabled: true,
-      checks: ['codeInjection'], // Enable code injection detection
-    },
-  },
-};
-```
-
-### With Custom Patterns
-
-```typescript
-export const fortressConfig: FortressConfig = {
-  modules: {
-    injection: {
-      enabled: true,
-      checks: ['codeInjection'],
-      customPatterns: [
-        /\bvm\b.*runInContext/gi,     // VM module
-        /\bworker_threads\b/gi,        // Worker threads
-        /\bcluster\b.*fork/gi,         // Cluster forking
-        /\bglobal\./gi,                // Global object access
-      ],
-    },
-  },
-};
-```
-
 ## Attack Examples
 
 ### Example 1: eval() Injection
@@ -261,7 +225,7 @@ POST /api/process
 ## How to Initialize
 
 ```typescript
-import { FortressConfig, FortressLogger } from 'nextjs-fortress';
+import { FortressConfig, FortressLogger } from '@mindfiredigital/nextjs-fortress';
 
 export const fortressConfig: FortressConfig = {
   enabled: true,

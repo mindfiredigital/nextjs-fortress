@@ -2,7 +2,7 @@
 
 ## The Wake-Up Call: React2Shell & CVE-2025-55182
 
-On January 5, 2025, the security community was rocked by the discovery of **React2Shell** - a critical vulnerability in React's Server Components that could lead to Remote Code Execution (RCE). This vulnerability, tracked as **CVE-2025-55182**, exposed a fundamental flaw in how React deserializes data from client to server.
+On November 29, 2025, the security community was rocked by the discovery of **React2Shell** - a critical vulnerability in React's Server Components that could lead to Remote Code Execution (RCE). This vulnerability, tracked as **CVE-2025-55182**, exposed a fundamental flaw in how React deserializes data from client to server.
 
 ### What Happened?
 
@@ -114,10 +114,6 @@ export async function POST(request: Request) {
   return processUserData(data); // 💥 RCE possible
 }
 ```
-
-**Attack Success Rate:** ~95%
-**Time to Exploit:** \<5 minutes
-**Detection Rate:** \<10%
 
 ### After nextjs-fortress
 

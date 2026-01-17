@@ -185,93 +185,6 @@ export function createFortressMiddleware(config: FortressConfig) {
 }
 ```
 
-## Configuration
-
-### Basic Setup (IP-Based)
-
-```typescript
-import { FortressConfig } from 'nextjs-fortress';
-
-export const fortressConfig: FortressConfig = {
-  modules: {
-    rateLimit: {
-      enabled: true,
-      byIP: {
-        requests: 100,     // 100 requests
-        window: 60000,     // per 60 seconds (1 minute)
-      },
-    },
-  },
-};
-```
-
-### Session-Based Rate Limiting
-
-```typescript
-export const fortressConfig: FortressConfig = {
-  modules: {
-    rateLimit: {
-      enabled: true,
-      byIP: {
-        requests: 100,
-        window: 60000,
-      },
-      bySession: {
-        requests: 50,      // 50 requests
-        window: 60000,     // per session per minute
-      },
-    },
-  },
-};
-```
-
-### Endpoint-Specific Limits
-
-```typescript
-export const fortressConfig: FortressConfig = {
-  modules: {
-    rateLimit: {
-      enabled: true,
-      byIP: {
-        requests: 100,
-        window: 60000,
-      },
-      endpoints: {
-        '/api/auth/login': {
-          requests: 5,       // Only 5 login attempts
-          window: 300000,    // per 5 minutes
-        },
-        '/api/reports/generate': {
-          requests: 10,      // 10 report generations
-          window: 3600000,   // per hour
-        },
-      },
-    },
-  },
-};
-```
-
-### With Backoff
-
-```typescript
-export const fortressConfig: FortressConfig = {
-  modules: {
-    rateLimit: {
-      enabled: true,
-      byIP: {
-        requests: 100,
-        window: 60000,
-      },
-      backoff: {
-        enabled: true,
-        multiplier: 2,       // Double delay each time
-        maxDelay: 300000,    // Max 5 minutes
-      },
-    },
-  },
-};
-```
-
 ## Real Implementation Examples
 
 ### Middleware (Automatic)
@@ -398,7 +311,7 @@ Retry-After: 45                 // Seconds until retry
 ## How to Initialize
 
 ```typescript
-import { FortressConfig, FortressLogger } from 'nextjs-fortress';
+import { FortressConfig, FortressLogger } from '@mindfiredigital/nextjs-fortress';
 
 export const fortressConfig: FortressConfig = {
   enabled: true,

@@ -7,13 +7,17 @@ Get your Next.js application protected from CVE-2025-55182 in under 5 minutes.
 - Next.js 12.0.0 or higher
 - Node.js 16.0.0 or higher
 
-## Step 1: Install (30 seconds)
+## Demo Video
+
+[![Watch the NextJS Fortress Demo](../../packages/nextjs-fortress/public/@mindfiredigitalnextjs-fortress.png)](https://youtu.be/u2sZN_lTsGo)
+
+## Step 1: Install 
 
 ```bash
 npm install @mindfiredigital/nextjs-fortress
 ```
 
-Or use the CLI:
+Or use the CLI:  
 
 ```bash
 npx fortress init
@@ -174,7 +178,7 @@ export const middleware = createFortressMiddleware(fortressConfig, myMiddleware)
 ### Option 3: Middleware implementation in custom allowed paths
 
 ```typescript
-import { createSelectiveFortressMiddleware } from 'nextjs-fortress'
+import { createSelectiveFortressMiddleware } from '@mindfiredigital/nextjs-fortress'
 import { fortressConfig } from './fortress.config'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -214,90 +218,22 @@ export const config = {
 
 ## Step 4: Test Protection
 
-### Test 1: Prototype Pollution (CVE-2025-55182)
+### Option 1: Test with the built in frontend
+
+The demo app provides a hands-on interface to test all security protections with 15+ pre-configured attack vectors.
+
+#### Running the Demo
 
 ```bash
-curl -X POST http://localhost:3000/api/test \
-  -H "Content-Type: application/json" \
-  -d '{"__proto__": {"isAdmin": true}}'
+git clone https://github.com/mindfiredigital/nextjs-fortress.git
+cd examples/demoApp
+pnpm install
+pnpm dev
 ```
 
-**Expected Response:**
-```json
-{
-  "error": "Dangerous key detected: \"__proto__\"",
-  "rule": "dangerous_key"
-}
-```
-**Status:** 403 Forbidden 
+### Option 2: Self Testing
 
-### Test 2: SQL Injection
-
-```bash
-curl -X POST http://localhost:3000/api/test \
-  -H "Content-Type: application/json" \
-  -d '{"query": "SELECT * FROM users WHERE id=1 OR 1=1"}'
-```
-
-**Expected Response:**
-```json
-{
-  "error": "SQL injection detected: \"OR 1=1\"",
-  "rule": "sql_injection"
-}
-```
-**Status:** 403 Forbidden 
-
-### Test 3: XSS Attack
-
-```bash
-curl -X POST http://localhost:3000/api/test \
-  -H "Content-Type: application/json" \
-  -d '{"comment": "<script>alert(1)</script>"}'
-```
-
-**Expected Response:**
-```json
-{
-  "error": "XSS injection detected: \"<script>\"",
-  "rule": "xss_injection"
-}
-```
-**Status:** 403 Forbidden 
-
-### Test 4: Rate Limiting
-
-```bash
-# Run this 101 times quickly
-for i in {1..101}; do
-  curl -X POST http://localhost:3000/api/test \
-    -H "Content-Type: application/json" \
-    -d '{"test": "data"}'
-done
-```
-
-**After 100 requests:**
-```
-Status: 429 Too Many Requests
-Retry-After: 45
-```
-Rate limit working!
-
-## Environment Variables
-
-Create `.env.local`:
-
-```bash
-# CSRF Secret (generate with: openssl rand -hex 32)
-CSRF_SECRET=your-32-character-secret-key-here
-
-# Whitelisted IPs (comma-separated)
-WHITELIST_IPS=127.0.0.1,::1
-```
-
-## Verify Installation
-
-### Create Test API Route
+#### Create Test API Route
 
 ```typescript
 // app/api/test/route.ts
@@ -336,16 +272,86 @@ export async function GET() {
 }
 ```
 
-### Test the Endpoint
+
+#### Test 1: Prototype Pollution (CVE-2025-55182)
 
 ```bash
-# Should succeed
-curl http://localhost:3000/api/test
-
-# Should get blocked
 curl -X POST http://localhost:3000/api/test \
   -H "Content-Type: application/json" \
-  -d '{"__proto__": {"hacked": true}}'
+  -d '{"__proto__": {"isAdmin": true}}'
+```
+
+**Expected Response:**
+```json
+{
+  "error": "Dangerous key detected: \"__proto__\"",
+  "rule": "dangerous_key"
+}
+```
+**Status:** 403 Forbidden 
+
+#### Test 2: SQL Injection
+
+```bash
+curl -X POST http://localhost:3000/api/test \
+  -H "Content-Type: application/json" \
+  -d '{"query": "SELECT * FROM users WHERE id=1 OR 1=1"}'
+```
+
+**Expected Response:**
+```json
+{
+  "error": "SQL injection detected: \"OR 1=1\"",
+  "rule": "sql_injection"
+}
+```
+**Status:** 403 Forbidden 
+
+#### Test 3: XSS Attack
+
+```bash
+curl -X POST http://localhost:3000/api/test \
+  -H "Content-Type: application/json" \
+  -d '{"comment": "<script>alert(1)</script>"}'
+```
+
+**Expected Response:**
+```json
+{
+  "error": "XSS injection detected: \"<script>\"",
+  "rule": "xss_injection"
+}
+```
+**Status:** 403 Forbidden 
+
+#### Test 4: Rate Limiting
+
+```bash
+# Run this 101 times quickly
+for i in {1..101}; do
+  curl -X POST http://localhost:3000/api/test \
+    -H "Content-Type: application/json" \
+    -d '{"test": "data"}'
+done
+```
+
+**After 100 requests:**
+```
+Status: 429 Too Many Requests
+Retry-After: 45
+```
+Rate limit working!
+
+## Environment Variables
+
+Create `.env.local`:
+
+```bash
+# CSRF Secret (generate with: openssl rand -hex 32)
+CSRF_SECRET=your-32-character-secret-key-here
+
+# Whitelisted IPs (comma-separated)
+WHITELIST_IPS=127.0.0.1,::1
 ```
 
 ## What Happens Now
@@ -403,8 +409,8 @@ Now that you're protected:
 
 ## Getting Help
 
-- 🐛 [Report Issues](https://github.com/mindfiredigital/nextjs-fortress/issues)
+- [Report Issues](https://github.com/mindfiredigital/nextjs-fortress/issues)
 
 ---
 
-**🎉 Congratulations!** Your Next.js application is now protected from CVE-2025-55182 and all major attack vectors.
+**Congratulations!** Your Next.js application is now protected from CVE-2025-55182 and all major attack vectors.

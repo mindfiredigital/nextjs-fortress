@@ -36,7 +36,7 @@ export const useAttackTesting = () => {
 
       setTestResult(result)
       addToHistory(result)
-    } catch (error) {
+    } catch {
       setTestResult({
         blocked: false,
         attack: ATTACKS[attackKey].name,
