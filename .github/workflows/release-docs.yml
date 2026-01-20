@@ -15,7 +15,9 @@ jobs:
       packages: read
     steps:
       - name: 'Checkout repository'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -35,9 +37,6 @@ jobs:
         working-directory: docs
         run: pnpm build
 
-      - name: 'Fetch branches'
-        run: git fetch origin
-
       - name: 'Set Git user name and email'
         run: |
           git config --local user.email "github-actions@github.com"
@@ -49,32 +48,27 @@ jobs:
           mkdir -p /tmp/temp-directory
           # Enable dotglob to copy hidden files (like .gitignore)
           shopt -s dotglob
-          # Copy the build from the docs-docusaurus/build folder
+          # Copy the build from the docs/build folder
           cp -r docs/build/* /tmp/temp-directory/
           shopt -u dotglob
-          # Stash any changes to prevent checkout conflicts
-          git stash push
+          # REMOVED: git stash (causes issues in CI)
           # Switch to the gh-pages branch, creating it if it doesn't exist
-          git checkout gh-pages || git checkout -b gh-pages
-          # Remove all files from the gh-pages branch
-          rm -rf *
+          git checkout gh-pages || git checkout --orphan gh-pages
+          # CHANGED: Remove all files safely
+          git rm -rf . 2>/dev/null || true
           # Copy the build artifacts from the temp directory
           cp -r /tmp/temp-directory/* .
+          # ADDED: Create .nojekyll file for GitHub Pages
+          touch .nojekyll
           # Check if there are any changes before committing
           if [[ -n "$(git status --porcelain)" ]]; then
-            git add . -f
+            # CHANGED: Use -A instead of . -f
+            git add -A
             git commit -m "chore(docs): copy docusaurus build artifacts to gh-pages branch"
           else
             echo "No changes to commit"
           fi
 
       - name: Push to gh-pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git push origin gh-pages --force || echo "No changes to push"
-
-      - name: 'Switch back to main branch'
-        run: |
-          git checkout main
-          git stash pop || true  # Restore stashed changes if any
