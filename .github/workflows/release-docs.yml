@@ -24,6 +24,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Enable Corepack
+        run: npm install -g pnpm
+
       - name: 'Install dependencies'
         working-directory: docs
         run: pnpm install
