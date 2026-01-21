@@ -23,8 +23,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Enable Corepack
         run: npm install -g pnpm
@@ -70,5 +68,7 @@ jobs:
           fi
 
       - name: Push to gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git push origin gh-pages --force || echo "No changes to push"
+          git push origin gh-pages --force
