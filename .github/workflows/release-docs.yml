@@ -54,6 +54,8 @@ jobs:
           git checkout gh-pages || git checkout --orphan gh-pages
           # CHANGED: Remove all files safely
           git rm -rf . 2>/dev/null || true
+          # FIX: Explicitly remove node_modules and other build artifacts
+          rm -rf node_modules .next .docusaurus docs/node_modules docs/.next docs/.docusaurus
           # Copy the build artifacts from the temp directory
           cp -r /tmp/temp-directory/* .
           # ADDED: Create .nojekyll file for GitHub Pages
