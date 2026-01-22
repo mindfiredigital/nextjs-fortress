@@ -1,5 +1,12 @@
 # demo-app
 
+## 0.1.13
+
+### Patch Changes
+
+- Updated dependencies
+  - @mindfiredigital/nextjs-fortress@1.3.3
+
 ## 0.1.12
 
 ### Patch Changes

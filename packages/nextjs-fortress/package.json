@@ -1,6 +1,6 @@
 {
   "name": "@mindfiredigital/nextjs-fortress",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "private": false,
   "description": "Universal security validation framework for Next.js - Protects against CVE-2025-55182 and major attack vectors",
   "main": "dist/index.js",
