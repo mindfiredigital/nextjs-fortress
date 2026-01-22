@@ -25,6 +25,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 'Install dependencies and build'
+        run: npm install -g pnpm
+
+      - name: 'Install dependencies and build'
         run: |
           cd docs
           pnpm install
