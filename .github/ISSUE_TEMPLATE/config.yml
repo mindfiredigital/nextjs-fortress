@@ -1,5 +1,0 @@
-blank_issues_enabled: true
-contact_links:
-  - name:Nextjs-Fortress
-    url: https://github.com/lakinmindfire/nextjs-fortress
-    about: Nextjs-Fortress is a high-performance, developer-first security middleware designed specifically for Next.js. It acts as a protective shield (a "WAF-in-a-box") that runs at the Edge, intercepting incoming requests before they reach your Server Components or API routes. While standard WAFs (Web Application Firewalls) often live outside your codebase, nextjs-fortress is integrated directly into your application's middleware layer, allowing it to leverage local context and stay lightning-fast.
