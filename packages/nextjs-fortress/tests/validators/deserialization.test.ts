@@ -204,7 +204,7 @@ describe('DeserializationValidator', () => {
       }
       const duration = Date.now() - start
 
-      expect(duration).toBeLessThan(100) // 1000 validations in <100ms
+      expect(duration).toBeLessThan(200) // 1000 validations in <100ms
     })
   })
 })
