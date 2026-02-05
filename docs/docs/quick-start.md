@@ -9,7 +9,14 @@ Get your Next.js application protected from CVE-2025-55182 in under 5 minutes.
 
 ## Demo Video
 
-[![Watch the NextJS Fortress Demo](../../packages/nextjs-fortress/public/@mindfiredigitalnextjs-fortress.png)](https://youtu.be/u2sZN_lTsGo)
+<iframe 
+  width="100%" 
+  height="450"
+  src="https://www.youtube.com/embed/u2sZN_lTsGo" 
+  title="NextJS Fortress Demo"
+  frameborder="0" 
+  allowfullscreen>
+</iframe>
 
 ## Step 1: Install 
 

@@ -49,11 +49,11 @@ describe('CSRFValidator - Fixed Tests', () => {
     test('should handle tokens with future timestamps gracefully', async () => {
       jest.useFakeTimers()
       const sessionId = 'session-123'
-      
+
       const futureTime = Date.now() + 100000
       jest.setSystemTime(futureTime)
       const token = await validator.generateToken(sessionId)
-      
+
       // Go back to current time
       jest.setSystemTime(Date.now() - 100000)
       const result = await validator.validate(token, sessionId, 'POST')
@@ -116,11 +116,11 @@ describe('CSRFValidator - Fixed Tests', () => {
     test('should handle null HTTP method', async () => {
       const sessionId = 'session-123'
       const token = await validator.generateToken(sessionId)
-      
+
       // The validator crashes on null.toUpperCase()
       // This is a validator bug - it should handle null gracefully
       // For now, we test that it throws or expect defensive coding
-      
+
       try {
         const result = await validator.validate(token, sessionId, null)
         // If it doesn't throw, it should reject
@@ -135,7 +135,7 @@ describe('CSRFValidator - Fixed Tests', () => {
     test('should handle undefined HTTP method', async () => {
       const sessionId = 'session-123'
       const token = await validator.generateToken(sessionId)
-      
+
       // Same issue as null - validator needs defensive coding
       try {
         const result = await validator.validate(token, sessionId, undefined)
@@ -150,7 +150,7 @@ describe('CSRFValidator - Fixed Tests', () => {
     test('should handle unknown HTTP methods', async () => {
       const sessionId = 'session-123'
       const token = await validator.generateToken(sessionId)
-      
+
       // Based on failure: CUSTOM method is accepted as valid (requires token)
       // The validator doesn't whitelist methods, it just checks safe methods
       // So CUSTOM requires a token and validates it
@@ -177,7 +177,11 @@ describe('CSRFValidator - Fixed Tests', () => {
       const token = await validator.generateToken(sessionId)
       const whitespaceToken = `  ${token}  `
 
-      const result = await validator.validate(whitespaceToken, sessionId, 'POST')
+      const result = await validator.validate(
+        whitespaceToken,
+        sessionId,
+        'POST'
+      )
 
       expect(result.valid).toBe(false)
     })
